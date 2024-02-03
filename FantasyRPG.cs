@@ -32,6 +32,7 @@ namespace FantasyRPG
             maxPotions = 5; 
             level = 1;
             mana = 100;
+            
         }
 
 
@@ -111,7 +112,7 @@ namespace FantasyRPG
             specialAtkName = _specialAtkName;
             normalAtkName = "Sword Slash";
             specialAtkRecharge = 100; // 100% preset
-            specialAtkDmg = 10; // Preset damage from sword special atk
+            specialAtkDmg = 10; // Preset damage from sword special attack
             normalAtkDmg = 4;
         }
 
@@ -326,14 +327,16 @@ namespace FantasyRPG
                         chosenSpecialties.Add(magicChoices[chosenSpecialtyIndex - 1]);
                     }
 
-                    Console.WriteLine("Final chosen specialities: " + string.Join(", ", chosenSpecialties));
+                    Console.WriteLine("\nFinal chosen specialities: " + string.Join(", ", chosenSpecialties));
 
                     Mage newWizard = new Mage(name, weaponType, chosenSpecialties.ToArray(), mainSpell);
 
-                    Console.WriteLine("Mage Name: " + name + "\nMage's Main Spell: " + mainSpell +
+                    Console.WriteLine("Mage Name: " + name + "\nMage's Weapon: " + weaponType + "\nMage's Main Spell: " + mainSpell +
                         "\nMage's Magic Specialties: " + string.Join(", ", chosenSpecialties));
 
                     userJourney wizardJourney = new userJourney(); // Journey start!
+                    wizardJourney.usersFirstJourney();
+
                     break;
 
                 case 4:
@@ -373,7 +376,7 @@ namespace FantasyRPG
         string[] customaryScenarios = ["You embark on a long journey, you find yourself lost midway throughout the journey. There appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?"];
 
         // non static scenarios will be introduced later in the game if I can be asked
-        string fixedScenario = "You embark on a long journey, you find yourself lost midway, your eyes are surrounded by vast levels of fog, mitigating your view of the perspective ahead. Closeby, there appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?";
+        string fixedScenario = "\nYou embark on a long journey, you find yourself lost midway, your eyes are surrounded by vast levels of fog, mitigating your view of the perspective ahead. Closeby, there appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?";
 
         public void usersFirstJourney()
         {
@@ -381,12 +384,14 @@ namespace FantasyRPG
 
             Console.WriteLine("1. Fight back");
             Console.WriteLine("2. Escape");
+            fightChoice = Convert.ToInt32(Console.ReadLine());
 
             switch (fightChoice)
             {
                 case 1:
                     Console.BackgroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Your level is too low, the dragon proceeds to consume you whole in your defenseless state");
+                    Console.WriteLine("Your level is too low, the dragon proceeds to consume you whole in your defenseless state.");
+                    
                     Console.WriteLine("You died.");
                     break;
 
