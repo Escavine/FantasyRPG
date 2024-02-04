@@ -146,26 +146,26 @@ namespace FantasyRPG
     class Mage : characterDefault // wizard class properties + methods
     {
         // Properties for common wizard attributes
-        public string mainSpell;
+        public string[] magicSpells;
         string[] magicSpeciality; // user can have multiple magic specialties
-        public int spellsInInventory;
+        public int spellUsage; // spell usage to keep spells in control
 
-        public Mage(string _name, string _weaponName, string _weaponType, string[] _magicSpeciality, string _mainSpell) : base(_name, _weaponName, _weaponType) 
+        public Mage(string _name, string _weaponName, string _weaponType, string[] _magicSpeciality, string[] _magicSpells) : base(_name, _weaponName, _weaponType) 
         {
             name = _name;
             weaponName = _weaponName;
             weaponType = _weaponType;
             magicSpeciality = _magicSpeciality; 
-            mainSpell = _mainSpell; // Predefined variables for every new wizard in the game
-            spellsInInventory = 2;
+            magicSpells = _magicSpells; // Predefined variables for every new wizard in the game
+            spellUsage = 5;
         }
 
 
         // methods for a wizard
         public void SpellCast() // spell casting for enemies
         {
-            Console.WriteLine(name + " has casted " + mainSpell);
-            spellsInInventory--;
+            Console.WriteLine(name + " has casted " + spellUsage);
+            spellUsage--;
             mana = mana - 30;
             exp += 0.3f;
 
@@ -173,7 +173,7 @@ namespace FantasyRPG
 
         public void IncreaseSpellInInventory()
         {
-            spellsInInventory++;
+            spellUsage++;
             Console.WriteLine(name + " has gained 1 spell in the inventory");
         }
 
@@ -284,10 +284,11 @@ namespace FantasyRPG
         public void gameStart()
         {
             int userChoice; // define the user choice
+            
+            // defining the different classes and rarity of items
             string[] fantasyClasses = ["Mage", "Knight", "Somali Pirate", "Eucladian Revenant", "Archer", "Sigma male"]; // predefined array of roles
             string[] rarity = ["Archaic", "Uncommon", "Mythical", "Divine"]; // predefined values :3
             int num = 1;
-            string name, favouriteSpell;
 
             Console.WriteLine("Welcome to the dungeon game!");
             Console.WriteLine("\nPick your class");
@@ -305,18 +306,26 @@ namespace FantasyRPG
             switch (userChoice)
             {
                 case 1:
-                    int magicIncrementer = 1; // used to increment the speciality index chosen by the user
                     int choiceIncrementer = 1; // used to increment the user choice when picking magic types
-                    string[] magicChoices = { "Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic (very overpowered)" };
+
+                    // arrays containing the variety of different magic choices, spells and weapons.
+                    string[] magicChoices = {"Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic (very overpowered)"};
+                    string[] fireMagicSpells = ["Infrared", "Blazing Rage", "Flamestrike", "Pyroburst", "Phoenix Fury"];
+                    string[] lightningMagicSpells = ["Thunderstrike", "Striking Surge", "Volt Surge", "Arcane Thunder"];
+                    string[] waterMagicSpells = ["Aqua Torrent", "Hydroburst", "Lunar Tide", "Ripple Cascade"];
+                    string[] darkMagicSpells = ["Shadow Veil", "Umbral Surge", "Wraith's Curse", "Eclipsed Oblivion"];
+                    string[] lightMagicSpells = ["Luminous Beam", "Solar Flare", "Etherial Halo", "Aurora's Illumination", "Divine Judgement"];
+                    string[] eucladianMagicSpells = ["Esoteric Paradigm", "Fractural Fissure", "Quantum Flux", "Etherial Nexus"];
+                    string[] mageWeapons = ["Weathered Oakwand", "Ancient Runestaff", "Runic Wooden Scepter", "Dusty Relic Rod", "Emerald Crystal Staff"];
                     Console.WriteLine("You undergo intense mana training and finally become a Mage.");
 
                     Console.WriteLine("What is your name?");
-                    name = Convert.ToString(Console.ReadLine());
+                    string name = Convert.ToString(Console.ReadLine());
 
                     Console.WriteLine("Name your main spell.");
                     string mainSpell = Convert.ToString(Console.ReadLine());
 
-                    string weaponName = "Wooden Staff (Common)";
+                    string weaponName = "Wooden Staff";
 
                     string weaponType = "Staff";
 
@@ -345,12 +354,24 @@ namespace FantasyRPG
                         chosenSpecialties.Add(magicChoices[chosenSpecialtyIndex - 1]);
                     }
 
-                    Console.WriteLine("\nFinal chosen specialities: " + string.Join(", ", chosenSpecialties));
+                    for (int z = 0; z < chosenSpecialties.Count; z++)
+                    {
+                        // will be used to check the magic specialities chosen by the user
 
-                    Mage newWizard = new Mage(name, weaponName, weaponType, chosenSpecialties.ToArray(), mainSpell);
+                        if (chosenSpecialties[z] == magicChoices[z])
+                        {
+                            Console.WriteLine(magicChoices[z].ToString() + "Spells ");
+                            
+                        }
+                    }
+                        
+
+                        Mage newWizard = new Mage(name, weaponName, weaponType, chosenSpecialties.ToArray(), magicSpells.ToArray());
+                    
 
                     Console.WriteLine("Mage Name: " + name + "\nMage's Weapon Type: " + weaponType + "\nMage's Weapon: " + weaponName + "\nMage's Main Spell: " + mainSpell +
                         "\nMage's Magic Specialties: " + string.Join(", ", chosenSpecialties));
+
 
                     userJourney wizardJourney = new userJourney(); // Journey start!
                     wizardJourney.usersFirstJourney();
