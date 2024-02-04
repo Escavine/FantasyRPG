@@ -9,7 +9,7 @@ namespace FantasyRPG
 {
     class CharacterDefault // fixed preset for all classes
     {
-        // generic character attributes
+        // Generic character attributes
         public string name;
         public int health;
         public string weaponType;
@@ -18,12 +18,12 @@ namespace FantasyRPG
         public float maxPotions;
         public int mana;
 
-        // levelling attributes
+        // Levelling attributes
         public float exp;
         public int level;
         private int experienceRequiredForNextLevel;
 
-        public CharacterDefault(string _name, string _weaponName, string _weaponType) // default preset for all classes during the start of the game :3
+        public CharacterDefault(string _name, string _weaponName, string _weaponType) // Default preset for all classes during the start of the game :3
         {
             name = _name;
             weaponType = _weaponType;
@@ -38,10 +38,10 @@ namespace FantasyRPG
         }
 
 
-        // all methods for all user choice classes
+        // All methods for all user choice classes
         public void CheckInventory()
         {
-            // feature will be added later :3
+            // Feature will be added later during development :3
         }
 
         public void CheckStatus()
@@ -52,7 +52,7 @@ namespace FantasyRPG
             Console.WriteLine("Current level: " + level);
         }
 
-        public void Meditate() // used for recovering spells in inventory and mana
+        public void Meditate() // Used for recovering spells in inventory and mana
         {
             Console.WriteLine(name + " has meditated ");
             mana = mana + 20;
@@ -63,7 +63,7 @@ namespace FantasyRPG
         }
 
 
-        // levelling methods 
+        // Levelling methods 
         public void CalculateExperienceForNextLevel()
         {
             if (level < 5)
@@ -76,7 +76,7 @@ namespace FantasyRPG
                 experienceRequiredForNextLevel = 100 * level;
                 Console.WriteLine("For the next level, you'll need " + experienceRequiredForNextLevel + " amount of experience.");
             }
-            // this sequence of logic will continue as the console game develops (probably not haha)
+            // This sequence of logic will continue as the console game develops (probably not haha)
 
         }
         public void LevelUp()
@@ -99,7 +99,7 @@ namespace FantasyRPG
         }
 
     }
-    class Knight : CharacterDefault // knight class properties and methods
+    class Knight : CharacterDefault // Knight class properties and methods
     {
         public string normalAtkName;
         public string specialAtkName;
@@ -143,12 +143,12 @@ namespace FantasyRPG
 
     }
 
-    class Mage : CharacterDefault // wizard class properties + methods
+    class Mage : CharacterDefault // Wizard class properties + methods
     {
         // Properties for common wizard attributes
         public string[] magicSpells;
-        string[] magicSpeciality; // user can have multiple magic specialties
-        public int spellUsage; // spell usage to keep spells in control
+        string[] magicSpeciality; // User can have multiple magic specialties
+        public int spellUsage; // Spell usage to keep spells in control
 
         public Mage(string _name, string _weaponName, string _weaponType, string[] _magicSpeciality, string[] _magicSpells) : base(_name, _weaponName, _weaponType) 
         {
@@ -162,7 +162,7 @@ namespace FantasyRPG
 
 
         // methods for a wizard
-        public void SpellCast() // spell casting for enemies
+        public void SpellCast() // Spell casting for enemies
         {
             Console.WriteLine(name + " has casted " + spellUsage);
             spellUsage--;
@@ -208,7 +208,7 @@ namespace FantasyRPG
 
         }
 
-        // all methods for the somaliPirate class
+        // All methods for the somaliPirate class
         public void PirateNormalAtk()
         {
             Console.WriteLine("The brave Somali Pirate named " + name + " has used " + weaponName + " to deal " + normalAtkDmg);
@@ -221,7 +221,7 @@ namespace FantasyRPG
 
         public void PirateTraining()
         {
-            // generate a random value for exp
+            // Generate a random value for experience
             Random rd = new Random();
             int rand_num = rd.Next(1, 5);
 
@@ -246,9 +246,9 @@ namespace FantasyRPG
     {
         static void Main(string[] args)
         {
-            int userChoice; // used for the start of the game
+            int userChoice; // Used for the start of the game
 
-            // initation of the console game
+            // Initiation of the console game
             Console.WriteLine("Welcome to the dungeon game!");
             Console.WriteLine("1. Get started");
             Console.WriteLine("2. Load game");
@@ -259,8 +259,8 @@ namespace FantasyRPG
             {
                 case 1:
                     Console.WriteLine("\nGet excited, your game session is now going to begin!");
-                    gameSession game = new gameSession(); // create a new game session
-                    game.gameStart(); // start the game
+                    classSelection selectClass = new classSelection(); // Create a new game session
+                    selectClass.userClass(); // Proceed to let the user pick a character class
                     break;
                 case 2:
                     Console.WriteLine("Unfortunately, this feature isn't avaliable yet :3");
@@ -278,15 +278,15 @@ namespace FantasyRPG
         }
     }
 
-    public class gameSession // if user decides to start a session, they'll be lead here
+    public class classSelection // This class will allow a user to pick from a variety of different roles in the game, before embarking on their journey.
     {
-        public void gameStart()
+        public void userClass()
         {
-            int userChoice; // define the user choice
+            int userChoice; // Define the user choice
             
-            // defining the different classes and rarity of items
-            string[] fantasyClasses = ["Mage", "Knight", "Somali Pirate", "Eucladian Revenant", "Archer", "Sigma male"]; // predefined array of roles
-            string[] rarity = ["Archaic", "Uncommon", "Mythical", "Divine"]; // predefined values :3
+            // Defining the different classes and rarity of items
+            string[] fantasyClasses = ["Mage", "Knight", "Somali Pirate", "Eucladian Revenant", "Archer", "Sigma male"]; // Predefined array of roles
+            string[] rarity = ["Archaic", "Uncommon", "Mythical", "Divine"]; // Predefined values :3
             int num = 1;
 
             Console.WriteLine("Welcome to the dungeon game!");
@@ -305,9 +305,9 @@ namespace FantasyRPG
             switch (userChoice)
             {
                 case 1:
-                    int choiceIncrementer = 1; // used to increment the user choice when picking magic types
+                    int choiceIncrementer = 1; // Used to increment the user choice when picking magic types
 
-                    // arrays containing the variety of different magic choices, spells and weapons.
+                    // Arrays containing the variety of different magic choices, spells and weapons.
                     string[] magicChoices = {"Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic"};
                     string[] fireMagicSpells = ["Infrared", "Blazing Rage", "Flamestrike", "Pyroburst", "Phoenix Fury"];
                     string[] lightningMagicSpells = ["Thunderstrike", "Striking Surge", "Volt Surge", "Arcane Thunder"];
@@ -327,8 +327,8 @@ namespace FantasyRPG
 
                     Console.WriteLine("Choose two magic specialties from the list: \n");
 
-                    List<string> chosenSpecialties = new List<string>(); // chosen magic specialities
-                    List<string> magicSpells = new List<string>(); // chosen magical spells
+                    List<string> chosenSpecialties = new List<string>(); // Chosen magic specialities
+                    List<string> magicSpells = new List<string>(); // Chosen magical spells
 
                     // Display all the magic choices to the user
                     for (int j = 0; j < magicChoices.Length; j++)
@@ -355,6 +355,7 @@ namespace FantasyRPG
                     int totalSpellsDisplayed = 0; // Keep track of the total spells displayed
 
                     // Will be used to check the magic specialities chosen by the user before displaying the range of spells they can pick
+
 
                     for (int z = 0; z < chosenSpecialties.Count; z++)
                     {
@@ -430,19 +431,54 @@ namespace FantasyRPG
                         }
                     }
 
-                    // allow the user to pick 2 magic spells from the 2 classes (that makes 4 magic spells total)
-                    for (int n = 0; n < 3; n++)
+
+                    for (int specialityIndex = 0; specialityIndex < chosenSpecialties.Count; specialityIndex++)
                     {
-                        int firstMagicSpellsChoice;
+                        Console.WriteLine($"Select 2 magic spells for {chosenSpecialties[specialityIndex]} by entering the corresponding numbers.");
 
-                        Console.WriteLine("Select a total of 2 magic spells from each speciality by selecting the corresponding number.");
-                        while (!int.TryParse(Console.ReadLine(), out firstMagicSpellsChoice) || firstMagicSpellsChoice < 1 || firstMagicSpellsChoice > magicChoices.Length)
+                        List<string> currentMagicSpells = new List<string>(); // Dynamic list which will be used to store the chosen magical spells of the users
+
+                        switch (chosenSpecialties[specialityIndex])
                         {
-                            Console.WriteLine("Invalid choice. Please enter a valid number corresponding to the magic specialty.");
+                            case "Fire":
+                                currentMagicSpells = fireMagicSpells.ToList();
+                                break;
+                            case "Lightning":
+                                currentMagicSpells = lightningMagicSpells.ToList();
+                                break;
+                            case "Water":
+                                currentMagicSpells = waterMagicSpells.ToList();
+                                break;
+                            case "Dark":
+                                currentMagicSpells = darkMagicSpells.ToList();
+                                break;
+                            case "Light":
+                                currentMagicSpells = lightMagicSpells.ToList();
+                                break;
+                            case "Eucladian-Magic":
+                                currentMagicSpells = eucladianMagicSpells.ToList();
+                                break;
+                            default:
+                                Console.WriteLine("Unknown magic speciality.");
+                                Environment.Exit(0);
+                                break;
                         }
-                        magicSpells.Add(fireMagicSpells[firstMagicSpellsChoice - 1]);
-                    }
 
+                        int spellIndex = 0; // Keep track of index within array
+
+                        for (int spellNumber = 0; spellNumber < 2; spellNumber++)
+                        {
+                            Console.WriteLine($"Choose magic spell #{spellNumber + 1} for {chosenSpecialties[specialityIndex]}:");
+                            int magicSpellChoice;
+                            while (!int.TryParse(Console.ReadLine(), out magicSpellChoice) || magicSpellChoice < 1 || magicSpellChoice > magicChoices.Length)
+                            {
+                                Console.WriteLine("Invalid choice. Please enter a valid number corresponding to the magic specialty.");
+                            }
+                            magicSpells.Add(currentMagicSpells[magicSpellChoice - 1]);
+                            spellIndex++;
+                        }
+                    }
+                    
 
                     Mage newWizard = new Mage(name, weaponName, weaponType, chosenSpecialties.ToArray(), magicSpells.ToArray());
 
