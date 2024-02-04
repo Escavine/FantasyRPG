@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 
 namespace FantasyRPG
 {
-    class characterDefault // fixed preset for all classes
+    class CharacterDefault // fixed preset for all classes
     {
         // generic character attributes
         public string name;
@@ -23,7 +23,7 @@ namespace FantasyRPG
         public int level;
         private int experienceRequiredForNextLevel;
 
-        public characterDefault(string _name, string _weaponName, string _weaponType) // default preset for all classes during the start of the game :3
+        public CharacterDefault(string _name, string _weaponName, string _weaponType) // default preset for all classes during the start of the game :3
         {
             name = _name;
             weaponType = _weaponType;
@@ -99,7 +99,7 @@ namespace FantasyRPG
         }
 
     }
-    class Knight : characterDefault // knight class properties and methods
+    class Knight : CharacterDefault // knight class properties and methods
     {
         public string normalAtkName;
         public string specialAtkName;
@@ -143,7 +143,7 @@ namespace FantasyRPG
 
     }
 
-    class Mage : characterDefault // wizard class properties + methods
+    class Mage : CharacterDefault // wizard class properties + methods
     {
         // Properties for common wizard attributes
         public string[] magicSpells;
@@ -190,11 +190,11 @@ namespace FantasyRPG
 
     }
 
-    class somaliPirate : characterDefault
+    class SomaliPirate : CharacterDefault
     {
         public string weaponAura, normalAtkName, specialAtkName;
         public int normalAtkDmg, specialAtkDmg, specialAtkCharge;
-        public somaliPirate(string  _name, string _weaponName, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName) : base(_name, _weaponName, _weaponName)
+        public SomaliPirate(string  _name, string _weaponName, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName) : base(_name, _weaponName, _weaponName)
         {
             name = _name;
             weaponName = _weaponName;
@@ -233,8 +233,7 @@ namespace FantasyRPG
 
     }
 
-
-    class Archer : characterDefault
+    class Archer : CharacterDefault
     {
         public Archer(string _name, string _weaponName, string _weaponType) : base(_name, _weaponName, _weaponType)
         {
