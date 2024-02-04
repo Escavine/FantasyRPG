@@ -304,18 +304,19 @@ namespace FantasyRPG
 
             switch (userChoice)
             {
-                case 1:
+                // Should the user decided to become a Mage
+                case 1: 
                     int choiceIncrementer = 1; // Used to increment the user choice when picking magic types
 
                     // Arrays containing the variety of different magic choices, spells and weapons.
-                    string[] magicChoices = {"Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic"};
-                    string[] fireMagicSpells = ["Infrared", "Blazing Rage", "Flamestrike", "Pyroburst", "Phoenix Fury"];
+                    string[] magicChoices = {"Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic"}; // Future Reference: Make a method in the Mage Class that allows for a mage to learn more magic specialities and skills as they level up.
+                    string[] fireMagicSpells = ["Infrared", "Blazing Rage", "Flamestrike", "Pyroburst", "Phoenix Fury"]; // Future Reference: Add a damage system for the magic spells (e.g. infrared deals 8 damage etc.)
                     string[] lightningMagicSpells = ["Thunderstrike", "Striking Surge", "Volt Surge", "Arcane Thunder"];
                     string[] waterMagicSpells = ["Aqua Torrent", "Hydroburst", "Lunar Tide", "Ripple Cascade"];
                     string[] darkMagicSpells = ["Shadow Veil", "Umbral Surge", "Wraith's Curse", "Eclipsed Oblivion"];
                     string[] lightMagicSpells = ["Luminous Beam", "Solar Flare", "Etherial Halo", "Aurora's Illumination", "Divine Judgement"];
                     string[] eucladianMagicSpells = ["Esoteric Paradigm", "Fractural Fissure", "Quantum Flux", "Etherial Nexus"];
-                    string[] mageWeapons = ["Weathered Oakwand", "Ancient Runestaff", "Runic Wooden Scepter", "Dusty Relic Rod", "Emerald Crystal Staff"];
+                    string[] mageWeapons = ["Weathered Oakwand", "Ancient Runestaff", "Runic Wooden Scepter", "Dusty Relic Rod", "Emerald Crystal Staff"]; // Future Reference: Use a random number to decide on which Staff the Mage receives during the start of the game.
                     Console.WriteLine("You undergo intense mana training and finally become a Mage.");
 
                     Console.WriteLine("What is your name?");
