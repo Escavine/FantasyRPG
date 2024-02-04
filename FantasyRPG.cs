@@ -13,6 +13,7 @@ namespace FantasyRPG
         public string name;
         public int health;
         public string weaponType;
+        public string weaponName;
         public float numOfPotionsInInventory;
         public float maxPotions;
         public int mana;
@@ -22,10 +23,11 @@ namespace FantasyRPG
         public int level;
         private int experienceRequiredForNextLevel;
 
-        public characterDefault(string _name, string _weaponType) // default preset for all classes during the start of the game :3
+        public characterDefault(string _name, string _weaponName, string _weaponType) // default preset for all classes during the start of the game :3
         {
             name = _name;
             weaponType = _weaponType;
+            weaponName = _weaponName;
             health = 100; 
             exp = 0f;
             numOfPotionsInInventory = 0;
@@ -39,7 +41,7 @@ namespace FantasyRPG
         // all methods for all user choice classes
         public void CheckInventory()
         {
-            //
+            // feature will be added later :3
         }
 
         public void CheckStatus()
@@ -105,10 +107,11 @@ namespace FantasyRPG
         public int normalAtkDmg;
         public int specialAtkRecharge;// Percentage value representing 100%
 
-        public Knight(string _name, string _weaponType, string _specialAtkName) : base(_name, _weaponType)
+        public Knight(string _name, string _weaponName, string _weaponType, string _specialAtkName) : base(_name, _weaponName, _weaponType)
         {
             name = _name;
-            weaponType = "Longsword";
+            weaponName = _weaponName;
+            weaponType = _weaponType;
             specialAtkName = _specialAtkName;
             normalAtkName = "Sword Slash";
             specialAtkRecharge = 100; // 100% preset
@@ -147,9 +150,10 @@ namespace FantasyRPG
         string[] magicSpeciality; // user can have multiple magic specialties
         public int spellsInInventory;
 
-        public Mage(string _name, string _weaponType, string[] _magicSpeciality, string _mainSpell) : base(_name, _weaponType) 
+        public Mage(string _name, string _weaponName, string _weaponType, string[] _magicSpeciality, string _mainSpell) : base(_name, _weaponName, _weaponType) 
         {
             name = _name;
+            weaponName = _weaponName;
             weaponType = _weaponType;
             magicSpeciality = _magicSpeciality; 
             mainSpell = _mainSpell; // Predefined variables for every new wizard in the game
@@ -188,9 +192,9 @@ namespace FantasyRPG
 
     class somaliPirate : characterDefault
     {
-        public string weaponAura, weaponName, normalAtkName, specialAtkName;
+        public string weaponAura, normalAtkName, specialAtkName;
         public int normalAtkDmg, specialAtkDmg, specialAtkCharge;
-        public somaliPirate(string  _name, string _weaponName, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName) : base(_name, _weaponName)
+        public somaliPirate(string  _name, string _weaponName, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName) : base(_name, _weaponName, _weaponName)
         {
             name = _name;
             weaponName = _weaponName;
@@ -207,12 +211,12 @@ namespace FantasyRPG
         // all methods for the somaliPirate class
         public void PirateNormalAtk()
         {
-            Console.WriteLine(name + " has used " + weaponName + " to deal " + normalAtkDmg);
+            Console.WriteLine("The brave Somali Pirate named " + name + " has used " + weaponName + " to deal " + normalAtkDmg);
         }
 
         public void PirateSpecialAtk()
         {
-            Console.WriteLine(name + " has used " + weaponName + " to deal " + specialAtkDmg);
+            Console.WriteLine("The brave Somali Pirate named " + name + " has used " + weaponName + " to deal " + specialAtkDmg);
         }
 
         public void PirateTraining()
@@ -227,6 +231,17 @@ namespace FantasyRPG
         }
 
 
+    }
+
+
+    class Archer : characterDefault
+    {
+        public Archer(string _name, string _weaponName, string _weaponType) : base(_name, _weaponName, _weaponType)
+        {
+            name = _name;
+            weaponName = _weaponName;
+            weaponType = _weaponType;
+        }
     }
     class gameMenu
     {
@@ -269,7 +284,8 @@ namespace FantasyRPG
         public void gameStart()
         {
             int userChoice; // define the user choice
-            string[] fantasyClasses = ["Mage", "Knight", "Somali Pirate", "Nigerian Scammer", "Jakaria Ahmed Sigma", "Devious Sigma"]; // predefined array of roles
+            string[] fantasyClasses = ["Mage", "Knight", "Somali Pirate", "Eucladian Revenant", "Archer", "Sigma male"]; // predefined array of roles
+            string[] rarity = ["Archaic", "Uncommon", "Mythical", "Divine"]; // predefined values :3
             int num = 1;
             string name, favouriteSpell;
 
@@ -300,6 +316,8 @@ namespace FantasyRPG
                     Console.WriteLine("Name your main spell.");
                     string mainSpell = Convert.ToString(Console.ReadLine());
 
+                    string weaponName = "Wooden Staff (Common)";
+
                     string weaponType = "Staff";
 
                     Console.WriteLine("Choose two magic specialties from the list: \n");
@@ -329,9 +347,9 @@ namespace FantasyRPG
 
                     Console.WriteLine("\nFinal chosen specialities: " + string.Join(", ", chosenSpecialties));
 
-                    Mage newWizard = new Mage(name, weaponType, chosenSpecialties.ToArray(), mainSpell);
+                    Mage newWizard = new Mage(name, weaponName, weaponType, chosenSpecialties.ToArray(), mainSpell);
 
-                    Console.WriteLine("Mage Name: " + name + "\nMage's Weapon: " + weaponType + "\nMage's Main Spell: " + mainSpell +
+                    Console.WriteLine("Mage Name: " + name + "\nMage's Weapon Type: " + weaponType + "\nMage's Weapon: " + weaponName + "\nMage's Main Spell: " + mainSpell +
                         "\nMage's Magic Specialties: " + string.Join(", ", chosenSpecialties));
 
                     userJourney wizardJourney = new userJourney(); // Journey start!
@@ -340,7 +358,7 @@ namespace FantasyRPG
                     break;
 
                 case 4:
-                    Console.WriteLine("After suffering in the slums of Africa and scamming, your finally a full fledged scammer!");
+                    Console.WriteLine("After long endurance of physical training, your eyes are as sharp as fangs and bowmanship is now your speciality.");
 
                     Console.WriteLine("What is your name?");
                     name = Convert.ToString(Console.ReadLine());
