@@ -355,72 +355,77 @@ namespace FantasyRPG
                     // Will be used to check the magic specialities chosen by the user before displaying the range of spells they can pick
                     for (int z = 0; z < chosenSpecialties.Count; z++)
                     {
+                        Console.WriteLine("\n" + chosenSpecialties[z] + " Spells:");
+
                         int spellsDeterminer = 1;
 
-                        // Correct the comparison to the specific magic specialities
-                        if (chosenSpecialties[z] == "Fire")
+                        switch (chosenSpecialties[z])
                         {
-                            Console.WriteLine("\n" + chosenSpecialties[z] + " Spells:");
-                            foreach (string spell in fireMagicSpells)
-                            {
-                                Console.WriteLine(spellsDeterminer + ". " + fireMagicSpells[z]);
-                                spellsDeterminer++;
-                            }
+                            case "Fire":
+                                foreach (string spell in fireMagicSpells)
+                                {
+                                    Console.WriteLine(spellsDeterminer + ". " + spell);
+                                    spellsDeterminer++;
+                                    Console.WriteLine("Press Enter to see the next spell...");
+                                    Console.ReadLine();
+                                }
+                                break;
+                            case "Lightning":
+                                foreach (string spell in lightningMagicSpells)
+                                {
+                                    Console.WriteLine(spellsDeterminer + ". " + spell);
+                                    spellsDeterminer++;
+                                    Console.WriteLine("Press Enter to see the next spell...");
+                                    Console.ReadLine();
+                                }
+                                break;
+                            case "Water":
+                                foreach (string spell in waterMagicSpells)
+                                {
+                                    Console.WriteLine(spellsDeterminer + ". " + spell);
+                                    spellsDeterminer++;
+                                    Console.WriteLine("Press Enter to see the next spell...");
+                                    Console.ReadLine();
+                                }
+                                break;
+                            case "Dark":
+                                foreach (string spell in darkMagicSpells)
+                                {
+                                    Console.WriteLine(spellsDeterminer + ". " + spell);
+                                    spellsDeterminer++;
+                                    Console.WriteLine("Press Enter to see the next spell...");
+                                    Console.ReadLine();
+                                }
+                                break;
+                            case "Light":
+                                foreach (string spell in lightMagicSpells)
+                                {
+                                    Console.WriteLine(spellsDeterminer + ". " + spell);
+                                    spellsDeterminer++;
+                                    Console.WriteLine("Press Enter to see the next spell...");
+                                    Console.ReadLine();
+                                }
+                                break;
+                            case "Eucladian-Magic":
+                                foreach (string spell in eucladianMagicSpells)
+                                {
+                                    Console.WriteLine(spellsDeterminer + ". " + spell);
+                                    spellsDeterminer++;
+                                    Console.WriteLine("Press Enter to see the next spell...");
+                                    Console.ReadLine();
+                                }
+                                break;
+                            default:
+                                Console.WriteLine("Unknown Error");
+                                Environment.Exit(0);
+                                break;
                         }
-                        else if (chosenSpecialties[z] == "Lightning")
-                        {
-                            Console.WriteLine("\n" + chosenSpecialties[z] + " Spells:");
-                            spellsDeterminer++;
-                            foreach (string spell in lightningMagicSpells)
-                            {
-                                Console.WriteLine(spellsDeterminer + ". " + lightningMagicSpells[z]);
-                                spellsDeterminer++;
-                            }
-                        }
-                        else if (chosenSpecialties[z] == "Water")
-                        {
-                            Console.WriteLine("\n" + chosenSpecialties[z] + " Spells:");
-                            spellsDeterminer++;
-                            foreach (string spell in fireMagicSpells)
-                            {
-                                Console.WriteLine(spellsDeterminer + ". " + waterMagicSpells[z]);
-                                spellsDeterminer++;
-                            }
-                            // Add similar checks for other magic specialities (Water, Lightning, etc.)
 
-                            spellsDeterminer++; // Increment the counter for the next set of spells
-                        }
-                        else if (chosenSpecialties[z] == "Dark")
+                        // Optionally, you can prompt for the next specialty
+                        if (z < chosenSpecialties.Count - 1)
                         {
-                            Console.WriteLine("\n" + chosenSpecialties[z] + " Spells:");
-                            spellsDeterminer++;
-                            foreach (string spell in darkMagicSpells)
-                            {
-                                Console.WriteLine(spellsDeterminer + ". " + darkMagicSpells[z]);
-                            }
-                        }
-                        else if (chosenSpecialties[z] == "Light")
-                        {
-                            Console.WriteLine("\n" + chosenSpecialties[z] + " Spells:");
-                            spellsDeterminer++;
-                            foreach (string spell in lightMagicSpells)
-                            {
-                                Console.WriteLine(lightMagicSpells[z]);
-                            }
-                        }
-                        else if (chosenSpecialties[z] == "Eucladian-Magic")
-                        {
-                            Console.WriteLine("\n" +chosenSpecialties[z] + " Spells:");
-                            spellsDeterminer++;
-                            foreach (string spell in eucladianMagicSpells)
-                            {
-                                Console.WriteLine(spellsDeterminer + ". " + eucladianMagicSpells[z]);
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Unknown Error");
-                            Environment.Exit(0);
+                            Console.WriteLine("\nPress Enter to see the spells for the next specialty...");
+                            Console.ReadLine();
                         }
                     }
 
@@ -443,6 +448,7 @@ namespace FantasyRPG
 
                     Console.WriteLine("Mage Name: " + name + "\nMage's Weapon Type: " + weaponType + "\nMage's Weapon: " + weaponName +
                             "\nMage's Magic Specialties: " + string.Join(", ", chosenSpecialties));
+                    Console.WriteLine("Mage's Chosen Spells: " + string.Join(", ", magicSpells));
 
 
                     userJourney wizardJourney = new userJourney(); // Journey start!
