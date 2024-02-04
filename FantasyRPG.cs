@@ -309,7 +309,7 @@ namespace FantasyRPG
                     int choiceIncrementer = 1; // used to increment the user choice when picking magic types
 
                     // arrays containing the variety of different magic choices, spells and weapons.
-                    string[] magicChoices = {"Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic (very overpowered)"};
+                    string[] magicChoices = {"Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic"};
                     string[] fireMagicSpells = ["Infrared", "Blazing Rage", "Flamestrike", "Pyroburst", "Phoenix Fury"];
                     string[] lightningMagicSpells = ["Thunderstrike", "Striking Surge", "Volt Surge", "Arcane Thunder"];
                     string[] waterMagicSpells = ["Aqua Torrent", "Hydroburst", "Lunar Tide", "Ripple Cascade"];
@@ -322,16 +322,14 @@ namespace FantasyRPG
                     Console.WriteLine("What is your name?");
                     string name = Convert.ToString(Console.ReadLine());
 
-                    Console.WriteLine("Name your main spell.");
-                    string mainSpell = Convert.ToString(Console.ReadLine());
-
                     string weaponName = "Wooden Staff";
 
                     string weaponType = "Staff";
 
                     Console.WriteLine("Choose two magic specialties from the list: \n");
 
-                    List<string> chosenSpecialties = new List<string>();
+                    List<string> chosenSpecialties = new List<string>(); // chosen magic specialities
+                    List<string> magicSpells = new List<string>(); // chosen magical spells
 
                     // Display all the magic choices to the user
                     for (int j = 0; j < magicChoices.Length; j++)
@@ -354,37 +352,113 @@ namespace FantasyRPG
                         chosenSpecialties.Add(magicChoices[chosenSpecialtyIndex - 1]);
                     }
 
+
+                    // Will be used to check the magic specialities chosen by the user before displaying the range of spells they can pick
                     for (int z = 0; z < chosenSpecialties.Count; z++)
                     {
-                        // will be used to check the magic specialities chosen by the user
+                        int spellsDeterminer = 1;
 
-                        if (chosenSpecialties[z] == magicChoices[z])
+                        // Correct the comparison to the specific magic specialities
+                        if (chosenSpecialties[z] == "Fire")
                         {
-                            Console.WriteLine(magicChoices[z].ToString() + "Spells ");
-                            
+                            Console.WriteLine("\n" + chosenSpecialties[z] + " Spells:");
+                            foreach (string spell in fireMagicSpells)
+                            {
+                                Console.WriteLine(spellsDeterminer + ". " + fireMagicSpells[z]);
+                                spellsDeterminer++;
+                            }
+                        }
+                        else if (chosenSpecialties[z] == "Lightning")
+                        {
+                            Console.WriteLine("\n" + chosenSpecialties[z] + " Spells:");
+                            spellsDeterminer++;
+                            foreach (string spell in lightningMagicSpells)
+                            {
+                                Console.WriteLine(spellsDeterminer + ". " + lightningMagicSpells[z]);
+                                spellsDeterminer++;
+                            }
+                        }
+                        else if (chosenSpecialties[z] == "Water")
+                        {
+                            Console.WriteLine("\n" + chosenSpecialties[z] + " Spells:");
+                            spellsDeterminer++;
+                            foreach (string spell in fireMagicSpells)
+                            {
+                                Console.WriteLine(spellsDeterminer + ". " + waterMagicSpells[z]);
+                                spellsDeterminer++;
+                            }
+                            // Add similar checks for other magic specialities (Water, Lightning, etc.)
+
+                            spellsDeterminer++; // Increment the counter for the next set of spells
+                        }
+                        else if (chosenSpecialties[z] == "Dark")
+                        {
+                            Console.WriteLine("\n" + chosenSpecialties[z] + " Spells:");
+                            spellsDeterminer++;
+                            foreach (string spell in darkMagicSpells)
+                            {
+                                Console.WriteLine(spellsDeterminer + ". " + darkMagicSpells[z]);
+                            }
+                        }
+                        else if (chosenSpecialties[z] == "Light")
+                        {
+                            Console.WriteLine("\n" + chosenSpecialties[z] + " Spells:");
+                            spellsDeterminer++;
+                            foreach (string spell in lightMagicSpells)
+                            {
+                                Console.WriteLine(lightMagicSpells[z]);
+                            }
+                        }
+                        else if (chosenSpecialties[z] == "Eucladian-Magic")
+                        {
+                            Console.WriteLine("\n" +chosenSpecialties[z] + " Spells:");
+                            spellsDeterminer++;
+                            foreach (string spell in eucladianMagicSpells)
+                            {
+                                Console.WriteLine(spellsDeterminer + ". " + eucladianMagicSpells[z]);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Unknown Error");
+                            Environment.Exit(0);
                         }
                     }
-                        
 
-                        Mage newWizard = new Mage(name, weaponName, weaponType, chosenSpecialties.ToArray(), magicSpells.ToArray());
-                    
+                    // allow the user to pick 2 magic spells from the 2 classes (that makes 4 magic spells total)
+                    for (int n = 0; n < 3; n++)
+                    {
+                        int firstMagicSpellsChoice;
 
-                    Console.WriteLine("Mage Name: " + name + "\nMage's Weapon Type: " + weaponType + "\nMage's Weapon: " + weaponName + "\nMage's Main Spell: " + mainSpell +
-                        "\nMage's Magic Specialties: " + string.Join(", ", chosenSpecialties));
+                        Console.WriteLine("Choose 2 magic spells for this speciality by selecting the corresponding number.");
+                        while (!int.TryParse(Console.ReadLine(), out firstMagicSpellsChoice) || firstMagicSpellsChoice < 1 || firstMagicSpellsChoice > magicChoices.Length)
+                        {
+                            Console.WriteLine("Invalid choice. Please enter a valid number corresponding to the magic specialty.");
+                        }
+                        magicSpells.Add(fireMagicSpells[firstMagicSpellsChoice - 1]);
+                    }
+
+
+                    Mage newWizard = new Mage(name, weaponName, weaponType, chosenSpecialties.ToArray(), magicSpells.ToArray());
+
+
+                    Console.WriteLine("Mage Name: " + name + "\nMage's Weapon Type: " + weaponType + "\nMage's Weapon: " + weaponName +
+                            "\nMage's Magic Specialties: " + string.Join(", ", chosenSpecialties));
 
 
                     userJourney wizardJourney = new userJourney(); // Journey start!
                     wizardJourney.usersFirstJourney();
-
                     break;
+
+                case 2:
+
+
+                case 3:
 
                 case 4:
                     Console.WriteLine("After long endurance of physical training, your eyes are as sharp as fangs and bowmanship is now your speciality.");
-
                     Console.WriteLine("What is your name?");
                     name = Convert.ToString(Console.ReadLine());
-
-
                     break;
                 case 5:
                     Console.ForegroundColor = ConsoleColor.Red; // devious colour hahahaha
@@ -402,10 +476,8 @@ namespace FantasyRPG
                     Console.ForegroundColor = ConsoleColor.Red; // devious colour hahahaha
                     Console.WriteLine("Please pick a sensible choice and understand if you do that again you'll be punished hahaha");
                     break;
-            }
-
-
-
+                }
+                        
         }
     }
 
@@ -430,7 +502,7 @@ namespace FantasyRPG
                 case 1:
                     Console.BackgroundColor = ConsoleColor.Red;
                     Console.WriteLine("Your level is too low, the dragon proceeds to consume you whole in your defenseless state.");
-                    
+  
                     Console.WriteLine("You died.");
                     break;
 
