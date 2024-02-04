@@ -342,7 +342,7 @@ namespace FantasyRPG
                     {
                         int chosenSpecialtyIndex;
 
-                        Console.WriteLine("Choose a magic specialty by entering the corresponding number:");
+                        Console.WriteLine("\nChoose a magic specialty by entering the corresponding number:");
                         while (!int.TryParse(Console.ReadLine(), out chosenSpecialtyIndex) || chosenSpecialtyIndex < 1 || chosenSpecialtyIndex > magicChoices.Length)
                         {
                             Console.WriteLine("Invalid choice. Please enter a valid number corresponding to the magic specialty.");
@@ -352,20 +352,21 @@ namespace FantasyRPG
                     }
 
 
+                    int totalSpellsDisplayed = 0; // Keep track of the total spells displayed
+
                     // Will be used to check the magic specialities chosen by the user before displaying the range of spells they can pick
+
                     for (int z = 0; z < chosenSpecialties.Count; z++)
                     {
                         Console.WriteLine("\n" + chosenSpecialties[z] + " Spells:");
-
-                        int spellsDeterminer = 1;
 
                         switch (chosenSpecialties[z])
                         {
                             case "Fire":
                                 foreach (string spell in fireMagicSpells)
                                 {
-                                    Console.WriteLine(spellsDeterminer + ". " + spell);
-                                    spellsDeterminer++;
+                                    Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                                    totalSpellsDisplayed++;
                                     Console.WriteLine("Press Enter to see the next spell...");
                                     Console.ReadLine();
                                 }
@@ -373,8 +374,8 @@ namespace FantasyRPG
                             case "Lightning":
                                 foreach (string spell in lightningMagicSpells)
                                 {
-                                    Console.WriteLine(spellsDeterminer + ". " + spell);
-                                    spellsDeterminer++;
+                                    Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                                    totalSpellsDisplayed++;
                                     Console.WriteLine("Press Enter to see the next spell...");
                                     Console.ReadLine();
                                 }
@@ -382,8 +383,8 @@ namespace FantasyRPG
                             case "Water":
                                 foreach (string spell in waterMagicSpells)
                                 {
-                                    Console.WriteLine(spellsDeterminer + ". " + spell);
-                                    spellsDeterminer++;
+                                    Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                                    totalSpellsDisplayed++;
                                     Console.WriteLine("Press Enter to see the next spell...");
                                     Console.ReadLine();
                                 }
@@ -391,8 +392,8 @@ namespace FantasyRPG
                             case "Dark":
                                 foreach (string spell in darkMagicSpells)
                                 {
-                                    Console.WriteLine(spellsDeterminer + ". " + spell);
-                                    spellsDeterminer++;
+                                    Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                                    totalSpellsDisplayed++;
                                     Console.WriteLine("Press Enter to see the next spell...");
                                     Console.ReadLine();
                                 }
@@ -400,8 +401,8 @@ namespace FantasyRPG
                             case "Light":
                                 foreach (string spell in lightMagicSpells)
                                 {
-                                    Console.WriteLine(spellsDeterminer + ". " + spell);
-                                    spellsDeterminer++;
+                                    Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                                    totalSpellsDisplayed++;
                                     Console.WriteLine("Press Enter to see the next spell...");
                                     Console.ReadLine();
                                 }
@@ -409,8 +410,8 @@ namespace FantasyRPG
                             case "Eucladian-Magic":
                                 foreach (string spell in eucladianMagicSpells)
                                 {
-                                    Console.WriteLine(spellsDeterminer + ". " + spell);
-                                    spellsDeterminer++;
+                                    Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                                    totalSpellsDisplayed++;
                                     Console.WriteLine("Press Enter to see the next spell...");
                                     Console.ReadLine();
                                 }
@@ -434,7 +435,7 @@ namespace FantasyRPG
                     {
                         int firstMagicSpellsChoice;
 
-                        Console.WriteLine("Choose 2 magic spells for this speciality by selecting the corresponding number.");
+                        Console.WriteLine("Select a total of 2 magic spells from each speciality by selecting the corresponding number.");
                         while (!int.TryParse(Console.ReadLine(), out firstMagicSpellsChoice) || firstMagicSpellsChoice < 1 || firstMagicSpellsChoice > magicChoices.Length)
                         {
                             Console.WriteLine("Invalid choice. Please enter a valid number corresponding to the magic specialty.");
