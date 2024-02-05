@@ -189,15 +189,30 @@ namespace FantasyRPG
 
         }
 
-        public void chooseSpeciality(string[] magicSpeciality, string name) // Should the mage level up, they'll be able to pick another speciality (only 1)
+        public void chooseNewSpeciality(string[] magicSpeciality, string name) // Should the mage level up, they'll be able to pick another speciality (only 1)
         {
             // For every 10 levels, a mage can pick a new speciality
 
+            Console.Clear(); // Cleaning purposes
+
+            Console.BackgroundColor = ConsoleColor.Blue;
             string userInput;
             int correspondingNumOrder = 1;
-
-            string[] magicChoices = { "Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic" };
             List<string> updatedMagicChoices = new List<string>();
+            string[] chosenSpecialties = magicSpeciality;
+
+            // Magic choices + Elements
+            string[] magicChoices = { "Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic" };
+            string[] fireMagicSpells = { "Infrared", "Blazing Rage", "Flamestrike", "Pyroburst", "Phoenix Fury" }; // Future Reference: Add a damage system for the magic spells (e.g. infrared deals 8 damage etc.)
+            string[] lightningMagicSpells = { "Thunderstrike", "Striking Surge", "Volt Surge", "Arcane Thunder" };
+            string[] waterMagicSpells = { "Aqua Torrent", "Hydroburst", "Lunar Tide", "Ripple Cascade" };
+            string[] darkMagicSpells = { "Shadow Veil", "Umbral Surge", "Wraith's Curse", "Eclipsed Oblivion" };
+            string[] lightMagicSpells = { "Luminous Beam", "Solar Flare", "Etherial Halo", "Aurora's Illumination", "Divine Judgement" };
+            string[] eucladianMagicSpells = { "Esoteric Paradigm", "Fractural Fissure", "Quantum Flux", "Etherial Nexus" };
+
+
+            // Output this to the terminal
+            Console.WriteLine("Mage's Prestiege!");
             Console.WriteLine("\n" + name + "'s" + " current known magic specialities.");
 
 
@@ -217,6 +232,7 @@ namespace FantasyRPG
 
             Console.WriteLine("\nPick a new magic speciality!");
 
+
             for (int i = 0; i < updatedMagicChoices.Count; i++)
             {
                 Console.WriteLine(correspondingNumOrder + ". " + updatedMagicChoices[i]); // Display the magic choices avaliable to the user
@@ -229,12 +245,34 @@ namespace FantasyRPG
             Console.WriteLine("Input based on the corresponding number");
 
             // Appending the magic element to array.
+            int selectedIndex;
 
-            Array.Resize(ref magicSpeciality, magicSpeciality.Length + 1);
-            magicSpeciality[magicSpeciality.Length - 1] = userInput;
+            if (int.TryParse(userInput, out selectedIndex) && selectedIndex >= 1 && selectedIndex <= updatedMagicChoices.Count)
+            {
+                // chosenSpecialties is used to keep track of the magic that was learnt
+                chosenSpecialties[0] = updatedMagicChoices[selectedIndex - 1];
+                Console.WriteLine(name + " has learnt the magic speciality: " + chosenSpecialties[0]);
+                chosenSpecialties = null; // Clear the array of any specialties, for the next time this is run
 
 
+                Array.Resize(ref magicSpeciality, magicSpeciality.Length + 1);
+                magicSpeciality[magicSpeciality.Length - 1] = updatedMagicChoices[selectedIndex - 1];
+                Console.WriteLine($"Updated magic specialties: {string.Join(", ", magicSpeciality)}");
 
+                learnNewSpells(); // Redirect the user to this function for them to learn new spells for their given speciality.
+
+
+            }
+            else
+            {
+                // Invalid input
+                Console.WriteLine("Invalid input. Please enter a valid number corresponding to the magic speciality.");
+            }
+        }
+
+        public void learnNewSpells()
+        {
+            //
         }
 
     }
@@ -448,6 +486,7 @@ namespace FantasyRPG
                     string[] eucladianMagicSpells = { "Esoteric Paradigm", "Fractural Fissure", "Quantum Flux", "Etherial Nexus" };
                     string[] starterMageWeapons = { "Weathered Oakwand", "Ancient Runestaff", "Runic Wooden Scepter", "Dusty Relic Rod", "Emerald Crystal Staff" };
 
+                    Console.Clear(); // Cleaning purposes
                     Console.WriteLine("\n");
                     Console.WriteLine("Mage's Route");
                     Console.WriteLine("\nYou undergo intense mana training and finally become a Mage.");
@@ -617,7 +656,7 @@ namespace FantasyRPG
 
 
                     Mage newWizard = new Mage(name, weaponName, weaponType, chosenSpecialties.ToArray(), magicSpells.ToArray());
-                    newWizard.chooseSpeciality(chosenSpecialties.ToArray(), name); // Debugging 
+                    newWizard.chooseNewSpeciality(chosenSpecialties.ToArray(), name); // Debugging 
 
 
                     Console.WriteLine("Mage Name: " + name + "\nMage's Weapon Type: " + weaponType + "\nMage's Weapon: " + weaponName +
