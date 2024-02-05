@@ -291,24 +291,29 @@ namespace FantasyRPG
     {
         static void Main(string[] args)
         {
+            // Future reference: Implementing AI mobs and perhaps AI individuals
+
             int userChoice; // Used for the start of the game
             string[] gameTips = ["Did you know that every 10 levels, you can get an extra ability/speciality?",
                 "This game is still in development, so if there's an issue please contact me through my GitHub (Escavine) and send a pull request which I'll review.",
             "Eucladian abilities are very overpowered, but in turn they'll cost you some health.", "This game have a sneaky RNG factor, you'll see later as you play :3",
-            "Should I introduce a harem feature in this game?!?!?!"];
+            "For you down bad individuals, I MIGHT introduce a harem feature, perhaps implement it with AI, imagine how insane that'll be? LOL"]; // Array containing necessary game tips, more will be added in the future.
 
             // Initiation of the console game
-            Console.WriteLine("Welcome to the dungeon game!");
+            Console.WriteLine("---------FantasyRPG----------\n");
+            Console.WriteLine("Game advice: When inputting values, input a corresponding value to the action (e.g. enter the value 1 in order to start the game\n"); // Display game advice
+            Random ran = new Random();
+            int ran_num = ran.Next(0, 5);
+            Console.WriteLine("Game Tip: " + gameTips[ran_num] + "\n"); // Display a random game tip in the menu
+
+            Console.WriteLine("Game Menu\n");
             Console.WriteLine("1. Get started");
             Console.WriteLine("2. Load game");
             Console.WriteLine("3. Help");
-
-            Random ran = new Random();
-            int ran_num = ran.Next(0, 4);
-            Console.WriteLine("Game Tip: " + gameTips[ran_num]); // Display a random game tip in the menu
-           
-     
-
+            Console.WriteLine("4. Make a suggestion");
+            Console.WriteLine("5. Future plans");
+            
+            // Register user input
             userChoice = Convert.ToInt32(Console.ReadLine());
 
             switch (userChoice)
@@ -341,7 +346,7 @@ namespace FantasyRPG
             int userChoice; // Define the user choice
             
             // Defining the different classes and rarity of items
-            string[] fantasyClasses = ["Mage", "Knight", "Somali Pirate", "Eucladian Revenant", "Archer", "Sigma male"]; // Predefined array of roles
+            string[] fantasyClasses = ["Mage", "Knight", "Somali Pirate", "Shadowwrath", "Archer", "Assassin"]; // Predefined array of roles
             string[] rarity = ["Archaic", "Uncommon", "Mythical", "Divine"]; // Predefined values :3
             int num = 1;
 
@@ -376,7 +381,7 @@ namespace FantasyRPG
 
                     Console.WriteLine("\n");
                     Console.WriteLine("Mage's Route");
-                    Console.WriteLine("You undergo intense mana training and finally become a Mage.");
+                    Console.WriteLine("\nYou undergo intense mana training and finally become a Mage.");
 
                     Console.WriteLine("What is your name?");
                     string name = Convert.ToString(Console.ReadLine());
