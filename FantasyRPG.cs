@@ -29,13 +29,13 @@ namespace FantasyRPG
             name = _name;
             weaponType = _weaponType;
             weaponName = _weaponName;
-            health = 100; 
+            health = 100;
             exp = 0f;
             numOfPotionsInInventory = 0;
-            maxPotions = 5; 
+            maxPotions = 5;
             level = 1;
             mana = 100;
-            
+
         }
 
 
@@ -151,12 +151,12 @@ namespace FantasyRPG
         string[] magicSpeciality; // User can have multiple magic specialties
         public int spellUsage; // Spell usage to keep spells in control
 
-        public Mage(string _name, string _weaponName, string _weaponType, string[] _magicSpeciality, string[] _magicSpells) : base(_name, _weaponName, _weaponType) 
+        public Mage(string _name, string _weaponName, string _weaponType, string[] _magicSpeciality, string[] _magicSpells) : base(_name, _weaponName, _weaponType)
         {
             name = _name;
             weaponName = _weaponName;
             weaponType = _weaponType;
-            magicSpeciality = _magicSpeciality; 
+            magicSpeciality = _magicSpeciality;
             magicSpells = _magicSpells; // Predefined variables for every new wizard in the game
             spellUsage = 5;
         }
@@ -193,7 +193,7 @@ namespace FantasyRPG
         {
             // For every 10 levels, a mage can pick a new speciality
 
-            int userInput;
+            string userInput;
             int correspondingNumOrder = 1;
 
             string[] magicChoices = { "Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic" };
@@ -201,9 +201,9 @@ namespace FantasyRPG
             Console.WriteLine("\n" + name + "'s" + " current known magic specialities.");
 
 
-            for (int j=0; j<magicSpeciality.Length; j++) // Display the user's current magic specialties
+            for (int j = 0; j < magicSpeciality.Length; j++) // Display the user's current magic specialties
             {
-                Console.WriteLine(magicSpeciality[j]); 
+                Console.WriteLine(magicSpeciality[j]);
             }
 
             // Updating the magic choices by appending the magic elements that the user doesn't possess in a list
@@ -217,23 +217,21 @@ namespace FantasyRPG
 
             Console.WriteLine("\nPick a new magic speciality!");
 
-            for (int i=0; i<updatedMagicChoices.Count; i++)
+            for (int i = 0; i < updatedMagicChoices.Count; i++)
             {
                 Console.WriteLine(correspondingNumOrder + ". " + updatedMagicChoices[i]); // Display the magic choices avaliable to the user
                 correspondingNumOrder++;
 
             }
-            
+
+            userInput = Convert.ToString(Console.ReadLine());
+
             Console.WriteLine("Input based on the corresponding number");
 
-            userInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
+            // Appending the magic element to array.
 
-            // switch(updatedMagicChoices[userInput])
-            //{
-             //   case userInput:
-               //     break;
-            //}
-
+            Array.Resize(ref magicSpeciality, magicSpeciality.Length + 1);
+            magicSpeciality[magicSpeciality.Length - 1] = userInput;
 
 
 
@@ -245,7 +243,7 @@ namespace FantasyRPG
     {
         public string weaponAura, normalAtkName, specialAtkName;
         public int normalAtkDmg, specialAtkDmg, specialAtkCharge;
-        public SomaliPirate(string  _name, string _weaponName, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName) : base(_name, _weaponName, _weaponName)
+        public SomaliPirate(string _name, string _weaponName, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName) : base(_name, _weaponName, _weaponName)
         {
             name = _name;
             weaponName = _weaponName;
@@ -300,10 +298,10 @@ namespace FantasyRPG
             // Future reference: Implementing AI mobs and perhaps AI individuals
 
             int userChoice; // Used for the start of the game
-            string[] gameTips = ["Did you know that every 10 levels, you can get an extra ability/speciality?",
+            string[] gameTips = {"Did you know that every 10 levels, you can get an extra ability/speciality?",
                 "This game is still in development, so if there's an issue please contact me through my GitHub (Escavine) and send a pull request which I'll review.",
             "Eucladian abilities are very overpowered, but in turn they'll cost you some health.", "This game have a sneaky RNG factor, you'll see later as you play :3",
-            "For you down bad individuals, I MIGHT introduce a harem feature, perhaps implement it with AI, imagine how insane that'll be? LOL"]; // Array containing necessary game tips, more will be added in the future.
+            "For you down bad individuals, I MIGHT introduce a harem feature, perhaps implement it with AI, imagine how insane that'll be? LOL" }; // Array containing necessary game tips, more will be added in the future.
 
             // Initiation of the console game
             Console.WriteLine("---------FantasyRPG----------\n");
@@ -315,10 +313,10 @@ namespace FantasyRPG
             Console.WriteLine("Game Menu\n");
             Console.WriteLine("1. Get started");
             Console.WriteLine("2. Load save game"); // Feature doesn't work yet
-            Console.WriteLine("3. Help"); 
+            Console.WriteLine("3. Help");
             Console.WriteLine("4. Make a suggestion"); // Feature doesn't work yet
-            Console.WriteLine("5. Future plans"); 
-            
+            Console.WriteLine("5. Future plans");
+
             // Register user input
             userChoice = Convert.ToInt32(Console.ReadLine());
 
@@ -335,10 +333,10 @@ namespace FantasyRPG
                     break;
                 case 3:
                     int userInput;
-                    string[] gameAdvice = ["You might die at any point within the game unknowingly.",
+                    string[] gameAdvice = { "You might die at any point within the game unknowingly.",
                         "Eucladian abilities are quite overpowered, if you find the opportunity to pursue it, then do so.",
-                    "Having a strong romantical bond with someone, can potentially increase your abilities.", "There are many classes to choose from, all having unique features.", 
-                    "Avoid fighting overpowered foes early in-game (i.e. dragons), you'll probably get destroyed."];
+                    "Having a strong romantical bond with someone, can potentially increase your abilities.", "There are many classes to choose from, all having unique features.",
+                    "Avoid fighting overpowered foes early in-game (i.e. dragons), you'll probably get destroyed." };
                     Console.WriteLine("--------Help Section--------\n");
                     Console.WriteLine("What is FantasyRPG?\n");
 
@@ -390,7 +388,7 @@ namespace FantasyRPG
                     break;
                 case 5:
                     int count = 1;
-                    string[] futurePlans = ["Adding new classes", "Potential romance feature", "Harem feature (not likely)", "A chance of randomly dying", "Illnesses and cures", "Game difficulty (easy, normal, hard, impossible)"];
+                    string[] futurePlans = { "Adding new classes", "Potential romance feature", "Harem feature (not likely)", "A chance of randomly dying", "Illnesses and cures", "Game difficulty (easy, normal, hard, impossible)" };
                     Console.WriteLine("Future plans for FantasyRPG include:\n");
 
                     foreach (string plan in futurePlans)
@@ -415,10 +413,10 @@ namespace FantasyRPG
         public void userClass()
         {
             int userChoice; // Define the user choice
-            
+
             // Defining the different classes and rarity of items
-            string[] fantasyClasses = ["Mage", "Knight", "Somali Pirate", "Shadowwrath", "Archer", "Assassin"]; // Predefined array of roles
-            string[] rarity = ["Archaic", "Uncommon", "Mythical", "Divine"]; // Predefined values :3
+            string[] fantasyClasses = { "Mage", "Knight", "Somali Pirate", "Shadowwrath", "Archer", "Assassin" }; // Predefined array of roles
+            string[] rarity = { "Archaic", "Uncommon", "Mythical", "Divine" }; // Predefined values :3
             int num = 1;
 
             Console.WriteLine("Welcome to the dungeon game!");
@@ -437,18 +435,18 @@ namespace FantasyRPG
             switch (userChoice)
             {
                 // Should the user decided to become a Mage
-                case 1: 
+                case 1:
                     int choiceIncrementer = 1; // Used to increment the user choice when picking magic types
 
                     // Arrays containing the variety of different magic choices, spells and weapons.
-                    string[] magicChoices = {"Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic"}; // Future Reference: Make a method in the Mage Class that allows for a mage to learn more magic specialities and skills as they level up.
-                    string[] fireMagicSpells = ["Infrared", "Blazing Rage", "Flamestrike", "Pyroburst", "Phoenix Fury"]; // Future Reference: Add a damage system for the magic spells (e.g. infrared deals 8 damage etc.)
-                    string[] lightningMagicSpells = ["Thunderstrike", "Striking Surge", "Volt Surge", "Arcane Thunder"];
-                    string[] waterMagicSpells = ["Aqua Torrent", "Hydroburst", "Lunar Tide", "Ripple Cascade"];
-                    string[] darkMagicSpells = ["Shadow Veil", "Umbral Surge", "Wraith's Curse", "Eclipsed Oblivion"];
-                    string[] lightMagicSpells = ["Luminous Beam", "Solar Flare", "Etherial Halo", "Aurora's Illumination", "Divine Judgement"];
-                    string[] eucladianMagicSpells = ["Esoteric Paradigm", "Fractural Fissure", "Quantum Flux", "Etherial Nexus"];
-                    string[] starterMageWeapons = ["Weathered Oakwand", "Ancient Runestaff", "Runic Wooden Scepter", "Dusty Relic Rod", "Emerald Crystal Staff"];
+                    string[] magicChoices = { "Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic" }; // Future Reference: Make a method in the Mage Class that allows for a mage to learn more magic specialities and skills as they level up.
+                    string[] fireMagicSpells = { "Infrared", "Blazing Rage", "Flamestrike", "Pyroburst", "Phoenix Fury" }; // Future Reference: Add a damage system for the magic spells (e.g. infrared deals 8 damage etc.)
+                    string[] lightningMagicSpells = { "Thunderstrike", "Striking Surge", "Volt Surge", "Arcane Thunder" };
+                    string[] waterMagicSpells = { "Aqua Torrent", "Hydroburst", "Lunar Tide", "Ripple Cascade" };
+                    string[] darkMagicSpells = { "Shadow Veil", "Umbral Surge", "Wraith's Curse", "Eclipsed Oblivion" };
+                    string[] lightMagicSpells = { "Luminous Beam", "Solar Flare", "Etherial Halo", "Aurora's Illumination", "Divine Judgement" };
+                    string[] eucladianMagicSpells = { "Esoteric Paradigm", "Fractural Fissure", "Quantum Flux", "Etherial Nexus" };
+                    string[] starterMageWeapons = { "Weathered Oakwand", "Ancient Runestaff", "Runic Wooden Scepter", "Dusty Relic Rod", "Emerald Crystal Staff" };
 
                     Console.WriteLine("\n");
                     Console.WriteLine("Mage's Route");
@@ -616,7 +614,7 @@ namespace FantasyRPG
                             spellIndex++;
                         }
                     }
-                    
+
 
                     Mage newWizard = new Mage(name, weaponName, weaponType, chosenSpecialties.ToArray(), magicSpells.ToArray());
                     newWizard.chooseSpeciality(chosenSpecialties.ToArray(), name); // Debugging 
@@ -657,22 +655,22 @@ namespace FantasyRPG
                     Console.ForegroundColor = ConsoleColor.Red; // devious colour hahahaha
                     Console.WriteLine("Please pick a sensible choice and understand if you do that again you'll be punished hahaha");
                     break;
-                }
-                        
+            }
+
         }
     }
 
     public class userJourney // Once the user selects a class, they'll proceed onto their journey
     {
         int fightChoice;
-        string[] customaryScenarios = ["You embark on a long journey, you find yourself lost midway throughout the journey. There appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?"];
+        string[] customaryScenarios = { "You embark on a long journey, you find yourself lost midway throughout the journey. There appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?" };
 
         // Non-static scenarios will be introduced later in the game if I can be asked
         string fixedScenario = "\nYou embark on a long journey, you find yourself lost midway, your eyes are surrounded by vast levels of fog, mitigating your view of the perspective ahead. Closeby, there appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?";
 
         public void usersFirstJourney()
         {
-            
+
             Console.WriteLine(fixedScenario);
 
             Console.WriteLine("1. Fight back");
@@ -684,7 +682,7 @@ namespace FantasyRPG
                 case 1:
                     Console.BackgroundColor = ConsoleColor.Red;
                     Console.WriteLine("Your level is too low, the dragon proceeds to consume you whole in your defenseless state.");
-  
+
                     Console.WriteLine("You died.");
                     break;
 
@@ -701,11 +699,10 @@ namespace FantasyRPG
 
 
         }
-       
 
-        
+
+
 
     }
 
 }
-        
