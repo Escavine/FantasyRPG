@@ -188,7 +188,7 @@ namespace FantasyRPG
 
         }
 
-        public void chooseSpeciality(string[] magicSpeciality) // Should the mage level up, they'll be able to pick another speciality (only 1)
+        public void chooseSpeciality(string[] magicSpeciality, string name) // Should the mage level up, they'll be able to pick another speciality (only 1)
         {
             // For every 10 levels, a mage can pick a new speciality
 
@@ -197,15 +197,27 @@ namespace FantasyRPG
 
             string[] magicChoices = { "Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic" };
 
-            Console.WriteLine("\n Pick a new magic speciality!");
+            Console.WriteLine("\n" + name + "'s" + " current known magic specialities.");
 
-            for (int i=0; i<magicSpeciality.Length; i++)
+
+            for (int j=0; j<magicSpeciality.Length; j++) // Display the user's current magic specialties
             {
-                Console.WriteLine(correspondingNumOrder + " ." + magicSpeciality[i]);
+                Console.WriteLine(magicSpeciality[j]); 
+            }
+
+            // Removing the current users magic specialties from the list
+
+
+            Console.WriteLine("\nPick a new magic speciality!");
+
+            for (int i=0; i<magicChoices.Length; i++)
+            {
+                Console.WriteLine(correspondingNumOrder + ". " + magicChoices[i]); // Display the magic choices avaliable to the user
+                correspondingNumOrder++;
 
             }
 
-            Console.WriteLine("Input based on the corresponding number");
+            Console.WriteLine("\nInput based on the corresponding number\n");
 
             userInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
 
@@ -510,6 +522,7 @@ namespace FantasyRPG
                     
 
                     Mage newWizard = new Mage(name, weaponName, weaponType, chosenSpecialties.ToArray(), magicSpells.ToArray());
+                    newWizard.chooseSpeciality(chosenSpecialties.ToArray(), name); // Debugging 
 
 
                     Console.WriteLine("Mage Name: " + name + "\nMage's Weapon Type: " + weaponType + "\nMage's Weapon: " + weaponName +
@@ -552,16 +565,17 @@ namespace FantasyRPG
         }
     }
 
-    public class userJourney // once user selects a class, they'll proceed onto their journey
+    public class userJourney // Once the user selects a class, they'll proceed onto their journey
     {
         int fightChoice;
         string[] customaryScenarios = ["You embark on a long journey, you find yourself lost midway throughout the journey. There appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?"];
 
-        // non static scenarios will be introduced later in the game if I can be asked
+        // Non-static scenarios will be introduced later in the game if I can be asked
         string fixedScenario = "\nYou embark on a long journey, you find yourself lost midway, your eyes are surrounded by vast levels of fog, mitigating your view of the perspective ahead. Closeby, there appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?";
 
         public void usersFirstJourney()
         {
+            
             Console.WriteLine(fixedScenario);
 
             Console.WriteLine("1. Fight back");
