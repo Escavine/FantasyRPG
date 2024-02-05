@@ -308,10 +308,10 @@ namespace FantasyRPG
 
             Console.WriteLine("Game Menu\n");
             Console.WriteLine("1. Get started");
-            Console.WriteLine("2. Load game");
-            Console.WriteLine("3. Help");
-            Console.WriteLine("4. Make a suggestion");
-            Console.WriteLine("5. Future plans");
+            Console.WriteLine("2. Load save game"); // Feature doesn't work yet
+            Console.WriteLine("3. Help"); 
+            Console.WriteLine("4. Make a suggestion"); // Feature doesn't work yet
+            Console.WriteLine("5. Future plans"); 
             
             // Register user input
             userChoice = Convert.ToInt32(Console.ReadLine());
@@ -319,7 +319,7 @@ namespace FantasyRPG
             switch (userChoice)
             {
                 case 1:
-                    Console.WriteLine("\nGet excited, your game session is now going to begin!");
+                    Console.WriteLine("\nYour game session will now begin!");
                     classSelection selectClass = new classSelection(); // Create a new game session
                     selectClass.userClass(); // Proceed to let the user pick a character class
                     break;
@@ -328,8 +328,54 @@ namespace FantasyRPG
                     Environment.Exit(0);
                     break;
                 case 3:
-                    Console.WriteLine("This game is made by myself, Escavine on GitHub, to better practice my OOP skills and get into C# from C++");
-                    Environment.Exit(0);
+                    int userInput;
+                    Console.WriteLine("--------Help Section--------\n");
+                    Console.WriteLine("What is FantasyRPG?\n");
+
+                    // Introduction to Arcania, the world of FantasyRPG
+                    Console.WriteLine("Welcome to FantasyRPG, a console-based game that transports you to the enchanting realm of Arcania!");
+                    Console.WriteLine("Embark on an epic journey through a vast and mystical world, brimming with hidden treasures awaiting discovery.");
+                    Console.WriteLine("The path ahead won't be an easy one – be prepared to face life-and-death situations, battling formidable foes and overcoming treacherous obstacles.");
+
+                    Console.WriteLine("\nIn Arcania, every choice you make shapes your destiny. As you navigate through the immersive landscape, forge alliances with fellow travelers and encounter mythical creatures, you'll find yourself entangled in a web of friendships.");
+
+                    Console.WriteLine("\nBut beware, adventurer, for danger lurks in the shadows. Face cunning enemies, solve challenging puzzles, and unravel the mysteries that lay dormant in this magical land.");
+
+                    Console.WriteLine("\nYet, amidst the chaos, there is a chance for something more. As you progress, open your heart to the possibility of romantic connections, adding a layer of complexity to your personal story.");
+
+                    Console.WriteLine("\nAre you ready to delve into the heart of Arcania, where every decision shapes your fate? Your adventure begins now!");
+
+                    Console.WriteLine("Would you like to see any game advice?\n");
+                    Console.WriteLine("1. Yes");
+                    Console.WriteLine("2. No");
+                    userInput = Convert.ToInt32(Console.ReadLine());
+
+                    switch (userInput)
+                    {
+                        case 1:
+                            break;
+                        case 2:
+                            break;
+                        default:
+                            break;
+                    }
+
+
+                    break;
+                case 4:
+                    Console.WriteLine("Send a message to kmescavine@gmail.com in order to send your ideas!"); // Future reference: Use an SMTP feature to allow the user to input their email and send their suggestion
+                    break;
+                case 5:
+                    int count = 1;
+                    string[] futurePlans = ["Adding new classes", "Potential romance feature", "Harem feature (not likely)", "A chance of randomly dying", "Illnesses and cures", "Game difficulty (easy, normal, hard, impossible)"];
+                    Console.WriteLine("Future suggestions for the game include:\n");
+
+                    foreach (string plan in futurePlans)
+                    {
+                        Console.WriteLine("Plan " + count + ": " + plan);
+                        count++;
+                    }
+
                     break;
                 default:
                     Console.WriteLine("Invalid option, please try again!");
