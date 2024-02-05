@@ -250,8 +250,6 @@ namespace FantasyRPG
                 Console.WriteLine($"Updated magic specialties: {string.Join(", ", magicSpeciality)}");
 
                 learnNewSpells(chosenSpecialty, magicSpeciality, magicSpells); // Redirect the user to this function for them to learn new spells for their given speciality.
-                chosenSpecialty = null; // Clear the array of any specialties, for the next time this is run
-
 
             }
             else
@@ -342,13 +340,6 @@ namespace FantasyRPG
                         break;
                 }
 
-                // Optionally, you can prompt for the next specialty
-                if (z < chosenSpecialty.Length - 1)
-                {
-                    Console.WriteLine("\nPress Enter to see the spells for the next specialty...");
-                    Console.ReadLine();
-                }
-
             }
 
             int specialityIndex = 0;
@@ -359,7 +350,7 @@ namespace FantasyRPG
 
                 List<string> currentMagicSpells = new List<string>(); // Dynamic list which will be used to store the chosen magical spells of the users
 
-                switch (chosenSpecialty[specialityIndex])
+                switch (chosenSpecialty[chosenSpecialty.Length - 1]) // Fix this that way it only displays the spells for exclusively the new magic element learnt (e.g. if user learns fire, then only display fire magic spells)
                 {
                     case "Fire":
                         currentMagicSpells = fireMagicSpells.ToList();
@@ -411,6 +402,8 @@ namespace FantasyRPG
             {
                 Console.WriteLine(magicSpells[i]);
             }
+
+            chosenSpecialty = null; // Clear the array of any specialties, for the next time this is run
         }
     }
 
