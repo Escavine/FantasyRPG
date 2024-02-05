@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
@@ -196,7 +197,7 @@ namespace FantasyRPG
             int correspondingNumOrder = 1;
 
             string[] magicChoices = { "Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic" };
-
+            List<string> updatedMagicChoices = new List<string>();
             Console.WriteLine("\n" + name + "'s" + " current known magic specialities.");
 
 
@@ -205,19 +206,25 @@ namespace FantasyRPG
                 Console.WriteLine(magicSpeciality[j]); 
             }
 
-            // Removing the current users magic specialties from the list
-
+            // Updating the magic choices by appending the magic elements that the user doesn't possess in a list
+            foreach (var choice in magicChoices)
+            {
+                if (!magicSpeciality.Contains(choice))
+                {
+                    updatedMagicChoices.Add(choice);
+                }
+            }
 
             Console.WriteLine("\nPick a new magic speciality!");
 
-            for (int i=0; i<magicChoices.Length; i++)
+            for (int i=0; i<updatedMagicChoices.Count; i++)
             {
-                Console.WriteLine(correspondingNumOrder + ". " + magicChoices[i]); // Display the magic choices avaliable to the user
+                Console.WriteLine(correspondingNumOrder + ". " + updatedMagicChoices[i]); // Display the magic choices avaliable to the user
                 correspondingNumOrder++;
 
             }
-
-            Console.WriteLine("\nInput based on the corresponding number\n");
+            
+            Console.WriteLine("Input based on the corresponding number");
 
             userInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
 
@@ -285,12 +292,23 @@ namespace FantasyRPG
         static void Main(string[] args)
         {
             int userChoice; // Used for the start of the game
+            string[] gameTips = ["Did you know that every 10 levels, you can get an extra ability/speciality?",
+                "This game is still in development, so if there's an issue please contact me through my GitHub (Escavine) and send a pull request which I'll review.",
+            "Eucladian abilities are very overpowered, but in turn they'll cost you some health.", "This game have a sneaky RNG factor, you'll see later as you play :3",
+            "Should I introduce a harem feature in this game?!?!?!"];
 
             // Initiation of the console game
             Console.WriteLine("Welcome to the dungeon game!");
             Console.WriteLine("1. Get started");
             Console.WriteLine("2. Load game");
             Console.WriteLine("3. Help");
+
+            Random ran = new Random();
+            int ran_num = ran.Next(0, 4);
+            Console.WriteLine("Game Tip: " + gameTips[ran_num]); // Display a random game tip in the menu
+           
+     
+
             userChoice = Convert.ToInt32(Console.ReadLine());
 
             switch (userChoice)
@@ -354,7 +372,10 @@ namespace FantasyRPG
                     string[] darkMagicSpells = ["Shadow Veil", "Umbral Surge", "Wraith's Curse", "Eclipsed Oblivion"];
                     string[] lightMagicSpells = ["Luminous Beam", "Solar Flare", "Etherial Halo", "Aurora's Illumination", "Divine Judgement"];
                     string[] eucladianMagicSpells = ["Esoteric Paradigm", "Fractural Fissure", "Quantum Flux", "Etherial Nexus"];
-                    string[] starterMageWeapons = ["Weathered Oakwand", "Ancient Runestaff", "Runic Wooden Scepter", "Dusty Relic Rod", "Emerald Crystal Staff"]; 
+                    string[] starterMageWeapons = ["Weathered Oakwand", "Ancient Runestaff", "Runic Wooden Scepter", "Dusty Relic Rod", "Emerald Crystal Staff"];
+
+                    Console.WriteLine("\n");
+                    Console.WriteLine("Mage's Route");
                     Console.WriteLine("You undergo intense mana training and finally become a Mage.");
 
                     Console.WriteLine("What is your name?");
