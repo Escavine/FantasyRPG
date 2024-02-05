@@ -188,6 +188,32 @@ namespace FantasyRPG
 
         }
 
+        public void chooseSpeciality(string[] magicSpeciality) // Should the mage level up, they'll be able to pick another speciality (only 1)
+        {
+            // For every 10 levels, a mage can pick a new speciality
+
+            int userInput;
+            int correspondingNumOrder = 1;
+
+            string[] magicChoices = { "Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic" };
+
+            Console.WriteLine("\n Pick a new magic speciality!");
+
+            for (int i=0; i<magicSpeciality.Length; i++)
+            {
+                Console.WriteLine(correspondingNumOrder + " ." + magicSpeciality[i]);
+
+            }
+
+            Console.WriteLine("Input based on the corresponding number");
+
+            userInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
+
+
+
+
+        }
+
     }
 
     class SomaliPirate : CharacterDefault
@@ -316,17 +342,19 @@ namespace FantasyRPG
                     string[] darkMagicSpells = ["Shadow Veil", "Umbral Surge", "Wraith's Curse", "Eclipsed Oblivion"];
                     string[] lightMagicSpells = ["Luminous Beam", "Solar Flare", "Etherial Halo", "Aurora's Illumination", "Divine Judgement"];
                     string[] eucladianMagicSpells = ["Esoteric Paradigm", "Fractural Fissure", "Quantum Flux", "Etherial Nexus"];
-                    string[] mageWeapons = ["Weathered Oakwand", "Ancient Runestaff", "Runic Wooden Scepter", "Dusty Relic Rod", "Emerald Crystal Staff"]; // Future Reference: Use a random number to decide on which Staff the Mage receives during the start of the game.
+                    string[] starterMageWeapons = ["Weathered Oakwand", "Ancient Runestaff", "Runic Wooden Scepter", "Dusty Relic Rod", "Emerald Crystal Staff"]; 
                     Console.WriteLine("You undergo intense mana training and finally become a Mage.");
 
                     Console.WriteLine("What is your name?");
                     string name = Convert.ToString(Console.ReadLine());
 
-                    string weaponName = "Wooden Staff";
+                    Random ranNum = new Random();
+                    int ran_num = ranNum.Next(0, 4); // Select a random weapon for the user
 
+                    string weaponName = starterMageWeapons[ran_num]; // Assigns a random weapon for the user
                     string weaponType = "Staff";
 
-                    Console.WriteLine("Choose two magic specialties from the list: \n");
+                    Console.WriteLine("\nChoose two magic specialties from the list: \n");
 
                     List<string> chosenSpecialties = new List<string>(); // Chosen magic specialities
                     List<string> magicSpells = new List<string>(); // Chosen magical spells
