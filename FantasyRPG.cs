@@ -228,6 +228,12 @@ namespace FantasyRPG
 
             userInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
 
+            // switch(updatedMagicChoices[userInput])
+            //{
+             //   case userInput:
+               //     break;
+            //}
+
 
 
 
@@ -325,10 +331,14 @@ namespace FantasyRPG
                     break;
                 case 2:
                     Console.WriteLine("Unfortunately, this feature isn't avaliable yet :3");
-                    Environment.Exit(0);
+                    Console.ReadKey(); // Read user input before terminating
                     break;
                 case 3:
                     int userInput;
+                    string[] gameAdvice = ["You might die at any point within the game unknowingly.",
+                        "Eucladian abilities are quite overpowered, if you find the opportunity to pursue it, then do so.",
+                    "Having a strong romantical bond with someone, can potentially increase your abilities.", "There are many classes to choose from, all having unique features.", 
+                    "Avoid fighting overpowered foes early in-game (i.e. dragons), you'll probably get destroyed."];
                     Console.WriteLine("--------Help Section--------\n");
                     Console.WriteLine("What is FantasyRPG?\n");
 
@@ -345,6 +355,7 @@ namespace FantasyRPG
 
                     Console.WriteLine("\nAre you ready to delve into the heart of Arcania, where every decision shapes your fate? Your adventure begins now!");
 
+                    // Ask if the user wants to see any game advice in the help section
                     Console.WriteLine("Would you like to see any game advice?\n");
                     Console.WriteLine("1. Yes");
                     Console.WriteLine("2. No");
@@ -353,12 +364,24 @@ namespace FantasyRPG
                     switch (userInput)
                     {
                         case 1:
+                            Console.WriteLine("Game Advice:\n");
+
+                            foreach (string s in gameAdvice) // Display game advice
+                            {
+                                Console.WriteLine(s + "\n");
+                            }
                             break;
-                        case 2:
+
+                        case 2: // Future reference: Move the game menu code to different methods rather than the main, that way you can utilise recursion
+                            Environment.Exit(0); // Terminate the game session
                             break;
                         default:
+                            Console.WriteLine("Invalid input, please try again.");
                             break;
                     }
+
+                    Console.ReadKey(); // Wait for key input
+
 
 
                     break;
@@ -368,13 +391,15 @@ namespace FantasyRPG
                 case 5:
                     int count = 1;
                     string[] futurePlans = ["Adding new classes", "Potential romance feature", "Harem feature (not likely)", "A chance of randomly dying", "Illnesses and cures", "Game difficulty (easy, normal, hard, impossible)"];
-                    Console.WriteLine("Future suggestions for the game include:\n");
+                    Console.WriteLine("Future plans for FantasyRPG include:\n");
 
                     foreach (string plan in futurePlans)
                     {
-                        Console.WriteLine("Plan " + count + ": " + plan);
+                        Console.WriteLine("Plan " + count + ": " + plan + "\n");
                         count++;
                     }
+
+                    Console.ReadKey(); // Wait for key input
 
                     break;
                 default:
@@ -547,7 +572,7 @@ namespace FantasyRPG
 
                     for (int specialityIndex = 0; specialityIndex < chosenSpecialties.Count; specialityIndex++)
                     {
-                        Console.WriteLine($"Select 2 magic spells for {chosenSpecialties[specialityIndex]} by entering the corresponding numbers.");
+                        Console.WriteLine($"Select 2 magic spells for {chosenSpecialties[specialityIndex]} by entering the corresponding numbers. (1-4 for each element)");
 
                         List<string> currentMagicSpells = new List<string>(); // Dynamic list which will be used to store the chosen magical spells of the users
 
