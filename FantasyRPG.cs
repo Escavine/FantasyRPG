@@ -398,7 +398,7 @@ namespace FantasyRPG
 
             Console.WriteLine(name + " has learned the following magical abilities: ");
 
-            for (int i = 0;  i < magicSpells.Length; i++) // Display the magic spells that the user knows
+            for (int i = 0; i < magicSpells.Length; i++) // Display the magic spells that the user knows
             {
                 Console.WriteLine(magicSpells[i]);
             }
@@ -415,7 +415,7 @@ namespace FantasyRPG
         public SomaliPirate(string _name, string _weaponName, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName) : base(_name, _weaponName, _weaponName)
         {
             name = _name;
-            weaponName = _weaponName; 
+            weaponName = _weaponName;
             weaponType = _weaponType;
             weaponAura = _weaponAura;
             normalAtkName = _normalAtkName; // Presets for all new Somali Pirates in the game
@@ -606,7 +606,7 @@ namespace FantasyRPG
                 // Should the user decided to become a Mage
                 case 1:
                     int choiceIncrementer = 1; // Used to increment the user choice when picking magic types
-
+                    int startMageJourneyInput;
                     // Arrays containing the variety of different magic choices, spells and weapons.
                     string[] magicChoices = { "Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic" }; // Future Reference: Make a method in the Mage Class that allows for a mage to learn more magic specialities and skills as they level up.
                     string[] fireMagicSpells = { "Infrared", "Blazing Rage", "Flamestrike", "Pyroburst", "Phoenix Fury" }; // Future Reference: Add a damage system for the magic spells (e.g. infrared deals 8 damage etc.)
@@ -785,51 +785,105 @@ namespace FantasyRPG
                         }
                     }
 
+                    Console.Clear(); // Neatness
 
                     Mage newWizard = new Mage(name, staffName, staffWeaponType, chosenSpecialties.ToArray(), magicSpells.ToArray());
 
 
-
                     Console.WriteLine("Mage Name: " + name + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + staffName +
-                            "\nMage's Magic Specialties: " + string.Join(", ", chosenSpecialties));
+                    "\nMage's Magic Specialties: " + string.Join(", ", chosenSpecialties));
                     Console.WriteLine("Mage's Chosen Spells: " + string.Join(", ", magicSpells));
 
 
-                    userJourney wizardJourney = new userJourney(); // Journey start!
-                    wizardJourney.usersFirstJourney();
+                    Console.WriteLine("Would you like to now embark on your journey in the world of Arcania? (1 for Yes and 2 for No)");
+                    startMageJourneyInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
+
+
+                    switch (startMageJourneyInput)
+                    {
+                        case 1:
+                            Console.Clear(); // Neatness
+                            Console.WriteLine("You will now be sent to the world of Arcania, make sure to not die.");
+                            userJourney wizardJourney = new userJourney(); // Journey start!
+                            wizardJourney.usersFirstJourney();
+                            break;
+
+                        case 2:
+                            Console.BackgroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Why are you here then?");
+                            Console.ReadLine();
+                            break;
+
+                        default:
+                            Console.WriteLine("Invalid input, please input a sensible value again.");
+                            break;
+
+                    }
                     break;
 
                 case 2:
 
 
                 case 3:
-                    string user;
-                    string[] randomWeaponChoice = ["Sharp Cutlass", "Raging Horn", "Somali Pride", "Mohamad's Dagger", "Dilapidated Thorn"];
-                    string [][] pirateAuraType = new string[][]; // Jagged array for aura type, which is associated with a damage bonus
+                    int startPirateJourneyInput;
+                    Console.Clear();
+                    string pirateName;
+                    string[] pirateWeaponChoice = { "Sharp Cutlass", "Raging Horn", "Somali Pride", "Mohamad's Dagger", "Dilapidated Thorn" };
+                    string[][] pirateAuraType = new string[][] // Jagged array for aura type, which is associated with a damage bonus
                     {
-                        new string[] { "Bloodlust (Unique)", "+10 damage"},
-                        new string[] { "Kraken's Pride (Legendary)", "+15 damage"},
-                        new string[] { "Mystical Remenance (Rare)", "+10 damage"},
-                        new string[] { "Wraith's Omen (Uncommon)", "+6 damage"},
-                        new string[] { "Devious Sigma Pirate (OP)", "+20 damage"}
+                        new string[] { "Bloodlust (Unique) +10 damage", "Kraken's Pride (Legendary) +15 damage" },
+                        new string[] { "Mystical Remenance (Rare) +10 damage", "Wraith's Omen (Uncommon) +6 damage" },
+                        new string[] { "Devious Sigma Pirate (OP) +20 damage", "Somalia's Exudance (Rare) +10 damage" },
                     };
 
-                    Console.WriteLine("You are a proud Somali Pirate, one who has explored the vast open seas for many years, and now you feel that your ready for a new adventure!");
+
+                    Console.WriteLine("You are a proud Somali Pirate, one who has explored the vast open seas for many years, and now you feel that your ready for a new adventure!\n");
 
                     // Take users name
                     Console.WriteLine("Enter your name:");
-                    user = Convert.ToString(Console.ReadLine());
+                    pirateName = Convert.ToString(Console.ReadLine());
 
                     // User will be randomly assigned a weapon
                     Random rd = new Random();
                     int rand_num = rd.Next(1, 5);
-                    string pirateWeaponName = randomWeaponChoice[rand_num]; 
+                    string pirateWeaponName = pirateWeaponChoice[rand_num];
 
+                    Random random = new Random();
+                    int weaponAuraRoll = rd.Next(0, 2);
                     string pirateWeaponType = "Sword/Longsword/Dagger/Blades";
+                    string weaponAura = pirateAuraType[weaponAuraRoll][weaponAuraRoll]; // Generate a random aura type for the pirate class
 
+                    string pirateAtkName = "Slash";
+                    string pirateSpecialAtkName = "Pirate's might";
 
-                    
+                    SomaliPirate newPirate = new SomaliPirate(pirateName, pirateWeaponName, pirateWeaponType, weaponAura, pirateAtkName, pirateSpecialAtkName); // Generate the pirate details
 
+                    Console.WriteLine("Pirates name: " + pirateName + "\nPirate's Weapon Type: " + pirateWeaponType + "\nPirate's Weapon: " + pirateWeaponName +
+                    "\nPirate's Aura: " + string.Join(", ", weaponAura)); // Display information to the user
+
+                    Console.WriteLine("Would you like to now embark on your journey in the world of Arcania? (1 for Yes and 2 for No)");
+                    startPirateJourneyInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
+
+                    switch (startPirateJourneyInput)
+                    {
+                        case 1:
+                            Console.Clear(); // Neatness
+                            Console.WriteLine("You will now be sent to the world of Arcania, make sure to not die.");
+                            userJourney pirateJourney = new userJourney(); // Journey start!
+                            pirateJourney.usersFirstJourney();
+                            break;
+
+                        case 2:
+                            Console.BackgroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Why are you here then?");
+                            Console.ReadLine();
+                            break;
+
+                        default:
+                            Console.WriteLine("Invalid input, please input a sensible value again.");
+                            break;
+
+                    }
                     break;
 
 
