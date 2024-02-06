@@ -205,7 +205,7 @@ namespace FantasyRPG
 
             // Output this to the terminal
             Console.WriteLine("Mage's Prestiege!");
-            Console.WriteLine("\n" + name + "'s" + " current known magic specialities.");
+            Console.WriteLine("\n" + name + "'s" + " current known magic specialities:");
 
 
             for (int j = 0; j < magicSpeciality.Length; j++) // Display the user's current magic specialties
@@ -274,7 +274,7 @@ namespace FantasyRPG
 
             // Display the given spells to the user
 
-            for (int z = 0; z < chosenSpecialty.Length; z++)
+            for (int z = 0; z < 1; z++)
             {
                 Console.WriteLine("\n" + chosenSpecialty[z] + " Spells:");
 
@@ -344,7 +344,7 @@ namespace FantasyRPG
 
             int specialityIndex = 0;
 
-            for (specialityIndex = 0; specialityIndex < chosenSpecialty.Length; specialityIndex++)
+            for (specialityIndex = 0; specialityIndex < 1; specialityIndex++)
             {
                 Console.WriteLine($"Select 2 magic spells for {chosenSpecialty[specialityIndex]} by entering the corresponding numbers. (1-4 for each element)");
 
@@ -415,7 +415,7 @@ namespace FantasyRPG
         public SomaliPirate(string _name, string _weaponName, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName) : base(_name, _weaponName, _weaponName)
         {
             name = _name;
-            weaponName = _weaponName;
+            weaponName = _weaponName; 
             weaponType = _weaponType;
             weaponAura = _weaponAura;
             normalAtkName = _normalAtkName; // Presets for all new Somali Pirates in the game
@@ -628,8 +628,8 @@ namespace FantasyRPG
                     Random ranNum = new Random();
                     int ran_num = ranNum.Next(0, 4); // Select a random weapon for the user
 
-                    string weaponName = starterMageWeapons[ran_num]; // Assigns a random weapon for the user
-                    string weaponType = "Staff";
+                    string staffName = starterMageWeapons[ran_num]; // Assigns a random weapon for the user
+                    string staffWeaponType = "Staff";
 
                     Console.WriteLine("\nChoose two magic specialties from the list: \n");
 
@@ -786,11 +786,11 @@ namespace FantasyRPG
                     }
 
 
-                    Mage newWizard = new Mage(name, weaponName, weaponType, chosenSpecialties.ToArray(), magicSpells.ToArray());
-                    newWizard.chooseNewSpeciality(chosenSpecialties.ToArray(), name); // Debugging 
+                    Mage newWizard = new Mage(name, staffName, staffWeaponType, chosenSpecialties.ToArray(), magicSpells.ToArray());
 
 
-                    Console.WriteLine("Mage Name: " + name + "\nMage's Weapon Type: " + weaponType + "\nMage's Weapon: " + weaponName +
+
+                    Console.WriteLine("Mage Name: " + name + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + staffName +
                             "\nMage's Magic Specialties: " + string.Join(", ", chosenSpecialties));
                     Console.WriteLine("Mage's Chosen Spells: " + string.Join(", ", magicSpells));
 
@@ -803,6 +803,35 @@ namespace FantasyRPG
 
 
                 case 3:
+                    string user;
+                    string[] randomWeaponChoice = ["Sharp Cutlass", "Raging Horn", "Somali Pride", "Mohamad's Dagger", "Dilapidated Thorn"];
+                    string [][] pirateAuraType = new string[][]; // Jagged array for aura type, which is associated with a damage bonus
+                    {
+                        new string[] { "Bloodlust (Unique)", "+10 damage"},
+                        new string[] { "Kraken's Pride (Legendary)", "+15 damage"},
+                        new string[] { "Mystical Remenance (Rare)", "+10 damage"},
+                        new string[] { "Wraith's Omen (Uncommon)", "+6 damage"},
+                        new string[] { "Devious Sigma Pirate (OP)", "+20 damage"}
+                    };
+
+                    Console.WriteLine("You are a proud Somali Pirate, one who has explored the vast open seas for many years, and now you feel that your ready for a new adventure!");
+
+                    // Take users name
+                    Console.WriteLine("Enter your name:");
+                    user = Convert.ToString(Console.ReadLine());
+
+                    // User will be randomly assigned a weapon
+                    Random rd = new Random();
+                    int rand_num = rd.Next(1, 5);
+                    string pirateWeaponName = randomWeaponChoice[rand_num]; 
+
+                    string pirateWeaponType = "Sword/Longsword/Dagger/Blades";
+
+
+                    
+
+                    break;
+
 
                 case 4:
                     Console.WriteLine("After long endurance of physical training, your eyes are as sharp as fangs and bowmanship is now your speciality.");
