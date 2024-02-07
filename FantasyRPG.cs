@@ -777,7 +777,7 @@ namespace FantasyRPG
                     lightMagicSpells.Keys.CopyTo(lightSpells, 0);
 
                     string[] eucladianSpells = new string[eucladianMagicSpells.Count];
-                    eucladianMagicSpells.Keys.CopyTo(eucladianSpells, 0)l
+                    eucladianMagicSpells.Keys.CopyTo(eucladianSpells, 0);
 
                        
 
