@@ -729,11 +729,7 @@ namespace FantasyRPG
                         { "Emerald Crystal Staff", (10, "Mythical") }
                     };
 
-
-
-
                     Console.Clear(); // Cleaning purposes
-                    Console.WriteLine("\n");
                     Console.WriteLine("Mage's Route");
                     Console.WriteLine("\nYou undergo intense mana training and finally become a Mage.");
 
@@ -741,9 +737,13 @@ namespace FantasyRPG
                     string name = Convert.ToString(Console.ReadLine());
 
                     Random ranNum = new Random();
-                    int ran_num = ranNum.Next(0, 4); // Select a random weapon for the user
+                    int random_index = ranNum.Next(0, starterMageWeapons.Count); // Select a random weapon for the user
 
-                    string staffName = starterMageWeapons[ran_num]; // Assigns a random weapon for the user
+
+                    string[] weaponNames = new string[starterMageWeapons.Count]; // All values will be assigned to the array
+                    starterMageWeapons.Keys.CopyTo(weaponNames, 0);
+                    string staffName = weaponNames[random_index]; // Assign a weapon randomly to the user from the converted dictionary
+
                     string staffWeaponType = "Staff";
 
                     Console.WriteLine("\nChoose two magic specialties from the list: \n");
@@ -757,6 +757,29 @@ namespace FantasyRPG
                         Console.WriteLine(choiceIncrementer + ". " + magicChoices[j]);
                         choiceIncrementer++;
                     }
+
+
+                    // Convert all the following magic spells dictionary to array values to be used in the loop :3
+
+                    string[] fireSpells = new string[fireMagicSpells.Count];
+                    fireMagicSpells.Keys.CopyTo(fireSpells, 0);
+
+                    string[] waterSpells = new string[waterMagicSpells.Count];
+                    waterMagicSpells.Keys.CopyTo(waterSpells, 0);
+
+                    string[] lightningSpells = new string[lightningMagicSpells.Count];
+                    lightningMagicSpells.Keys.CopyTo(lightningSpells, 0);
+
+                    string[] darkSpells = new string[darkMagicSpells.Count];
+                    darkMagicSpells.Keys.CopyTo(darkSpells, 0);
+
+                    string[] lightSpells = new string[lightMagicSpells.Count] ;
+                    lightMagicSpells.Keys.CopyTo(lightSpells, 0);
+
+                    string[] eucladianSpells = new string[eucladianMagicSpells.Count];
+                    eucladianMagicSpells.Keys.CopyTo(eucladianSpells, 0)l
+
+                       
 
                     // Allow the user to choose two magic specialties
                     for (int k = 0; k < 2; k++)
