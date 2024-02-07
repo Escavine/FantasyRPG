@@ -18,6 +18,9 @@ namespace FantasyRPG
         public float maxPotions;
         public int mana;
         public string[] currentInventory; // Will contain the users potions and other weapons.
+        public int arcaniaGoldCoins; // Currency for the city of Arcanith
+        // public int atk;
+        // public int def;
 
         // Levelling attributes
         public float exp;
@@ -30,7 +33,7 @@ namespace FantasyRPG
             weaponType = _weaponType;
             weaponName = _weaponName;
             currentInventory = _currentInventory;
-            arcaniaGoldCoins = _arcaniaGoldCoins;
+            arcaniaGoldCoins = 0;
             health = 100;
             exp = 0f;
             numOfPotionsInInventory = 0;
@@ -40,10 +43,10 @@ namespace FantasyRPG
         }
 
         // WIll allow user to equip the following weapon (e.g. if they use a bow, blades, sword etc.)
-        public void EquipWeapon(Weapon weapon)
-        {
-            CurrentWeapon = weapon;
-        }
+        // public void EquipWeapon(Weapon weapon)
+        // {
+        //    CurrentWeapon = weapon;
+        // }
 
 
         // All methods for all user choice classes
@@ -129,7 +132,7 @@ namespace FantasyRPG
         public int normalAtkDmg;
         public int specialAtkRecharge;// Percentage value representing 100%
 
-        public Knight(string _name, string _weaponName, string _weaponType, string _specialAtkName, string[] _currentInventory) : base(_name, _weaponName, _weaponType, _currentInventory)
+        public Knight(string _name, string _weaponName, string _weaponType, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weaponName, _weaponType, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
             weaponName = _weaponName;
@@ -182,7 +185,7 @@ namespace FantasyRPG
         string[] magicSpeciality; // User can have multiple magic specialties
         public int spellUsage; // Spell usage to keep spells in control
 
-        public Mage(string _name, string _weaponName, string _weaponType, string[] _magicSpeciality, string[] _magicSpells, string[] _currentInventory) : base(_name, _weaponName, _weaponType, _currentInventory)
+        public Mage(string _name, string _weaponName, string _weaponType, string[] _magicSpeciality, int _arcaniaGoldCoins, string[] _magicSpells, string[] _currentInventory) : base(_name, _weaponName, _weaponType, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
             weaponName = _weaponName;
@@ -445,13 +448,14 @@ namespace FantasyRPG
     {
         public string weaponAura, normalAtkName, specialAtkName;
         public int normalAtkDmg, specialAtkDmg, specialAtkCharge;
-        public SomaliPirate(string _name, string _weaponName, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName, string[] _currentInventory) : base(_name, _weaponName, _weaponName, _currentInventory)
+        public SomaliPirate(string _name, string _weaponName, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weaponName, _weaponName, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
             weaponName = _weaponName;
             weaponType = _weaponType;
             weaponAura = _weaponAura;
             normalAtkName = _normalAtkName; // Presets for all new Somali Pirates in the game
+            arcaniaGoldCoins = _arcaniaGoldCoins;
             specialAtkName = _specialAtkName;
             currentInventory = _currentInventory;
             normalAtkDmg = 8;
@@ -487,22 +491,36 @@ namespace FantasyRPG
 
     class Archer : CharacterDefault
     {
-        public Archer(string _name, string _weaponName, string _weaponType, string[] _currentInventory) : base(_name, _weaponName, _weaponType, _currentInventory)
+        public Archer(string _name, string _weaponName, string _weaponType, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weaponName, _weaponType, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
             weaponName = _weaponName;
             weaponType = _weaponType;
+            arcaniaGoldCoins = _arcaniaGoldCoins;
         }
     }
 
 
-    public class Weapon 
+    public class Weapon // Equip/Unequip weapon 
     {
         public string Name { get; set; }
         public int Damage { get; set; }
         public string WeaponName { get; set;}
         public string WeaponType { get; set;}
 
+    }
+
+    // Warrior class
+    class Warrior : CharacterDefault
+    {
+        public Warrior(string _name, string _weaponName, string _weaponType, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weaponName, _weaponType, _currentInventory, _arcaniaGoldCoins)
+        {
+            name = _name;
+            weaponName = _weaponName;
+            weaponType = _weaponType;
+            currentInventory = _currentInventory;
+            arcaniaGoldCoins = _arcaniaGoldCoins;
+        }
     }
 
 
@@ -659,9 +677,10 @@ namespace FantasyRPG
                 case 1:
                     int choiceIncrementer = 1; // Used to increment the user choice when picking magic types
                     int startMageJourneyInput;
+
                     // Arrays containing the variety of different magic choices, spells and weapons.
                     string[] magicChoices = { "Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic" };
-
+                    int arcaniaGoldCoins = 0; // You start of as a brokie 
 
                     // Tuple dictionary for each Fire magic spell, which is associated with a damage value and a mana requirement 
                     Dictionary<string, (int, int)> fireMagicSpells = new Dictionary<string, (int, int)>()
@@ -744,7 +763,11 @@ namespace FantasyRPG
                     starterMageWeapons.Keys.CopyTo(weaponNames, 0);
                     string staffName = weaponNames[random_index]; // Assign a weapon randomly to the user from the converted dictionary
 
-                    string staffWeaponType = "Staff";
+                    List<string> currentInventory = new List<string>();
+                    currentInventory.Add(staffName); // Add the staff to the users current inventory
+
+
+                    string staffWeaponType = "Staff"; // Fixed and cannot be changed
 
                     Console.WriteLine("\nChoose two magic specialties from the list: \n");
 
@@ -787,7 +810,7 @@ namespace FantasyRPG
                         int chosenSpecialtyIndex;
 
                         Console.WriteLine("\nChoose a magic specialty by entering the corresponding number:");
-                        while (!int.TryParse(Console.ReadLine(), out chosenSpecialtyIndex) || chosenSpecialtyIndex < 1 || chosenSpecialtyIndex > magicChoices.Length)
+                        while (!int.TryParse(Console.ReadLine(), out chosenSpecialtyIndex) || chosenSpecialtyIndex < 1 || chosenSpecialtyIndex > magicChoices.Length) // Conditions to ensure user doesn't input trash
                         {
                             Console.WriteLine("Invalid choice. Please enter a valid number corresponding to the magic specialty.");
                         }
@@ -808,7 +831,7 @@ namespace FantasyRPG
                         switch (chosenSpecialties[z])
                         {
                             case "Fire":
-                                foreach (string spell in fireMagicSpells)
+                                foreach (string spell in fireSpells)
                                 {
                                     Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
                                     totalSpellsDisplayed++;
@@ -817,7 +840,7 @@ namespace FantasyRPG
                                 }
                                 break;
                             case "Lightning":
-                                foreach (string spell in lightningMagicSpells)
+                                foreach (string spell in lightningSpells)
                                 {
                                     Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
                                     totalSpellsDisplayed++;
@@ -826,7 +849,7 @@ namespace FantasyRPG
                                 }
                                 break;
                             case "Water":
-                                foreach (string spell in waterMagicSpells)
+                                foreach (string spell in waterSpells)
                                 {
                                     Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
                                     totalSpellsDisplayed++;
@@ -835,7 +858,7 @@ namespace FantasyRPG
                                 }
                                 break;
                             case "Dark":
-                                foreach (string spell in darkMagicSpells)
+                                foreach (string spell in darkSpells)
                                 {
                                     Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
                                     totalSpellsDisplayed++;
@@ -844,7 +867,7 @@ namespace FantasyRPG
                                 }
                                 break;
                             case "Light":
-                                foreach (string spell in lightMagicSpells)
+                                foreach (string spell in lightSpells)
                                 {
                                     Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
                                     totalSpellsDisplayed++;
@@ -853,7 +876,7 @@ namespace FantasyRPG
                                 }
                                 break;
                             case "Eucladian-Magic":
-                                foreach (string spell in eucladianMagicSpells)
+                                foreach (string spell in eucladianSpells)
                                 {
                                     Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
                                     totalSpellsDisplayed++;
@@ -885,22 +908,22 @@ namespace FantasyRPG
                         switch (chosenSpecialties[specialityIndex])
                         {
                             case "Fire":
-                                currentMagicSpells = fireMagicSpells.ToList();
+                                currentMagicSpells = fireSpells.ToList();
                                 break;
                             case "Lightning":
-                                currentMagicSpells = lightningMagicSpells.ToList();
+                                currentMagicSpells = lightSpells.ToList();
                                 break;
                             case "Water":
-                                currentMagicSpells = waterMagicSpells.ToList();
+                                currentMagicSpells = waterSpells.ToList();
                                 break;
                             case "Dark":
-                                currentMagicSpells = darkMagicSpells.ToList();
+                                currentMagicSpells = darkSpells.ToList();
                                 break;
                             case "Light":
-                                currentMagicSpells = lightMagicSpells.ToList();
+                                currentMagicSpells = lightSpells.ToList();
                                 break;
                             case "Eucladian-Magic":
-                                currentMagicSpells = eucladianMagicSpells.ToList();
+                                currentMagicSpells = eucladianSpells.ToList();
                                 break;
                             default:
                                 Console.WriteLine("Unknown magic speciality.");
@@ -925,7 +948,7 @@ namespace FantasyRPG
 
                     Console.Clear(); // Neatness
 
-                    Mage newWizard = new Mage(name, staffName, staffWeaponType, chosenSpecialties.ToArray(), magicSpells.ToArray());
+                    Mage newWizard = new Mage(name, staffName, staffWeaponType, chosenSpecialties.ToArray(), magicSpells.ToArray(), arcaniaGoldCoins, currentInventory);
 
 
                     Console.WriteLine("Mage Name: " + name + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + staffName +
@@ -976,7 +999,7 @@ namespace FantasyRPG
                         { "Dilapidated Thorn", (13, "Katana") }
                     };
 
-                    Dictionary<string, (int, string)> pirateAura = new Dictionary<string, (int, string)>();
+                    Dictionary<string, (int, string)> pirateAura = new Dictionary<string, (int, string)>()
                     {
                         { "Bloodlust", (3, "Rare") },
                         { "Kraken's Pride", (4, "Rare") },
