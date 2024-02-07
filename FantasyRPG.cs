@@ -17,33 +17,43 @@ namespace FantasyRPG
         public float numOfPotionsInInventory;
         public float maxPotions;
         public int mana;
+        public string[] currentInventory; // Will contain the users weapon and potions
 
         // Levelling attributes
         public float exp;
         public int level;
         private int experienceRequiredForNextLevel;
 
-        public CharacterDefault(string _name, string _weaponName, string _weaponType) // Default preset for all classes during the start of the game :3
+        public CharacterDefault(string _name, string _weaponName, string _weaponType, string[] _currentInventory) // Default preset for all classes during the start of the game :3
         {
             name = _name;
             weaponType = _weaponType;
             weaponName = _weaponName;
+            currentInventory = _currentInventory;
             health = 100;
             exp = 0f;
             numOfPotionsInInventory = 0;
             maxPotions = 5;
             level = 1;
             mana = 100;
-
         }
 
 
         // All methods for all user choice classes
+
+
+        // Display the users inventory
         public void CheckInventory()
         {
-            // Feature will be added later during development :3
+            for (int i = 0; i < currentInventory.Length; i++)
+            {
+                Console.WriteLine(currentInventory[i]);
+
+            }
+
         }
 
+        // Allow for the user to check their current status
         public void CheckStatus()
         {
             Console.WriteLine(name + " current status: ");
@@ -52,12 +62,13 @@ namespace FantasyRPG
             Console.WriteLine("Current level: " + level);
         }
 
-        public void Meditate() // Used for recovering spells in inventory and mana
+        // Used for recovery
+        public void Meditate() 
         {
             Console.WriteLine(name + " has meditated ");
             mana = mana + 20;
             health = health + 20;
-            Console.WriteLine(name + " has meditated and has recovered: ");
+            Console.WriteLine(name + " has meditated and has recovered:\n");
             Console.WriteLine("+20 health");
             Console.WriteLine("+20 mana");
         }
@@ -79,6 +90,8 @@ namespace FantasyRPG
             // This sequence of logic will continue as the console game develops (probably not haha)
 
         }
+
+        // Should the condiition be met
         public void LevelUp()
         {
             level++;
@@ -86,6 +99,8 @@ namespace FantasyRPG
             CalculateExperienceForNextLevel();
 
         }
+
+        // Check if user has enough to level up
         public void GainExperience(int experiencePoints)
         {
             exp += experiencePoints;
@@ -107,26 +122,36 @@ namespace FantasyRPG
         public int normalAtkDmg;
         public int specialAtkRecharge;// Percentage value representing 100%
 
-        public Knight(string _name, string _weaponName, string _weaponType, string _specialAtkName) : base(_name, _weaponName, _weaponType)
+        public Knight(string _name, string _weaponName, string _weaponType, string _specialAtkName, string[] _currentInventory) : base(_name, _weaponName, _weaponType, _currentInventory)
         {
             name = _name;
             weaponName = _weaponName;
             weaponType = _weaponType;
             specialAtkName = _specialAtkName;
+            currentInventory = _currentInventory;
             normalAtkName = "Sword Slash";
-            specialAtkRecharge = 100; // 100% preset
+            specialAtkRecharge = 0; // 0% preset, every time the user attacks, this will increase
             specialAtkDmg = 10; // Preset damage from sword special attack
             normalAtkDmg = 4;
         }
 
-        public void BasicAtk()
+        public void BasicAtk() // Primitive knight attack
         {
             Console.WriteLine(name + " has used " + normalAtkName + " and has dealt " + normalAtkDmg + " damage.");
         }
 
-        public void SpecialAtk()
+        public void SpecialAtk(int specialAtkRecharge) // Knight's special ability (has a recharge and will be executed should the recharge be 100%)
         {
-            Console.WriteLine(name + " has used " + specialAtkName + " and has dealt " + specialAtkDmg + " damage.");
+            if (specialAtkRecharge == 100)
+            {
+                Console.WriteLine("Conditions met\n");
+                Console.WriteLine(name + " has used " + specialAtkName + " and has dealt " + specialAtkDmg + " damage.");
+            }
+            else
+            {
+                Console.WriteLine("Your recharge isn't high enough.");
+            }
+
         }
 
         public void KnightTraining()
