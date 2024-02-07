@@ -17,25 +17,32 @@ namespace FantasyRPG
         public float numOfPotionsInInventory;
         public float maxPotions;
         public int mana;
-        public string[] currentInventory; // Will contain the users weapon and potions
+        public string[] currentInventory; // Will contain the users potions and other weapons.
 
         // Levelling attributes
         public float exp;
         public int level;
         private int experienceRequiredForNextLevel;
 
-        public CharacterDefault(string _name, string _weaponName, string _weaponType, string[] _currentInventory) // Default preset for all classes during the start of the game :3
+        public CharacterDefault(string _name, string _weaponName, string _weaponType, string[] _currentInventory, int _arcaniaGoldCoins) // Default preset for all classes during the start of the game :3
         {
             name = _name;
             weaponType = _weaponType;
             weaponName = _weaponName;
             currentInventory = _currentInventory;
+            arcaniaGoldCoins = _arcaniaGoldCoins;
             health = 100;
             exp = 0f;
             numOfPotionsInInventory = 0;
             maxPotions = 5;
             level = 1;
             mana = 100;
+        }
+
+        // WIll allow user to equip the following weapon (e.g. if they use a bow, blades, sword etc.)
+        public void EquipWeapon(Weapon weapon)
+        {
+            CurrentWeapon = weapon;
         }
 
 
@@ -175,12 +182,13 @@ namespace FantasyRPG
         string[] magicSpeciality; // User can have multiple magic specialties
         public int spellUsage; // Spell usage to keep spells in control
 
-        public Mage(string _name, string _weaponName, string _weaponType, string[] _magicSpeciality, string[] _magicSpells) : base(_name, _weaponName, _weaponType)
+        public Mage(string _name, string _weaponName, string _weaponType, string[] _magicSpeciality, string[] _magicSpells, string[] _currentInventory) : base(_name, _weaponName, _weaponType, _currentInventory)
         {
             name = _name;
             weaponName = _weaponName;
             weaponType = _weaponType;
             magicSpeciality = _magicSpeciality;
+            currentInventory = _currentInventory;
             magicSpells = _magicSpells; // Predefined variables for every new wizard in the game
             spellUsage = 5;
         }
@@ -437,7 +445,7 @@ namespace FantasyRPG
     {
         public string weaponAura, normalAtkName, specialAtkName;
         public int normalAtkDmg, specialAtkDmg, specialAtkCharge;
-        public SomaliPirate(string _name, string _weaponName, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName) : base(_name, _weaponName, _weaponName)
+        public SomaliPirate(string _name, string _weaponName, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName, string[] _currentInventory) : base(_name, _weaponName, _weaponName, _currentInventory)
         {
             name = _name;
             weaponName = _weaponName;
@@ -445,6 +453,7 @@ namespace FantasyRPG
             weaponAura = _weaponAura;
             normalAtkName = _normalAtkName; // Presets for all new Somali Pirates in the game
             specialAtkName = _specialAtkName;
+            currentInventory = _currentInventory;
             normalAtkDmg = 8;
             specialAtkDmg = 16;
             specialAtkCharge = 100;
@@ -478,13 +487,31 @@ namespace FantasyRPG
 
     class Archer : CharacterDefault
     {
-        public Archer(string _name, string _weaponName, string _weaponType) : base(_name, _weaponName, _weaponType)
+        public Archer(string _name, string _weaponName, string _weaponType, string[] _currentInventory) : base(_name, _weaponName, _weaponType, _currentInventory)
         {
             name = _name;
             weaponName = _weaponName;
             weaponType = _weaponType;
         }
     }
+
+
+    public class Weapon 
+    {
+        public string Name { get; set; }
+        public int Damage { get; set; }
+        public string WeaponName { get; set;}
+        public string WeaponType { get; set;}
+
+    }
+
+
+    class userMenu // Future reference: Authentication system before user logs in, will create a table to store the users information
+    {
+        //
+    }
+
+
     class gameMenu
     {
         static void Main(string[] args)
@@ -853,7 +880,27 @@ namespace FantasyRPG
                     int startPirateJourneyInput;
                     Console.Clear();
                     string pirateName;
-                    string[] pirateWeaponChoice = { "Sharp Cutlass", "Raging Horn", "Somali Pride", "Mohamad's Dagger", "Dilapidated Thorn" };
+
+                    Dictionary<string, (int, string)> pirateWeaponChoice = new Dictionary<string, (int, string)>()
+                    {
+                        { "Sharp Cutlass", (10, "Sword") },
+                        { "Raging Horn", (15, "Longsword") },
+                        { "Somali Pride", (18, "Sword") },
+                        { "Mohamad's Dagger", (20, "Dagger") },
+                        { "Dilapidated Thorn", (13, "Katana") }
+                    };
+
+                    Dictionary<string, (int, string)> pirateAura = new Dictionary<string, (int, string)>();
+                    {
+                        { "Bloodlust", (3, "Rare") },
+                        { "Kraken's Pride", (4, "Rare") },
+                        { "Mystical Remenance", (8, "Unique") },
+                        { "Wriath's Omen", (2, "Uncommon") },
+                        { "Devious Sigma Pirate", (20, "Legendary") },
+                        { "Somalia's Exudance", (10, "Legendary") }
+                    };
+
+
                     string[][] pirateAuraType = new string[][] // Jagged array for aura type, which is associated with a damage bonus
                     {
                         new string[] { "Bloodlust (Unique) +10 damage", "Kraken's Pride (Legendary) +15 damage" },
