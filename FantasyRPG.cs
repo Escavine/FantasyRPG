@@ -651,6 +651,8 @@ namespace FantasyRPG
     {
         public void userClass()
         {
+            smoothConsole smoothPrinting = new smoothConsole(); // initiate the smooth console class
+
             int userChoice; // Define the user choice
 
             // Defining the different classes and rarity of items
@@ -658,7 +660,7 @@ namespace FantasyRPG
             string[] rarity = { "Archaic", "Uncommon", "Mythical", "Divine" }; // Predefined values :3
             int num = 1;
 
-            Console.WriteLine("Welcome to the dungeon game!");
+            smoothPrinting.SlowPrint("Welcome to the dungeon game!");
             Console.WriteLine("\nPick your class");
             Console.WriteLine("-------------------\n"); // Neater
 
@@ -750,26 +752,26 @@ namespace FantasyRPG
 
                     Console.Clear(); // Cleaning purposes
                     Console.WriteLine("Mage's Route");
-                    Console.WriteLine("\nYou undergo intense mana training and finally become a Mage.");
+                    smoothPrinting.FastPrint("\nYou undergo intense mana training and finally become a Mage.\n");
 
-                    Console.WriteLine("What is your name?");
+                    Console.WriteLine("What is your name, adventurer?");
                     string name = Convert.ToString(Console.ReadLine());
 
                     Random ranNum = new Random();
                     int random_index = ranNum.Next(0, starterMageWeapons.Count); // Select a random weapon for the user
 
 
-                    string[] weaponNames = new string[starterMageWeapons.Count]; // All values will be assigned to the array
-                    starterMageWeapons.Keys.CopyTo(weaponNames, 0);
-                    string staffName = weaponNames[random_index]; // Assign a weapon randomly to the user from the converted dictionary
+                    string[] mageWeaponNames = new string[starterMageWeapons.Count]; // All values will be assigned to the array
+                    starterMageWeapons.Keys.CopyTo(mageWeaponNames, 0);
+                    string staffName = mageWeaponNames[random_index]; // Assign a weapon randomly to the user from the converted dictionary
 
-                    List<string> currentInventory = new List<string>();
-                    currentInventory.Add(staffName); // Add the staff to the users current inventory
+                    List<string> mageInventory = new List<string>();
+                    mageInventory.Add(staffName); // Add the staff to the users current inventory
 
 
                     string staffWeaponType = "Staff"; // Fixed and cannot be changed
 
-                    Console.WriteLine("\nChoose two magic specialties from the list: \n");
+                    smoothPrinting.SlowPrint("\nChoose two magic specialties from the list: \n");
 
                     List<string> chosenSpecialties = new List<string>(); // Chosen magic specialities
                     List<string> magicSpells = new List<string>(); // Chosen magical spells
@@ -809,7 +811,7 @@ namespace FantasyRPG
                     {
                         int chosenSpecialtyIndex;
 
-                        Console.WriteLine("\nChoose a magic specialty by entering the corresponding number:");
+                        smoothPrinting.FastPrint("\nChoose a magic specialty by entering the corresponding number:");
                         while (!int.TryParse(Console.ReadLine(), out chosenSpecialtyIndex) || chosenSpecialtyIndex < 1 || chosenSpecialtyIndex > magicChoices.Length) // Conditions to ensure user doesn't input trash
                         {
                             Console.WriteLine("Invalid choice. Please enter a valid number corresponding to the magic specialty.");
@@ -948,15 +950,15 @@ namespace FantasyRPG
 
                     Console.Clear(); // Neatness
 
-                    Mage newWizard = new Mage(name, staffName, staffWeaponType, chosenSpecialties.ToArray(), magicSpells.ToArray(), arcaniaGoldCoins, currentInventory);
+                    Mage newWizard = new Mage(name, staffName, staffWeaponType, chosenSpecialties.ToArray(), arcaniaGoldCoins, magicSpells.ToArray(), mageInventory.ToArray());
 
 
-                    Console.WriteLine("Mage Name: " + name + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + staffName +
+                    smoothPrinting.FastPrint("Mage Name: " + name + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + staffName +
                     "\nMage's Magic Specialties: " + string.Join(", ", chosenSpecialties));
-                    Console.WriteLine("Mage's Chosen Spells: " + string.Join(", ", magicSpells));
+                    smoothPrinting.FastPrint("\nMage's Chosen Spells: " + string.Join(", ", magicSpells));
 
 
-                    Console.WriteLine("Would you like to now embark on your journey in the world of Arcania? (1 for Yes and 2 for No)");
+                    Console.WriteLine("\nWould you like to now embark on your journey in the world of Arcania? (1 for Yes and 2 for No)");
                     startMageJourneyInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
 
 
@@ -983,6 +985,10 @@ namespace FantasyRPG
                     break;
 
                 case 2:
+                    Console.Clear();
+                    Console.BackgroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Knight's aren't avaliable as of present :3");
+                    break;
 
 
                 case 3:
@@ -990,57 +996,67 @@ namespace FantasyRPG
                     Console.Clear();
                     string pirateName;
 
+                    // Dictionary to store the weapon types that a pirate can retrieve before embarking on their journey
                     Dictionary<string, (int, string)> pirateWeaponChoice = new Dictionary<string, (int, string)>()
                     {
-                        { "Sharp Cutlass", (10, "Sword") },
-                        { "Raging Horn", (15, "Longsword") },
-                        { "Somali Pride", (18, "Sword") },
+                        { "Sharp Cutlass", (6, "Sword") },
+                        { "Raging Horn", (8, "Longsword") },
+                        { "Somali Pride", (11, "Sword") },
                         { "Mohamad's Dagger", (20, "Dagger") },
-                        { "Dilapidated Thorn", (13, "Katana") }
+                        { "Dilapidated Thorn", (14, "Katana") }
                     };
 
-                    Dictionary<string, (int, string)> pirateAura = new Dictionary<string, (int, string)>()
+                    // Dictionary to store pirate aura types
+                    Dictionary<string, (int, string)> pirateAuras = new Dictionary<string, (int, string)>()
                     {
                         { "Bloodlust", (3, "Rare") },
                         { "Kraken's Pride", (4, "Rare") },
                         { "Mystical Remenance", (8, "Unique") },
                         { "Wriath's Omen", (2, "Uncommon") },
                         { "Devious Sigma Pirate", (20, "Legendary") },
-                        { "Somalia's Exudance", (10, "Legendary") }
+                        { "Somalia's Exudance", (12, "Unique") }
                     };
 
 
-                    string[][] pirateAuraType = new string[][] // Jagged array for aura type, which is associated with a damage bonus
-                    {
-                        new string[] { "Bloodlust (Unique) +10 damage", "Kraken's Pride (Legendary) +15 damage" },
-                        new string[] { "Mystical Remenance (Rare) +10 damage", "Wraith's Omen (Uncommon) +6 damage" },
-                        new string[] { "Devious Sigma Pirate (OP) +20 damage", "Somalia's Exudance (Rare) +10 damage" },
-                    };
-
-
+                    // Story output
                     Console.WriteLine("You are a proud Somali Pirate, one who has explored the vast open seas for many years, and now you feel that your ready for a new adventure!\n");
 
                     // Take users name
                     Console.WriteLine("Enter your name:");
                     pirateName = Convert.ToString(Console.ReadLine());
 
+                    arcaniaGoldCoins = 0; // Preset zero
+
+                    List<string> pirateInventory = new List<string>();
+
                     // User will be randomly assigned a weapon
-                    Random rd = new Random();
-                    int rand_num = rd.Next(1, 5);
-                    string pirateWeaponName = pirateWeaponChoice[rand_num];
+                    Random weaponPirateRandom = new Random();
+                    int pirateRandomWeaponAssignment = weaponPirateRandom.Next(0, pirateWeaponChoice.Count); // Allow for the random generation between index 0 and length of the dictionary
 
-                    Random random = new Random();
-                    int weaponAuraRoll = rd.Next(0, 2);
-                    string pirateWeaponType = "Sword/Longsword/Dagger/Blades";
-                    string weaponAura = pirateAuraType[weaponAuraRoll][weaponAuraRoll]; // Generate a random aura type for the pirate class
+                    // Get a random weapon name from the dictionary
+                    string pirateWeaponName = pirateWeaponChoice.ElementAt(pirateRandomWeaponAssignment).Key;
 
-                    string pirateAtkName = "Slash";
-                    string pirateSpecialAtkName = "Pirate's might";
+                    pirateInventory.Add(pirateWeaponName); // Insert the weapon into the user's inventory
 
-                    SomaliPirate newPirate = new SomaliPirate(pirateName, pirateWeaponName, pirateWeaponType, weaponAura, pirateAtkName, pirateSpecialAtkName); // Generate the pirate details
+
+                    // User will be randomly assigned an aura
+                    Random auraPirateRandom = new Random();
+                    int pirateAuraRoll = auraPirateRandom.Next(0, pirateAuras.Count); // Allow for the random generation between index 0 and length of the dictionary
+
+                    // Generate random aura for pirate
+                    string pirateAuraName = pirateAuras.ElementAt(pirateAuraRoll).Key;
+
+
+                    // Predefined attributes for a pirate
+                    string pirateAtkName = "Slash"; 
+                    string pirateSpecialAtkName = "Pirate's might"; 
+                    string pirateWeaponType = "Sword/Longsword/Dagger/Blades";  
+
+                    SomaliPirate newPirate = new SomaliPirate(pirateName, pirateWeaponName, pirateWeaponType, pirateAuraName, pirateAtkName, pirateSpecialAtkName, pirateInventory.ToArray(), arcaniaGoldCoins); // Generate the pirate details
 
                     Console.WriteLine("Pirates name: " + pirateName + "\nPirate's Weapon Type: " + pirateWeaponType + "\nPirate's Weapon: " + pirateWeaponName +
-                    "\nPirate's Aura: " + string.Join(", ", weaponAura)); // Display information to the user
+                    "\nPirate's Aura: " + string.Join(", ", pirateAuraName)); // Display information to the user
+
 
                     Console.WriteLine("Would you like to now embark on your journey in the world of Arcania? (1 for Yes and 2 for No)");
                     startPirateJourneyInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
@@ -1069,30 +1085,36 @@ namespace FantasyRPG
 
 
                 case 4:
-                    Console.WriteLine("After long endurance of physical training, your eyes are as sharp as fangs and bowmanship is now your speciality.");
+                    Console.WriteLine("After long endurance of physical training, you develop eyes as keen as an owl and your bowmanship is first class.");
                     Console.WriteLine("What is your name?");
                     name = Convert.ToString(Console.ReadLine());
+
                     break;
                 case 5:
                     Console.ForegroundColor = ConsoleColor.Red; // devious colour hahahaha
                     Console.WriteLine("I'm in your walls :3");
                     Console.WriteLine("You died");
-                    Environment.Exit(0);
+                    Console.ReadLine();
+
                     break;
                 case 6:
                     Console.ForegroundColor = ConsoleColor.Red; // devious colour hahahaha
                     Console.WriteLine("You are not :3, therefore you are not worthy of becoming a devious sigma");
                     Console.WriteLine("You died");
-                    Environment.Exit(0);
+                    Console.ReadLine();
+
                     break;
                 default:
                     Console.ForegroundColor = ConsoleColor.Red; // devious colour hahahaha
                     Console.WriteLine("Please pick a sensible choice and understand if you do that again you'll be punished hahaha");
+
                     break;
             }
 
         }
+
     }
+
 
     public class userJourney // Once the user selects a class, they'll proceed onto their journey
     {
@@ -1100,15 +1122,16 @@ namespace FantasyRPG
         string[] customaryScenarios = { "You embark on a long journey, you find yourself lost midway throughout the journey. There appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?" };
 
         // Non-static scenarios will be introduced later in the game if I can be asked
-        string fixedScenario = "\nYou embark on a long journey, you find yourself lost midway, your eyes are surrounded by vast levels of fog, mitigating your view of the perspective ahead. Closeby, there appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?";
+        string fixedScenario = "\nYou embark on a long journey, you find yourself lost midway, your eyes are surrounded by vast levels of fog, mitigating your view of the perspective ahead. Closeby, there appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. \nWhat do you do?";
 
         public void usersFirstJourney()
         {
+            smoothConsole smoothPrinting = new smoothConsole();
+            smoothPrinting.FastPrint(fixedScenario); 
 
-            Console.WriteLine(fixedScenario);
-
-            Console.WriteLine("1. Fight back");
-            Console.WriteLine("2. Escape");
+            smoothPrinting.FastPrint("\n1. Fight back");
+            smoothPrinting.FastPrint("\n2. Escape");
+            Console.WriteLine("\n");
             fightChoice = Convert.ToInt32(Console.ReadLine());
 
             switch (fightChoice)
@@ -1136,6 +1159,28 @@ namespace FantasyRPG
 
 
 
+
+    }
+
+    public class smoothConsole // This will be used to ensure output from the console is smooth and aesthetic looking
+    {
+        public void SlowPrint(string text) // Slower, smoother console output
+        {
+            foreach (char c in text)
+            {
+                Console.Write(c);
+                Thread.Sleep(50);
+            }
+        }
+
+        public void FastPrint(string text) // Faster, smoother console output
+        {
+            foreach (char c in text)
+            {
+                Console.Write(c);
+                Thread.Sleep(20);
+            }
+        }
 
     }
 
