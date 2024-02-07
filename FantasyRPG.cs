@@ -660,14 +660,78 @@ namespace FantasyRPG
                     int choiceIncrementer = 1; // Used to increment the user choice when picking magic types
                     int startMageJourneyInput;
                     // Arrays containing the variety of different magic choices, spells and weapons.
-                    string[] magicChoices = { "Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic" }; // Future Reference: Make a method in the Mage Class that allows for a mage to learn more magic specialities and skills as they level up.
-                    string[] fireMagicSpells = { "Infrared", "Blazing Rage", "Flamestrike", "Pyroburst", "Phoenix Fury" }; // Future Reference: Add a damage system for the magic spells (e.g. infrared deals 8 damage etc.)
-                    string[] lightningMagicSpells = { "Thunderstrike", "Striking Surge", "Volt Surge", "Arcane Thunder" };
-                    string[] waterMagicSpells = { "Aqua Torrent", "Hydroburst", "Lunar Tide", "Ripple Cascade" };
-                    string[] darkMagicSpells = { "Shadow Veil", "Umbral Surge", "Wraith's Curse", "Eclipsed Oblivion" };
-                    string[] lightMagicSpells = { "Luminous Beam", "Solar Flare", "Etherial Halo", "Aurora's Illumination", "Divine Judgement" };
-                    string[] eucladianMagicSpells = { "Esoteric Paradigm", "Fractural Fissure", "Quantum Flux", "Etherial Nexus" };
-                    string[] starterMageWeapons = { "Weathered Oakwand", "Ancient Runestaff", "Runic Wooden Scepter", "Dusty Relic Rod", "Emerald Crystal Staff" };
+                    string[] magicChoices = { "Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic" };
+
+
+                    // Tuple dictionary for each Fire magic spell, which is associated with a damage value and a mana requirement 
+                    Dictionary<string, (int, int)> fireMagicSpells = new Dictionary<string, (int, int)>();
+                    {
+                        { "Infrared", (5, 25) },
+                        { "Blazing Rage", (10, 40) },
+                        { "Flamestrike", (8, 35) },
+                        { "Pyroburst", (10, 45) },
+                        { "Phoenix Fury", (12, 55)}
+                    };
+
+                    // Tuple dictionary for each Lightning magic spell, which is associated with a damage value and a mana requirement 
+                    Dictionary<string, (int, int)> lightningMagicSpells = new Dictionary<string, (int, int)>();
+                    {
+                        { "Thunderstrike", (6, 25) },
+                        { "Striking Surge", (12, 40) },
+                        { "Volt Surge", (15, 60) },
+                        { "Arcane Thunder", (13, 45) },
+                    };
+
+                    // Tuple dictionary for each Water magic spell, which is associated with a damage value and a mana requirement 
+                    Dictionary<string, (int, int)> waterMagicSpells = new Dictionary<string, (int, int)>();
+                    {
+                        { "Aqua Torrent", (4, 15) },
+                        { "Hydroburst", (10, 30) },
+                        { "Lunar Tide", (15, 40) },
+                        { "Ripple Cascade", (20, 60) },
+                    };
+
+
+                    // Tuple dictionary for each Dark magic spell, which is associated with a damage value and a mana requirement 
+                    Dictionary<string, (int, int)> darkMagicSpells = new Dictionary<string, (int, int)>();
+                    {
+                        { "Shadow Veil", (8, 25) },
+                        { "Umbral Surge", (15, 50) },
+                        { "Wraith's Curse", (12, 35) },
+                        { "Eclipised Oblivion", (6, 15) },
+                    };
+
+                    // Tuple dictionary for each Light magic spell, which is associated with a damage value and a mana requirement 
+                    Dictionary<string, (int, int)> lightMagicSpells = new Dictionary<string, (int, int)>()
+                    {
+                        { "Luminous Beam", (6, 25) },
+                        { "Solar Flare", (12, 40) },
+                        { "Etherial Halo", (15, 60) },
+                        { "Aurora's Illumination", (13, 45) },
+                        { "Divine Judgement", (25, 70) }
+                    };
+
+                    // Tuple dictionary for each Eucladian magic spell, which is associated with a damage value and a mana requirement 
+                    Dictionary<string, (int, int)> eucladianMagicSpells = new Dictionary<string, (int, int)>();
+                    {
+                        { "Esoteric Paradigm", (6, 25) },
+                        { "Fractural Fissure", (12, 40) },
+                        { "Quantum Flux", (15, 60) },
+                        { "Etherial Nexus", (13, 45) },
+                    };
+
+                    // Tuple dictionary for the starter weapons, which is associated with a damage value and a rarity type
+                    Dictionary<string, (int, string)> starterMageWeapons = new Dictionary<string, (int, string)>();
+                    {
+                        { "Weathered Oakwind", (8, "Archaic") },
+                        { "Ancient Runestaff", (12, "Uncommon") },
+                        { "Runic Wooden Scepter", (6, "Archaic") },
+                        { "Dusty Relic Rod", (4, "Archaic") },
+                        { "Emerald Crystal Staff", (16, "Mythical") } 
+
+                    };
+                               
+
 
                     Console.Clear(); // Cleaning purposes
                     Console.WriteLine("\n");
