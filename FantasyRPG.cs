@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 
@@ -182,15 +183,15 @@ namespace FantasyRPG
     {
         // Properties for common wizard attributes
         public string[] magicSpells;
-        string[] magicSpeciality; // User can have multiple magic specialties
+        string[] magicSpecialties; // User can have multiple magic specialties
         public int spellUsage; // Spell usage to keep spells in control
 
-        public Mage(string _name, string _weaponName, string _weaponType, string[] _magicSpeciality, int _arcaniaGoldCoins, string[] _magicSpells, string[] _currentInventory) : base(_name, _weaponName, _weaponType, _currentInventory, _arcaniaGoldCoins)
+        public Mage(string _name, string _weaponName, string _weaponType, string[] _magicSpecialties, int _arcaniaGoldCoins, string[] _magicSpells, string[] _currentInventory) : base(_name, _weaponName, _weaponType, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
             weaponName = _weaponName;
             weaponType = _weaponType;
-            magicSpeciality = _magicSpeciality;
+            magicSpecialties = _magicSpecialties;
             currentInventory = _currentInventory;
             magicSpells = _magicSpells; // Predefined variables for every new wizard in the game
             spellUsage = 5;
@@ -215,7 +216,7 @@ namespace FantasyRPG
 
         public void MageTraining()
         {
-            // generate a random value for exp
+            // Generate a random value for exp
             Random rd = new Random();
             int rand_num = rd.Next(1, 5);
 
@@ -224,187 +225,264 @@ namespace FantasyRPG
 
         }
 
-        public void chooseNewSpeciality(string[] magicSpeciality, string name) // Should the mage level up, they'll be able to pick another speciality (only 1)
+        public void chooseNewSpeciality(string[] magicSpecialties, string name) // Should the mage level up, they'll be able to pick another speciality (only 1)
         {
             // For every 10 levels, a mage can pick a new speciality
-
+            SmoothConsole smoothPrinting = new SmoothConsole(); // Aesthetic output
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.Clear(); // Cleaning purposes
 
-            Console.BackgroundColor = ConsoleColor.Blue;
-            string userInput;
-            int correspondingNumOrder = 1;
-            List<string> updatedMagicChoices = new List<string>();
-            string[] chosenSpecialty = magicSpeciality;
 
-            // Magic choices + Elements
+            int choiceIncrementer = 1; // Used to increment the user choice when picking magic types
+            List<string> updatedMagicChoices = new List<string>(); // Will display magic types that the user isn't familiar with
+            List<string> chosenMagicSpecialityByUser = new List<string>(); // This will contain the chosen magic speciality that the user has selected
+
+
+            // Arrays containing the variety of different magic choices, spells and weapons.
             string[] magicChoices = { "Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic" };
 
-            // Output this to the terminal
-            Console.WriteLine("Mage's Prestiege!");
-            Console.WriteLine("\n" + name + "'s" + " current known magic specialities:");
+
+            smoothPrinting.FastPrint("Mage's Prestiege!\n");
+            smoothPrinting.FastPrint("\n" + name + "'s" + " current known magic specialities:" + "\n");
 
 
-            for (int j = 0; j < magicSpeciality.Length; j++) // Display the user's current magic specialties
+            for (int j = 0; j < magicSpecialties.Length; j++) // Display the user's current magic specialties
             {
-                Console.WriteLine(magicSpeciality[j]);
+                smoothPrinting.FastPrint("* " + magicSpecialties[j] + "\n");
             }
+
 
             // Updating the magic choices by appending the magic elements that the user doesn't possess in a list
             foreach (var choice in magicChoices)
             {
-                if (!magicSpeciality.Contains(choice))
+                if (!magicSpecialties.Contains(choice))
                 {
                     updatedMagicChoices.Add(choice);
                 }
             }
 
-            Console.WriteLine("\nPick a new magic speciality!");
+            smoothPrinting.SlowPrint("\nChoose a new speciality from the list: \n");
 
 
-            for (int i = 0; i < updatedMagicChoices.Count; i++)
+            // Display all the magic speciality choices to the user
+            for (int j = 0; j < updatedMagicChoices.Count; j++)
             {
-                Console.WriteLine(correspondingNumOrder + ". " + updatedMagicChoices[i]); // Display the magic choices avaliable to the user
-                correspondingNumOrder++;
-
+                smoothPrinting.FastPrint(choiceIncrementer + ". " + updatedMagicChoices[j] + "\n");
+                choiceIncrementer++;
             }
 
-            userInput = Convert.ToString(Console.ReadLine());
 
-            Console.WriteLine("Input based on the corresponding number");
+            smoothPrinting.FastPrint("\nChoose a magic specialty by entering the corresponding number:");
+            string userInput = Convert.ToString(Console.ReadLine());
 
-            // Appending the magic element to array.
-            int selectedIndex;
 
-            if (int.TryParse(userInput, out selectedIndex) && selectedIndex >= 1 && selectedIndex <= updatedMagicChoices.Count)
+            int chosenSpecialtyIndex;
+
+            if (int.TryParse(userInput, out chosenSpecialtyIndex) && chosenSpecialtyIndex >= 1 && chosenSpecialtyIndex <= updatedMagicChoices.Count)
             {
-                // chosenSpecialties is used to keep track of the magic that was learnt
-                chosenSpecialty[0] = updatedMagicChoices[selectedIndex - 1];
-                Console.WriteLine(name + " has learnt the magic speciality: " + chosenSpecialty[0]);
+                // Adjusting the index to match the list indexing (which starts from 0)
+                chosenSpecialtyIndex--; // Decrease by 1 to match the zero-based indexing
 
-                Array.Resize(ref magicSpeciality, magicSpeciality.Length + 1);
-                magicSpeciality[magicSpeciality.Length - 1] = updatedMagicChoices[selectedIndex - 1];
-                Console.WriteLine($"Updated magic specialties: {string.Join(", ", magicSpeciality)}");
+                chosenMagicSpecialityByUser.Add(updatedMagicChoices[chosenSpecialtyIndex]);
+                smoothPrinting.FastPrint("\n" + name + " has learnt the magic speciality: " + chosenMagicSpecialityByUser[0]);
 
-                learnNewSpells(chosenSpecialty, magicSpeciality, magicSpells); // Redirect the user to this function for them to learn new spells for their given speciality.
+                // Add the chosen specialty to the magicSpecialties array
+                Array.Resize(ref magicSpecialties, magicSpecialties.Length + 1);
+                magicSpecialties[magicSpecialties.Length - 1] = chosenMagicSpecialityByUser[0];
 
-            }
-            else
-            {
-                // Invalid input
-                Console.WriteLine("Invalid input. Please enter a valid number corresponding to the magic speciality.");
-
+                smoothPrinting.FastPrint($"\nUpdated magic specialties: {string.Join(", ", magicSpecialties)}");
+                learnNewSpells(magicSpecialties, magicSpells, chosenMagicSpecialityByUser, magicChoices); // Pass as array to learnNewSpells
             }
         }
-
-        public void learnNewSpells(string[] chosenSpecialty, string[] magicSpeciality, string[] magicSpells)
+        public void learnNewSpells(string[] magicSpecialties, string[] magicSpells, List<string> chosenMagicSpecialityByUser, string[] magicChoices)
         {
-            string[] magicChoices = { "Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic" }; // Future Reference: Make a method in the Mage Class that allows for a mage to learn more magic specialities and skills as they level up.
-            string[] fireMagicSpells = { "Infrared", "Blazing Rage", "Flamestrike", "Pyroburst", "Phoenix Fury" }; // Future Reference: Add a damage system for the magic spells (e.g. infrared deals 8 damage etc.)
-            string[] lightningMagicSpells = { "Thunderstrike", "Striking Surge", "Volt Surge", "Arcane Thunder" };
-            string[] waterMagicSpells = { "Aqua Torrent", "Hydroburst", "Lunar Tide", "Ripple Cascade" };
-            string[] darkMagicSpells = { "Shadow Veil", "Umbral Surge", "Wraith's Curse", "Eclipsed Oblivion" };
-            string[] lightMagicSpells = { "Luminous Beam", "Solar Flare", "Etherial Halo", "Aurora's Illumination", "Divine Judgement" };
-            string[] eucladianMagicSpells = { "Esoteric Paradigm", "Fractural Fissure", "Quantum Flux", "Etherial Nexus" };
+            // Tuple dictionary for each Fire magic spell, which is associated with a damage value and a mana requirement 
+            Dictionary<string, (int, int)> fireMagicSpells = new Dictionary<string, (int, int)>()
+                    {
+                        { "Infrared", (3, 15) },
+                        { "Blazing Rage", (5, 20) },
+                        { "Flamestrike", (7, 25) },
+                        { "Pyroburst", (9, 30) },
+                        { "Phoenix Fury", (12, 35) }
+                    };
 
-            int totalSpellsDisplayed = 0; // Keep track of the number of total spells displahyed
+            // Tuple dictionary for each Lightning magic spell, which is associated with a damage value and a mana requirement 
+            Dictionary<string, (int, int)> lightningMagicSpells = new Dictionary<string, (int, int)>()
+                    {
+                        { "Thunderstrike", (4, 15) },
+                        { "Striking Surge", (6, 20) },
+                        { "Volt Surge", (8, 25) },
+                        { "Arcane Thunder", (10, 30) }
+                    };
 
-            // Display the given spells to the user
+            // Tuple dictionary for each Water magic spell, which is associated with a damage value and a mana requirement 
+            Dictionary<string, (int, int)> waterMagicSpells = new Dictionary<string, (int, int)>()
+                    {
+                        { "Aqua Torrent", (2, 10) },
+                        { "Hydroburst", (4, 15) },
+                        { "Lunar Tide", (6, 20) },
+                        { "Ripple Cascade", (8, 25) }
+                    };
 
-            for (int z = 0; z < 1; z++)
+            // Tuple dictionary for each Dark magic spell, which is associated with a damage value and a mana requirement 
+            Dictionary<string, (int, int)> darkMagicSpells = new Dictionary<string, (int, int)>()
+                    {
+                        { "Shadow Veil", (3, 15) },
+                        { "Umbral Surge", (5, 20) },
+                        { "Wraith's Curse", (7, 25) },
+                        { "Eclipised Oblivion", (9, 30) }
+                    };
+
+            // Tuple dictionary for each Light magic spell, which is associated with a damage value and a mana requirement 
+            Dictionary<string, (int, int)> lightMagicSpells = new Dictionary<string, (int, int)>()
+                    {
+                        { "Luminous Beam", (3, 15) },
+                        { "Solar Flare", (5, 20) },
+                        { "Etherial Halo", (7, 25) },
+                        { "Aurora's Illumination", (9, 30) },
+                        { "Divine Judgement", (12, 35) }
+                    };
+
+            // Tuple dictionary for each Eucladian magic spell, which is associated with a damage value and a mana requirement 
+            Dictionary<string, (int, int)> eucladianMagicSpells = new Dictionary<string, (int, int)>()
+                    {
+                        { "Esoteric Paradigm", (3, 15) },
+                        { "Fractural Fissure", (5, 20) },
+                        { "Quantum Flux", (7, 25) },
+                        { "Etherial Nexus", (9, 30) }
+                    };
+
+
+
+            // Convert all the following magic spells dictionary to array values to be used in the loop :3
+
+            string[] fireSpells = new string[fireMagicSpells.Count];
+            fireMagicSpells.Keys.CopyTo(fireSpells, 0);
+
+            string[] waterSpells = new string[waterMagicSpells.Count];
+            waterMagicSpells.Keys.CopyTo(waterSpells, 0);
+
+            string[] lightningSpells = new string[lightningMagicSpells.Count];
+            lightningMagicSpells.Keys.CopyTo(lightningSpells, 0);
+
+            string[] darkSpells = new string[darkMagicSpells.Count];
+            darkMagicSpells.Keys.CopyTo(darkSpells, 0);
+
+            string[] lightSpells = new string[lightMagicSpells.Count];
+            lightMagicSpells.Keys.CopyTo(lightSpells, 0);
+
+            string[] eucladianSpells = new string[eucladianMagicSpells.Count];
+            eucladianMagicSpells.Keys.CopyTo(eucladianSpells, 0);
+
+
+
+            // Will be used to check the magic specialities chosen by the user before displaying the range of spells they can pick
+
+            int totalSpellsDisplayed = 0;
+
+            for (int z = 0; z < chosenMagicSpecialityByUser.Count; z++)
             {
-                Console.WriteLine("\n" + chosenSpecialty[z] + " Spells:");
+                SmoothConsole smoothPrinting = new SmoothConsole();
+                
+                Console.WriteLine("\n" + chosenMagicSpecialityByUser[z] + " Spells:");
 
-                switch (chosenSpecialty[z])
+                switch (chosenMagicSpecialityByUser[z])
                 {
                     case "Fire":
-                        foreach (string spell in fireMagicSpells)
+                        foreach (string spell in fireSpells)
                         {
-                            Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                            smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
                             totalSpellsDisplayed++;
-                            Console.WriteLine("Press Enter to see the next spell...");
+                            Console.WriteLine("\nPress Enter to see the next spell...");
                             Console.ReadLine();
                         }
                         break;
                     case "Lightning":
-                        foreach (string spell in lightningMagicSpells)
+                        foreach (string spell in lightningSpells)
                         {
-                            Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                            smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
                             totalSpellsDisplayed++;
-                            Console.WriteLine("Press Enter to see the next spell...");
+                            Console.WriteLine("\nPress Enter to see the next spell...");
                             Console.ReadLine();
                         }
                         break;
                     case "Water":
-                        foreach (string spell in waterMagicSpells)
+                        foreach (string spell in waterSpells)
                         {
-                            Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                            smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
                             totalSpellsDisplayed++;
-                            Console.WriteLine("Press Enter to see the next spell...");
+                            Console.WriteLine("\nPress Enter to see the next spell...");
                             Console.ReadLine();
                         }
                         break;
                     case "Dark":
-                        foreach (string spell in darkMagicSpells)
+                        foreach (string spell in darkSpells)
                         {
-                            Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                            smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
                             totalSpellsDisplayed++;
-                            Console.WriteLine("Press Enter to see the next spell...");
+                            Console.WriteLine("\nPress Enter to see the next spell...");
                             Console.ReadLine();
                         }
                         break;
                     case "Light":
-                        foreach (string spell in lightMagicSpells)
+                        foreach (string spell in lightSpells)
                         {
-                            Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                            smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
                             totalSpellsDisplayed++;
-                            Console.WriteLine("Press Enter to see the next spell...");
+                            Console.WriteLine("\nPress Enter to see the next spell...");
                             Console.ReadLine();
                         }
                         break;
                     case "Eucladian-Magic":
-                        foreach (string spell in eucladianMagicSpells)
+                        foreach (string spell in eucladianSpells)
                         {
-                            Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                            smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
                             totalSpellsDisplayed++;
-                            Console.WriteLine("Press Enter to see the next spell...");
+                            Console.WriteLine("\nPress Enter to see the next spell...");
                             Console.ReadLine();
                         }
                         break;
                     default:
-                        Console.WriteLine("Unknown Error");
+                        smoothPrinting.FastPrint("Unknown Error");
                         Environment.Exit(0);
                         break;
                 }
 
+                // Optionally, you can prompt for the next specialty
+                if (z < chosenMagicSpecialityByUser.Count - 1)
+                {
+                    Console.WriteLine("\nPress Enter to see the spells for the next specialty...");
+                    Console.ReadLine();
+                }
             }
 
             int specialityIndex = 0;
 
-            for (specialityIndex = 0; specialityIndex < 1; specialityIndex++)
+            for (specialityIndex = 0; specialityIndex < 2; specialityIndex++) // User can learn 2 spells for the given magic speciality
             {
-                Console.WriteLine($"Select 2 magic spells for {chosenSpecialty[specialityIndex]} by entering the corresponding numbers. (1-4 for each element)");
+                Console.WriteLine($"Select 2 magic spells for {magicSpecialties[specialityIndex]} by entering the corresponding numbers. (1-4 for each element)");
 
                 List<string> currentMagicSpells = new List<string>(); // Dynamic list which will be used to store the chosen magical spells of the users
 
-                switch (chosenSpecialty[chosenSpecialty.Length - 1]) // Fix this that way it only displays the spells for exclusively the new magic element learnt (e.g. if user learns fire, then only display fire magic spells)
+                switch (magicSpecialties[magicSpecialties.Length - 1]) // Fix this that way it only displays the spells for exclusively the new magic element learnt (e.g. if user learns fire, then only display fire magic spells)
                 {
                     case "Fire":
-                        currentMagicSpells = fireMagicSpells.ToList();
+                        currentMagicSpells = fireSpells.ToList();
                         break;
                     case "Lightning":
-                        currentMagicSpells = lightningMagicSpells.ToList();
+                        currentMagicSpells = lightningSpells.ToList();
                         break;
                     case "Water":
-                        currentMagicSpells = waterMagicSpells.ToList();
+                        currentMagicSpells = waterSpells.ToList();
                         break;
                     case "Dark":
-                        currentMagicSpells = darkMagicSpells.ToList();
+                        currentMagicSpells = darkSpells.ToList();
                         break;
                     case "Light":
-                        currentMagicSpells = lightMagicSpells.ToList();
+                        currentMagicSpells = lightSpells.ToList();
                         break;
                     case "Eucladian-Magic":
-                        currentMagicSpells = eucladianMagicSpells.ToList();
+                        currentMagicSpells = eucladianSpells.ToList();
                         break;
                     default:
                         Console.WriteLine("Unknown magic speciality.");
@@ -419,7 +497,7 @@ namespace FantasyRPG
 
                 for (int spellNumber = 0; spellNumber < 2; spellNumber++)
                 {
-                    Console.WriteLine($"Choose magic spell #{spellNumber + 1} for {chosenSpecialty[specialityIndex]}:");
+                    Console.WriteLine($"Choose magic spell #{spellNumber + 1} for {chosenMagicSpecialityByUser[specialityIndex]}:");
                     int magicSpellChoice;
                     while (!int.TryParse(Console.ReadLine(), out magicSpellChoice) || magicSpellChoice < 1 || magicSpellChoice > magicChoices.Length)
                     {
@@ -439,7 +517,7 @@ namespace FantasyRPG
                 Console.WriteLine(magicSpells[i]);
             }
 
-            chosenSpecialty = null; // Clear the array of any specialties, for the next time this is run
+            chosenMagicSpecialityByUser = null; // Clear the array of any specialties, for the next time this is executed when the user reaches this point in the game again
         }
     }
 
@@ -732,8 +810,8 @@ namespace FantasyRPG
 
             for (int i = 0; i < fantasyClasses.Length; i++)
             {
-
-                Console.WriteLine(num + ". " + fantasyClasses[i]);
+                
+                smoothPrinting.FastPrint(num + ". " + fantasyClasses[i] + "\n");
                 num++;
             }
 
@@ -817,7 +895,7 @@ namespace FantasyRPG
                     };
 
                     Console.Clear(); // Cleaning purposes
-                    Console.WriteLine("Mage's Route");
+                    smoothPrinting.FastPrint("Mage's Route");
                     smoothPrinting.FastPrint("\nYou undergo intense mana training and finally become a Mage.\n");
 
                     Console.WriteLine("What is your name, adventurer?");
@@ -839,13 +917,13 @@ namespace FantasyRPG
 
                     smoothPrinting.SlowPrint("\nChoose two magic specialties from the list: \n");
 
-                    List<string> chosenSpecialties = new List<string>(); // Chosen magic specialities
+                    List<string> magicSpecialties = new List<string>(); // Chosen magic specialities
                     List<string> magicSpells = new List<string>(); // Chosen magical spells
 
                     // Display all the magic choices to the user
                     for (int j = 0; j < magicChoices.Length; j++)
                     {
-                        Console.WriteLine(choiceIncrementer + ". " + magicChoices[j]);
+                        smoothPrinting.FastPrint(choiceIncrementer + ". " + magicChoices[j] + "\n");
                         choiceIncrementer++;
                     }
 
@@ -883,7 +961,7 @@ namespace FantasyRPG
                             Console.WriteLine("Invalid choice. Please enter a valid number corresponding to the magic specialty.");
                         }
 
-                        chosenSpecialties.Add(magicChoices[chosenSpecialtyIndex - 1]);
+                        magicSpecialties.Add(magicChoices[chosenSpecialtyIndex - 1]);
                     }
 
 
@@ -892,11 +970,11 @@ namespace FantasyRPG
                     // Will be used to check the magic specialities chosen by the user before displaying the range of spells they can pick
 
 
-                    for (int z = 0; z < chosenSpecialties.Count; z++)
+                    for (int z = 0; z < magicSpecialties.Count; z++)
                     {
-                        Console.WriteLine("\n" + chosenSpecialties[z] + " Spells:");
+                        Console.WriteLine("\n" + magicSpecialties[z] + " Spells:");
 
-                        switch (chosenSpecialties[z])
+                        switch (magicSpecialties[z])
                         {
                             case "Fire":
                                 foreach (string spell in fireSpells)
@@ -959,7 +1037,7 @@ namespace FantasyRPG
                         }
 
                         // Optionally, you can prompt for the next specialty
-                        if (z < chosenSpecialties.Count - 1)
+                        if (z < magicSpecialties.Count - 1)
                         {
                             Console.WriteLine("\nPress Enter to see the spells for the next specialty...");
                             Console.ReadLine();
@@ -967,13 +1045,13 @@ namespace FantasyRPG
                     }
 
 
-                    for (int specialityIndex = 0; specialityIndex < chosenSpecialties.Count; specialityIndex++)
+                    for (int specialityIndex = 0; specialityIndex < magicSpecialties.Count; specialityIndex++)
                     {
-                        Console.WriteLine($"Select 2 magic spells for {chosenSpecialties[specialityIndex]} by entering the corresponding numbers. (1-4 for each element)");
+                        Console.WriteLine($"Select 2 magic spells for {magicSpecialties[specialityIndex]} by entering the corresponding numbers. (1-4 for each element)");
 
                         List<string> currentMagicSpells = new List<string>(); // Dynamic list which will be used to store the chosen magical spells of the users
 
-                        switch (chosenSpecialties[specialityIndex])
+                        switch (magicSpecialties[specialityIndex])
                         {
                             case "Fire":
                                 currentMagicSpells = fireSpells.ToList();
@@ -1003,7 +1081,7 @@ namespace FantasyRPG
 
                         for (int spellNumber = 0; spellNumber < 2; spellNumber++)
                         {
-                            Console.WriteLine($"Choose magic spell #{spellNumber + 1} for {chosenSpecialties[specialityIndex]}:");
+                            Console.WriteLine($"Choose magic spell #{spellNumber + 1} for {magicSpecialties[specialityIndex]}:");
                             int magicSpellChoice;
                             while (!int.TryParse(Console.ReadLine(), out magicSpellChoice) || magicSpellChoice < 1 || magicSpellChoice > magicChoices.Length)
                             {
@@ -1016,11 +1094,11 @@ namespace FantasyRPG
 
                     Console.Clear(); // Neatness
 
-                    Mage newWizard = new Mage(name, staffName, staffWeaponType, chosenSpecialties.ToArray(), arcaniaGoldCoins, magicSpells.ToArray(), mageInventory.ToArray());
-
+                    Mage newWizard = new Mage(name, staffName, staffWeaponType, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells.ToArray(), mageInventory.ToArray());
+                    newWizard.chooseNewSpeciality(magicSpecialties.ToArray(), name);
 
                     smoothPrinting.FastPrint("Mage Name: " + name + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + staffName +
-                    "\nMage's Magic Specialties: " + string.Join(", ", chosenSpecialties));
+                    "\nMage's Magic Specialties: " + string.Join(", ", magicSpecialties));
                     smoothPrinting.FastPrint("\nMage's Chosen Spells: " + string.Join(", ", magicSpells));
 
 
