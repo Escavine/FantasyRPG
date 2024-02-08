@@ -272,7 +272,7 @@ namespace FantasyRPG
             }
 
 
-            smoothPrinting.FastPrint("\nChoose a magic specialty by entering the corresponding number:");
+            smoothPrinting.FastPrint("\nChoose a magic specialty by entering the corresponding number:\n");
             string userInput = Convert.ToString(Console.ReadLine());
 
 
@@ -290,12 +290,14 @@ namespace FantasyRPG
                 Array.Resize(ref magicSpecialties, magicSpecialties.Length + 1);
                 magicSpecialties[magicSpecialties.Length - 1] = chosenMagicSpecialityByUser[0];
 
-                smoothPrinting.FastPrint($"\nUpdated magic specialties: {string.Join(", ", magicSpecialties)}");
+                smoothPrinting.FastPrint($"\nUpdated magic specialties: {string.Join(", ", magicSpecialties)}\n");
                 learnNewSpells(magicSpecialties, magicSpells, chosenMagicSpecialityByUser, magicChoices); // Pass as array to learnNewSpells
             }
         }
         public void learnNewSpells(string[] magicSpecialties, string[] magicSpells, List<string> chosenMagicSpecialityByUser, string[] magicChoices)
         {
+            SmoothConsole smoothPrinting = new SmoothConsole(); // Cleaner output
+
             // Tuple dictionary for each Fire magic spell, which is associated with a damage value and a mana requirement 
             Dictionary<string, (int, int)> fireMagicSpells = new Dictionary<string, (int, int)>()
                     {
@@ -380,10 +382,8 @@ namespace FantasyRPG
 
             int totalSpellsDisplayed = 0;
 
-            for (int z = 0; z < chosenMagicSpecialityByUser.Count; z++)
-            {
-                SmoothConsole smoothPrinting = new SmoothConsole();
-                
+            for (int z = 0; z < 1; z++)
+            {                
                 Console.WriteLine("\n" + chosenMagicSpecialityByUser[z] + " Spells:");
 
                 switch (chosenMagicSpecialityByUser[z])
@@ -458,7 +458,7 @@ namespace FantasyRPG
 
             int specialityIndex = 0;
 
-            for (specialityIndex = 0; specialityIndex < 2; specialityIndex++) // User can learn 2 spells for the given magic speciality
+            for (specialityIndex = 0; specialityIndex < 1; specialityIndex++) // User can learn 2 spells for the given magic speciality
             {
                 Console.WriteLine($"Select 2 magic spells for {magicSpecialties[specialityIndex]} by entering the corresponding numbers. (1-4 for each element)");
 
@@ -497,7 +497,7 @@ namespace FantasyRPG
 
                 for (int spellNumber = 0; spellNumber < 2; spellNumber++)
                 {
-                    Console.WriteLine($"Choose magic spell #{spellNumber + 1} for {chosenMagicSpecialityByUser[specialityIndex]}:");
+                    smoothPrinting.FastPrint($"\nChoose magic spell #{spellNumber + 1} for {chosenMagicSpecialityByUser[specialityIndex]}:\n");
                     int magicSpellChoice;
                     while (!int.TryParse(Console.ReadLine(), out magicSpellChoice) || magicSpellChoice < 1 || magicSpellChoice > magicChoices.Length)
                     {
@@ -509,15 +509,43 @@ namespace FantasyRPG
                 }
             }
 
+            Console.Clear(); // Neater
 
-            Console.WriteLine(name + " has learned the following magical abilities: ");
+            smoothPrinting.FastPrint("\n" + name + "'s" + " current known magic specialities:" + "\n");
 
-            for (int i = 0; i < magicSpells.Length; i++) // Display the magic spells that the user knows
+
+            for (int j = 0; j < magicSpecialties.Length; j++) // Display the user's updated magic specialties
             {
-                Console.WriteLine(magicSpells[i]);
+                smoothPrinting.FastPrint("* " + magicSpecialties[j] + "\n");
+            }
+
+            smoothPrinting.FastPrint("\n" + name + "'s " + "current known magical spells/abilities:\n");
+
+            for (int i = 0; i < magicSpells.Length; i++) // Display users updated magic spells
+            {
+                smoothPrinting.FastPrint("* " + magicSpells[i] + "\n");
             }
 
             chosenMagicSpecialityByUser = null; // Clear the array of any specialties, for the next time this is executed when the user reaches this point in the game again
+
+
+            int userContinue = 0;
+            Console.WriteLine("\nAre you ready to go back? (1 for yes)"); // Give mage user time to read their updated information
+            userContinue = Convert.ToInt32(Console.ReadLine());
+
+            switch (userContinue)
+            {
+                case 1:
+                    Console.WriteLine("Redirecting " + name + " back to FantasyRPG...");
+                    Console.ForegroundColor = ConsoleColor.Gray; // Return back to default colour
+                    Console.Clear(); // Neater
+                    break;
+                default:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid input, please try again.");
+                    break;
+            }
+
         }
     }
 
@@ -915,7 +943,7 @@ namespace FantasyRPG
 
                     string staffWeaponType = "Staff"; // Fixed and cannot be changed
 
-                    smoothPrinting.SlowPrint("\nChoose two magic specialties from the list: \n");
+                    smoothPrinting.FastPrint("\nChoose two magic specialties from the list: \n");
 
                     List<string> magicSpecialties = new List<string>(); // Chosen magic specialities
                     List<string> magicSpells = new List<string>(); // Chosen magical spells
@@ -955,7 +983,7 @@ namespace FantasyRPG
                     {
                         int chosenSpecialtyIndex;
 
-                        smoothPrinting.FastPrint("\nChoose a magic specialty by entering the corresponding number:");
+                        smoothPrinting.FastPrint("\nChoose a magic specialty by entering the corresponding number:\n");
                         while (!int.TryParse(Console.ReadLine(), out chosenSpecialtyIndex) || chosenSpecialtyIndex < 1 || chosenSpecialtyIndex > magicChoices.Length) // Conditions to ensure user doesn't input trash
                         {
                             Console.WriteLine("Invalid choice. Please enter a valid number corresponding to the magic specialty.");
@@ -1095,9 +1123,8 @@ namespace FantasyRPG
                     Console.Clear(); // Neatness
 
                     Mage newWizard = new Mage(name, staffName, staffWeaponType, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells.ToArray(), mageInventory.ToArray());
-                    newWizard.chooseNewSpeciality(magicSpecialties.ToArray(), name);
 
-                    smoothPrinting.FastPrint("Mage Name: " + name + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + staffName +
+                    smoothPrinting.FastPrint("\nMage Name: " + name + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + staffName +
                     "\nMage's Magic Specialties: " + string.Join(", ", magicSpecialties));
                     smoothPrinting.FastPrint("\nMage's Chosen Spells: " + string.Join(", ", magicSpells));
 
@@ -1110,6 +1137,7 @@ namespace FantasyRPG
                     {
                         case 1:
                             Console.Clear(); // Neatness
+                            smoothPrinting.FastPrint("First scenario\n");
                             Console.WriteLine("You will now be sent to the world of Arcania, make sure to not die.");
                             userJourney wizardJourney = new userJourney(); // Journey start!
                             wizardJourney.usersFirstJourney();
