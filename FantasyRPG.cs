@@ -73,7 +73,7 @@ namespace FantasyRPG
         }
 
         // Used for recovery
-        public void Meditate() 
+        public void Meditate()
         {
             Console.WriteLine(name + " has meditated ");
             mana = mana + 20;
@@ -505,8 +505,8 @@ namespace FantasyRPG
     {
         public string Name { get; set; }
         public int Damage { get; set; }
-        public string WeaponName { get; set;}
-        public string WeaponType { get; set;}
+        public string WeaponName { get; set; }
+        public string WeaponType { get; set; }
 
     }
 
@@ -530,10 +530,19 @@ namespace FantasyRPG
     }
 
 
-    class gameMenu
+    class GameMenu
     {
-        static void Main(string[] args)
+        static void Main(string[] args) // Future reference: With the implementation of the authentication system soon, this will be moved.
         {
+            GameMenu menu = new GameMenu();
+            menu.gameMenu(); // User is first directed to the game menu method
+        }
+
+
+        void gameMenu() // After user information is authenticated, they'll be lead here
+        {
+            SmoothConsole smoothOutput = new SmoothConsole(); // Initialize the smooth console
+
             // Future reference: Implementing AI mobs and perhaps AI individuals
 
             int userChoice; // Used for the start of the game
@@ -543,18 +552,18 @@ namespace FantasyRPG
             "For you down bad individuals, I MIGHT introduce a harem feature, perhaps implement it with AI, imagine how insane that'll be? LOL" }; // Array containing necessary game tips, more will be added in the future.
 
             // Initiation of the console game
-            Console.WriteLine("---------FantasyRPG----------\n");
+            smoothOutput.FastPrint("---------FantasyRPG----------\n");
             Console.WriteLine("Game advice: When inputting values, input a corresponding value to the action (e.g. enter the value 1 in order to start the game\n"); // Display game advice
             Random ran = new Random();
             int ran_num = ran.Next(0, 5);
             Console.WriteLine("Game Tip: " + gameTips[ran_num] + "\n"); // Display a random game tip in the menu
 
             Console.WriteLine("Game Menu\n");
-            Console.WriteLine("1. Get started");
-            Console.WriteLine("2. Load save game"); // Feature doesn't work yet
-            Console.WriteLine("3. Help");
-            Console.WriteLine("4. Make a suggestion"); // Feature doesn't work yet
-            Console.WriteLine("5. Future plans");
+            smoothOutput.FastPrint("1. Get started\n");
+            smoothOutput.FastPrint("2. Load save game\n"); // Feature doesn't work yet
+            smoothOutput.FastPrint("3. Help\n");
+            smoothOutput.FastPrint("4. Make a suggestion\n"); // Feature doesn't work yet
+            smoothOutput.FastPrint("5. Future plans\n");
 
             // Register user input
             userChoice = Convert.ToInt32(Console.ReadLine());
@@ -563,95 +572,135 @@ namespace FantasyRPG
             {
                 case 1:
                     Console.WriteLine("\nYour game session will now begin!");
-                    classSelection selectClass = new classSelection(); // Create a new game session
+                    ClassSelection selectClass = new ClassSelection(); // Create a new game session
                     selectClass.userClass(); // Proceed to let the user pick a character class
                     break;
                 case 2:
-                    Console.WriteLine("Unfortunately, this feature isn't avaliable yet :3");
-                    Console.ReadKey(); // Read user input before terminating
+                    loadingSaveData(); // Lead user to the method
                     break;
                 case 3:
-                    int userInput;
-                    string[] gameAdvice = { "You might die at any point within the game unknowingly.",
-                        "Eucladian abilities are quite overpowered, if you find the opportunity to pursue it, then do so.",
-                    "Having a strong romantical bond with someone, can potentially increase your abilities.", "There are many classes to choose from, all having unique features.",
-                    "Avoid fighting overpowered foes early in-game (i.e. dragons), you'll probably get destroyed." };
-                    Console.WriteLine("--------Help Section--------\n");
-                    Console.WriteLine("What is FantasyRPG?\n");
-
-                    // Introduction to Arcania, the world of FantasyRPG
-                    Console.WriteLine("Welcome to FantasyRPG, a console-based game that transports you to the enchanting realm of Arcania!");
-                    Console.WriteLine("Embark on an epic journey through a vast and mystical world, brimming with hidden treasures awaiting discovery.");
-                    Console.WriteLine("The path ahead won't be an easy one – be prepared to face life-and-death situations, battling formidable foes and overcoming treacherous obstacles.");
-
-                    Console.WriteLine("\nIn Arcania, every choice you make shapes your destiny. As you navigate through the immersive landscape, forge alliances with fellow travelers and encounter mythical creatures, you'll find yourself entangled in a web of friendships.");
-
-                    Console.WriteLine("\nBut beware, adventurer, for danger lurks in the shadows. Face cunning enemies, solve challenging puzzles, and unravel the mysteries that lay dormant in this magical land.");
-
-                    Console.WriteLine("\nYet, amidst the chaos, there is a chance for something more. As you progress, open your heart to the possibility of romantic connections, adding a layer of complexity to your personal story.");
-
-                    Console.WriteLine("\nAre you ready to delve into the heart of Arcania, where every decision shapes your fate? Your adventure begins now!");
-
-                    // Ask if the user wants to see any game advice in the help section
-                    Console.WriteLine("Would you like to see any game advice?\n");
-                    Console.WriteLine("1. Yes");
-                    Console.WriteLine("2. No");
-                    userInput = Convert.ToInt32(Console.ReadLine());
-
-                    switch (userInput)
-                    {
-                        case 1:
-                            Console.WriteLine("Game Advice:\n");
-
-                            foreach (string s in gameAdvice) // Display game advice
-                            {
-                                Console.WriteLine(s + "\n");
-                            }
-                            break;
-
-                        case 2: // Future reference: Move the game menu code to different methods rather than the main, that way you can utilise recursion
-                            Environment.Exit(0); // Terminate the game session
-                            break;
-                        default:
-                            Console.WriteLine("Invalid input, please try again.");
-                            break;
-                    }
-
-                    Console.ReadKey(); // Wait for key input
-
-
-
+                    helpSection(); // Lead user to the method
                     break;
                 case 4:
-                    Console.WriteLine("Send a message to kmescavine@gmail.com in order to send your ideas!"); // Future reference: Use an SMTP feature to allow the user to input their email and send their suggestion
+                    makeGameSuggestion(); // Lead user to the method
                     break;
                 case 5:
-                    int count = 1;
-                    string[] futurePlans = { "Adding new classes", "Potential romance feature", "Harem feature (not likely)", "A chance of randomly dying", "Illnesses and cures", "Game difficulty (easy, normal, hard, impossible)" };
-                    Console.WriteLine("Future plans for FantasyRPG include:\n");
-
-                    foreach (string plan in futurePlans)
-                    {
-                        Console.WriteLine("Plan " + count + ": " + plan + "\n");
-                        count++;
-                    }
-
-                    Console.ReadKey(); // Wait for key input
-
+                    futurePlans(); // Lead user to the method
                     break;
                 default:
                     Console.WriteLine("Invalid option, please try again!");
                     break;
             }
+        }
+
+
+        void loadingSaveData()
+        {
+            bool loadingSaveData = true;
+            int loadingSaveDataInput = 0;
+
+            while (loadingSaveData == true)
+            {
+                // Should the user be logged in, they'll be able to access their save data
+                Console.WriteLine("This feature isn't avaliable yet, would you like to go back" +
+                    "to the menu? (1 for yes and 2 for no)");
+
+                if (loadingSaveDataInput == 1)
+                {
+                    ("You will be lead back to the menu");
+                    gameMenu();
+                }
+
+            }
 
         }
-    }
 
-    public class classSelection // This class will allow a user to pick from a variety of different roles in the game, before embarking on their journey.
+        void helpSection()
+        {
+            int userInput;
+            string[] gameAdvice = { "You might die at any point within the game unknowingly.",
+                        "Eucladian abilities are quite overpowered, if you find the opportunity to pursue it, then do so.",
+                    "Having a strong romantical bond with someone, can potentially increase your abilities.", "There are many classes to choose from, all having unique features.",
+                    "Avoid fighting overpowered foes early in-game (i.e. dragons), you'll probably get destroyed." };
+            Console.WriteLine("--------Help Section--------\n");
+            Console.WriteLine("What is FantasyRPG?\n");
+
+            // Introduction to Arcania, the world of FantasyRPG
+            Console.WriteLine("Welcome to FantasyRPG, a text-based adventure that transports you to the mystical realm of Arcania!");
+            Console.WriteLine("Embark on an epic journey through a vast and enchanting world, where hidden treasures await discovery at every turn.");
+            Console.WriteLine("Prepare yourself for the challenges ahead, as you confront life-and-death situations, battle formidable foes, and overcome treacherous obstacles.");
+            Console.WriteLine();
+            Console.WriteLine("In Arcania, your choices shape your destiny. Navigate the immersive landscape, forge alliances with fellow travelers, and encounter mythical creatures that will test your courage and resolve.");
+            Console.WriteLine();
+            Console.WriteLine("But beware, adventurer, for danger lurks in the shadows. Face cunning enemies, solve challenging puzzles, and unravel the mysteries that lie dormant in this magical land.");
+            Console.WriteLine();
+            Console.WriteLine("Amidst the chaos, there is also the promise of something more. As you progress, open your heart to the possibility of romantic connections, adding depth to your personal story.");
+            Console.WriteLine();
+            Console.WriteLine("Are you ready to embark on a journey into the heart of Arcania, where every decision shapes your fate? Your adventure begins now!");
+
+            // Ask if the user wants to see any game advice in the help section
+            Console.WriteLine("Would you like to see any game advice?\n");
+            Console.WriteLine("1. Yes");
+            Console.WriteLine("2. No");
+            userInput = Convert.ToInt32(Console.ReadLine());
+
+            switch (userInput)
+            {
+                case 1:
+                    Console.WriteLine("Game Advice:\n");
+
+                    foreach (string s in gameAdvice) // Display game advice
+                    {
+                        Console.WriteLine(s + "\n");
+                    }
+                    break;
+
+                case 2: // Future reference: Move the game menu code to different methods rather than the main, that way you can utilise recursion
+                    Environment.Exit(0); // Terminate the game session
+                    break;
+                default:
+                    Console.WriteLine("Invalid input, please try again.");
+                    break;
+            }
+
+            Console.ReadKey(); // Wait for key input
+        }
+
+
+        void makeGameSuggestion() // Game suggestions
+        {
+            Console.WriteLine("Send a message to kmescavine@gmail.com in order to send your ideas!"); // Future reference: Use an SMTP feature to allow the user to input their email and send their suggestion
+            Console.ReadKey();
+        }
+
+        void futurePlans() // Future plans for the game development
+        {
+            int count = 1;
+            string[] futurePlans = { "Adding new classes", "Potential romance feature", "Harem feature (not likely)", "A chance of randomly dying", "Illnesses and cures", "Game difficulty (easy, normal, hard, impossible)" };
+            Console.WriteLine("Future plans for FantasyRPG include:\n");
+
+            foreach (string plan in futurePlans)
+            {
+                Console.WriteLine("Plan " + count + ": " + plan + "\n");
+                count++;
+            }
+
+            Console.ReadKey(); // Wait for key input
+
+
+        }
+
+
+
+
+    }
+}
+
+    public class ClassSelection // This class will allow a user to pick from a variety of different roles in the game, before embarking on their journey.
     {
         public void userClass()
         {
-            smoothConsole smoothPrinting = new smoothConsole(); // initiate the smooth console class
+            SmoothConsole smoothPrinting = new SmoothConsole(); // initiate the smooth console class
 
             int userChoice; // Define the user choice
 
@@ -835,59 +884,59 @@ namespace FantasyRPG
                             case "Fire":
                                 foreach (string spell in fireSpells)
                                 {
-                                    Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                                    smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
                                     totalSpellsDisplayed++;
-                                    Console.WriteLine("Press Enter to see the next spell...");
+                                    Console.WriteLine("\nPress Enter to see the next spell...");
                                     Console.ReadLine();
                                 }
                                 break;
                             case "Lightning":
                                 foreach (string spell in lightningSpells)
                                 {
-                                    Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                                    smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
                                     totalSpellsDisplayed++;
-                                    Console.WriteLine("Press Enter to see the next spell...");
+                                    Console.WriteLine("\nPress Enter to see the next spell...");
                                     Console.ReadLine();
                                 }
                                 break;
                             case "Water":
                                 foreach (string spell in waterSpells)
                                 {
-                                    Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                                    smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
                                     totalSpellsDisplayed++;
-                                    Console.WriteLine("Press Enter to see the next spell...");
+                                    Console.WriteLine("\nPress Enter to see the next spell...");
                                     Console.ReadLine();
                                 }
                                 break;
                             case "Dark":
                                 foreach (string spell in darkSpells)
                                 {
-                                    Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                                    smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
                                     totalSpellsDisplayed++;
-                                    Console.WriteLine("Press Enter to see the next spell...");
+                                    Console.WriteLine("\nPress Enter to see the next spell...");
                                     Console.ReadLine();
                                 }
                                 break;
                             case "Light":
                                 foreach (string spell in lightSpells)
                                 {
-                                    Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                                    smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
                                     totalSpellsDisplayed++;
-                                    Console.WriteLine("Press Enter to see the next spell...");
+                                    Console.WriteLine("\nPress Enter to see the next spell...");
                                     Console.ReadLine();
                                 }
                                 break;
                             case "Eucladian-Magic":
                                 foreach (string spell in eucladianSpells)
                                 {
-                                    Console.WriteLine((totalSpellsDisplayed + 1) + ". " + spell);
+                                    smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
                                     totalSpellsDisplayed++;
-                                    Console.WriteLine("Press Enter to see the next spell...");
+                                    Console.WriteLine("\nPress Enter to see the next spell...");
                                     Console.ReadLine();
                                 }
                                 break;
                             default:
-                                Console.WriteLine("Unknown Error");
+                                smoothPrinting.FastPrint("Unknown Error");
                                 Environment.Exit(0);
                                 break;
                         }
@@ -1063,6 +1112,7 @@ namespace FantasyRPG
                     Console.WriteLine("\nWould you like to now embark on your journey in the world of Arcania? (1 for Yes and 2 for No)");
                     startPirateJourneyInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
 
+                    // Future reference: For each class chosen, make a seperate method for them
                     switch (startPirateJourneyInput)
                     {
                         case 1:
@@ -1124,16 +1174,16 @@ namespace FantasyRPG
         string[] customaryScenarios = { "You embark on a long journey, you find yourself lost midway throughout the journey. There appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?" };
 
         // Non-static scenarios will be introduced later in the game if I can be asked
-        string fixedScenario = "\nYou embark on a long journey, you find yourself lost midway, your eyes are surrounded by vast levels of fog, mitigating your view of the perspective ahead. Closeby, there appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training\n. \nWhat do you do?";
+        string fixedScenario = "\nYou embark on a long journey, you find yourself lost midway, your eyes are surrounded by vast levels of fog, mitigating your view of the perspective ahead. Closeby, there appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training.";
 
         public void usersFirstJourney()
         {
-            smoothConsole smoothPrinting = new smoothConsole();
-            smoothPrinting.FastPrint(fixedScenario); 
+            SmoothConsole smoothPrinting = new SmoothConsole();
+            smoothPrinting.FastPrint(fixedScenario + "\n");
+            Console.WriteLine("\nWhat do you do?");
 
             smoothPrinting.FastPrint("\n1. Fight back");
-            smoothPrinting.FastPrint("\n2. Escape");
-            Console.WriteLine("\n");
+            smoothPrinting.FastPrint("\n2. Escape\n");
             fightChoice = Convert.ToInt32(Console.ReadLine());
 
             switch (fightChoice)
@@ -1164,8 +1214,8 @@ namespace FantasyRPG
 
     }
 
-    public class smoothConsole // This will be used to ensure output from the console is smooth and aesthetic looking
-    {
+    public class SmoothConsole // This will be used to ensure output from the console is smooth and aesthetic looking
+{
         public void SlowPrint(string text) // Slower, smoother console output
         {
             foreach (char c in text)
