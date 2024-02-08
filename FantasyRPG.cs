@@ -1019,7 +1019,7 @@ namespace FantasyRPG
 
 
                     // Story output
-                    Console.WriteLine("You are a proud Somali Pirate, one who has explored the vast open seas for many years, and now you feel that your ready for a new adventure!\n");
+                    smoothPrinting.FastPrint("You are a proud Somali Pirate, one who has explored the vast open seas for many years, and now you feel that your ready for a new adventure!\n");
 
                     // Take users name
                     Console.WriteLine("Enter your name:");
@@ -1053,12 +1053,14 @@ namespace FantasyRPG
                     string pirateWeaponType = "Sword/Longsword/Dagger/Blades";  
 
                     SomaliPirate newPirate = new SomaliPirate(pirateName, pirateWeaponName, pirateWeaponType, pirateAuraName, pirateAtkName, pirateSpecialAtkName, pirateInventory.ToArray(), arcaniaGoldCoins); // Generate the pirate details
+                    
+                    Console.Clear(); // Neater
 
-                    Console.WriteLine("Pirates name: " + pirateName + "\nPirate's Weapon Type: " + pirateWeaponType + "\nPirate's Weapon: " + pirateWeaponName +
+                    smoothPrinting.FastPrint("Pirates name: " + pirateName + "\nPirate's Weapon Type: " + pirateWeaponType + "\nPirate's Weapon: " + pirateWeaponName +
                     "\nPirate's Aura: " + string.Join(", ", pirateAuraName)); // Display information to the user
 
 
-                    Console.WriteLine("Would you like to now embark on your journey in the world of Arcania? (1 for Yes and 2 for No)");
+                    Console.WriteLine("\nWould you like to now embark on your journey in the world of Arcania? (1 for Yes and 2 for No)");
                     startPirateJourneyInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
 
                     switch (startPirateJourneyInput)
@@ -1122,7 +1124,7 @@ namespace FantasyRPG
         string[] customaryScenarios = { "You embark on a long journey, you find yourself lost midway throughout the journey. There appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?" };
 
         // Non-static scenarios will be introduced later in the game if I can be asked
-        string fixedScenario = "\nYou embark on a long journey, you find yourself lost midway, your eyes are surrounded by vast levels of fog, mitigating your view of the perspective ahead. Closeby, there appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. \nWhat do you do?";
+        string fixedScenario = "\nYou embark on a long journey, you find yourself lost midway, your eyes are surrounded by vast levels of fog, mitigating your view of the perspective ahead. Closeby, there appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training\n. \nWhat do you do?";
 
         public void usersFirstJourney()
         {
