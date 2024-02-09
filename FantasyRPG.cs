@@ -383,7 +383,7 @@ namespace FantasyRPG
             int totalSpellsDisplayed = 0;
 
             for (int z = 0; z < 1; z++)
-            {                
+            {
                 Console.WriteLine("\n" + chosenMagicSpecialityByUser[z] + " Spells:");
 
                 switch (chosenMagicSpecialityByUser[z])
@@ -838,7 +838,7 @@ namespace FantasyRPG
 
             for (int i = 0; i < fantasyClasses.Length; i++)
             {
-                
+
                 smoothPrinting.FastPrint(num + ". " + fantasyClasses[i] + "\n");
                 num++;
             }
@@ -1124,7 +1124,7 @@ namespace FantasyRPG
 
                     Mage newWizard = new Mage(name, staffName, staffWeaponType, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells.ToArray(), mageInventory.ToArray());
 
-                    smoothPrinting.FastPrint("\nMage Name: " + name + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + staffName +
+                    smoothPrinting.FastPrint("Mage Name: " + name + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + staffName +
                     "\nMage's Magic Specialties: " + string.Join(", ", magicSpecialties));
                     smoothPrinting.FastPrint("\nMage's Chosen Spells: " + string.Join(", ", magicSpells));
 
@@ -1285,7 +1285,7 @@ namespace FantasyRPG
                     Console.Clear(); // Neater
                     redirectUserToMenu.gameMenu();
                     break;
-                   
+
                 default:
                     Console.ForegroundColor = ConsoleColor.Red; // devious colour hahahaha
                     Console.WriteLine("Please pick a sensible choice and understand if you do that again you'll be punished hahaha");
