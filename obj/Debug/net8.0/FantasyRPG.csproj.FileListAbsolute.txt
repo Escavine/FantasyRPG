@@ -1,0 +1,14 @@
+C:\Users\Khalid\source\repos\FantasyRPG\FantasyRPG\bin\Debug\net8.0\FantasyRPG.exe
+C:\Users\Khalid\source\repos\FantasyRPG\FantasyRPG\bin\Debug\net8.0\FantasyRPG.deps.json
+C:\Users\Khalid\source\repos\FantasyRPG\FantasyRPG\bin\Debug\net8.0\FantasyRPG.runtimeconfig.json
+C:\Users\Khalid\source\repos\FantasyRPG\FantasyRPG\bin\Debug\net8.0\FantasyRPG.dll
+C:\Users\Khalid\source\repos\FantasyRPG\FantasyRPG\bin\Debug\net8.0\FantasyRPG.pdb
+C:\Users\Khalid\source\repos\FantasyRPG\FantasyRPG\obj\Debug\net8.0\FantasyRPG.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Khalid\source\repos\FantasyRPG\FantasyRPG\obj\Debug\net8.0\FantasyRPG.AssemblyInfoInputs.cache
+C:\Users\Khalid\source\repos\FantasyRPG\FantasyRPG\obj\Debug\net8.0\FantasyRPG.AssemblyInfo.cs
+C:\Users\Khalid\source\repos\FantasyRPG\FantasyRPG\obj\Debug\net8.0\FantasyRPG.csproj.CoreCompileInputs.cache
+C:\Users\Khalid\source\repos\FantasyRPG\FantasyRPG\obj\Debug\net8.0\FantasyRPG.dll
+C:\Users\Khalid\source\repos\FantasyRPG\FantasyRPG\obj\Debug\net8.0\refint\FantasyRPG.dll
+C:\Users\Khalid\source\repos\FantasyRPG\FantasyRPG\obj\Debug\net8.0\FantasyRPG.pdb
+C:\Users\Khalid\source\repos\FantasyRPG\FantasyRPG\obj\Debug\net8.0\FantasyRPG.genruntimeconfig.cache
+C:\Users\Khalid\source\repos\FantasyRPG\FantasyRPG\obj\Debug\net8.0\ref\FantasyRPG.dll
