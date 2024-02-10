@@ -828,11 +828,11 @@ namespace FantasyRPG
             int userChoice; // Define the user choice
 
             // Defining the different classes and rarity of items
-            string[] fantasyClasses = { "Mage", "Knight", "Somali Pirate", "Shadowwrath", "Archer", "Assassin", "Return to menu" }; // Predefined array of roles
+            string[] fantasyClasses = { "Mage", "Knight", "Somali Pirate", "Shadowwrath", "Archer", "Return to menu" }; // Predefined array of roles
             string[] rarity = { "Archaic", "Uncommon", "Mythical", "Divine" }; // Predefined values :3
             int num = 1;
 
-            smoothPrinting.SlowPrint("Welcome to the world of Arcania!\n");
+            smoothPrinting.RapidPrint("Welcome to the world of Arcania!\n");
             Console.WriteLine("\nPick your class");
             Console.WriteLine("-------------------\n"); // Neater
 
@@ -927,7 +927,7 @@ namespace FantasyRPG
                     smoothPrinting.FastPrint("\nYou undergo intense mana training and finally become a Mage.\n");
 
                     Console.WriteLine("What is your name, adventurer?");
-                    string name = Convert.ToString(Console.ReadLine());
+                    string mageName = Convert.ToString(Console.ReadLine());
 
                     Random ranNum = new Random();
                     int random_index = ranNum.Next(0, starterMageWeapons.Count); // Select a random weapon for the user
@@ -983,12 +983,17 @@ namespace FantasyRPG
                     {
                         int chosenSpecialtyIndex;
 
+                        // Prompt the user to choose a magic specialty
                         smoothPrinting.FastPrint("\nChoose a magic specialty by entering the corresponding number:\n");
-                        while (!int.TryParse(Console.ReadLine(), out chosenSpecialtyIndex) || chosenSpecialtyIndex < 1 || chosenSpecialtyIndex > magicChoices.Length) // Conditions to ensure user doesn't input trash
+
+                        // Keep prompting until a valid choice is made
+                        while (!int.TryParse(Console.ReadLine(), out chosenSpecialtyIndex) || chosenSpecialtyIndex < 1 || chosenSpecialtyIndex > magicChoices.Length)
                         {
+                            // Display an error message for invalid input
                             Console.WriteLine("Invalid choice. Please enter a valid number corresponding to the magic specialty.");
                         }
 
+                        // Add the chosen magic specialty to the list
                         magicSpecialties.Add(magicChoices[chosenSpecialtyIndex - 1]);
                     }
 
@@ -1122,9 +1127,9 @@ namespace FantasyRPG
 
                     Console.Clear(); // Neatness
 
-                    Mage newWizard = new Mage(name, staffName, staffWeaponType, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells.ToArray(), mageInventory.ToArray());
+                    Mage newWizard = new Mage(mageName, staffName, staffWeaponType, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells.ToArray(), mageInventory.ToArray());
 
-                    smoothPrinting.FastPrint("Mage Name: " + name + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + staffName +
+                    smoothPrinting.FastPrint("Mage Name: " + mageName + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + staffName +
                     "\nMage's Magic Specialties: " + string.Join(", ", magicSpecialties));
                     smoothPrinting.FastPrint("\nMage's Chosen Spells: " + string.Join(", ", magicSpells));
 
@@ -1139,8 +1144,8 @@ namespace FantasyRPG
                             Console.Clear(); // Neatness
                             smoothPrinting.FastPrint("First scenario\n");
                             Console.WriteLine("You will now be sent to the world of Arcania, make sure to not die.");
-                            userJourney wizardJourney = new userJourney(); // Journey start!
-                            wizardJourney.usersFirstJourney();
+                            FirstScenario wizardJourney = new FirstScenario(); // Journey start!
+                            wizardJourney.usersFirstJourney(mageName);
                             break;
 
                         case 2:
@@ -1241,8 +1246,8 @@ namespace FantasyRPG
                         case 1:
                             Console.Clear(); // Neatness
                             Console.WriteLine("You will now be sent to the world of Arcania, make sure to not die.");
-                            userJourney pirateJourney = new userJourney(); // Journey start!
-                            pirateJourney.usersFirstJourney();
+                            FirstScenario pirateJourney = new FirstScenario(); // Journey start!
+                            pirateJourney.usersFirstJourney(pirateName);
                             break;
 
                         case 2:
@@ -1262,7 +1267,7 @@ namespace FantasyRPG
                 case 4:
                     Console.WriteLine("After long endurance of physical training, you develop eyes as keen as an owl and your bowmanship is first class.");
                     Console.WriteLine("What is your name?");
-                    name = Convert.ToString(Console.ReadLine());
+                    string archerName = Convert.ToString(Console.ReadLine());
 
                     break;
                 case 5:
@@ -1299,7 +1304,7 @@ namespace FantasyRPG
 
 
 
-    public class userJourney // Once the user selects a class, they'll proceed onto their journey
+    public class FirstScenario // Once the user selects a class, they'll proceed onto their journey
     {
         int fightChoice;
         string[] customaryScenarios = { "You embark on a long journey, you find yourself lost midway throughout the journey. There appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?" };
@@ -1307,7 +1312,7 @@ namespace FantasyRPG
         // Non-static scenarios will be introduced later in the game if I can be asked
         string fixedScenario = "\nYou embark on a long journey, you find yourself lost midway, your eyes are surrounded by vast levels of fog, mitigating your view of the perspective ahead. Closeby, there appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training.";
 
-        public void usersFirstJourney()
+        public void usersFirstJourney(string name)
         {
             SmoothConsole smoothPrinting = new SmoothConsole();
             smoothPrinting.FastPrint(fixedScenario + "\n");
@@ -1329,6 +1334,9 @@ namespace FantasyRPG
                 case 2:
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Wise choice, you successfully escape with all your limbs intact.");
+                    Console.WriteLine("TESTING MEASURE: YOU WILL NOW BE LEAD TO THE USER DASHBOARD");
+                    gameDashboard userDashboard = new gameDashboard();
+                    userDashboard.dashboard(name);
                     break;
                 default:
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -1345,8 +1353,36 @@ namespace FantasyRPG
 
     }
 
+
+
+    public class gameDashboard
+    {
+        public void dashboard(string name) // Will display the user dashboard for the game
+        {
+            SmoothConsole smoothPrinting = new SmoothConsole();
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Gray;
+            smoothPrinting.RapidPrint(name + "'s " + "dashboard\n");
+            smoothPrinting.RapidPrint("1. Main storyline (NOT WORKING YET)\n");
+            smoothPrinting.RapidPrint("2. Infinite dungeon (NOT WORKING YET)\n");
+            smoothPrinting.RapidPrint("3. Guild reputation(NOT WORKING YET)\n");
+            smoothPrinting.RapidPrint("4. Shop (NOT WORKING YET)\n");
+            Console.ReadKey(); // No functionality for now
+
+        }
+    }
+
     public class SmoothConsole // This will be used to ensure output from the console is smooth and aesthetic looking
     {
+
+        public void RapidPrint(string text) // Even faster console output
+        {
+            foreach (char c in text)
+            {
+                Console.Write(c);
+                Thread.Sleep(10);
+            }
+        }
         public void SlowPrint(string text) // Slower, smoother console output
         {
             foreach (char c in text)
