@@ -128,42 +128,100 @@ namespace FantasyRPG
 
     class MobDefault // Mob preset for the game
     {
-        public string normalAtkName, specialAtkName, name;
-        public int normalAtkDmg, specialAtkDmg, specialAtkRecharge, health;
-        
+        public string specialAtkName, name;
+        public int normalAtkDmg, specialAtkDmg, specialAtkRecharge, mobHealth;
 
-        public MobDefault(string _name, string _normalAtkName, string _specialAtkName, int _normalAtkDmg, int _specialAtkDmg, int _specialAtkRecharge, int _health) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
+
+        // Mobs can have different attack names and varying item drops, each associated with a rarity and damage value
+        public Dictionary<string, (int, string, string)> itemDrop; // First string defines the weapon name, second integer defines the weapon damage, thirs stirng defines the weapon rarity and fourth string defines the weapon type
+        public Dictionary<string, int> normalAtkNames;
+
+        public MobDefault(string _name, Dictionary<string, int> _normalAtkNames, string _specialAtkName, int _normalAtkDmg, int _specialAtkDmg, int _specialAtkRecharge, int _mobHealth, Dictionary<string, (int, string, string)> _itemDrop) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
         {
             name = _name;
-            normalAtkName = _normalAtkName;
+            normalAtkNames = _normalAtkNames;
             specialAtkName = _specialAtkName;
             normalAtkDmg = _normalAtkDmg;
             specialAtkDmg = _specialAtkDmg;
+            itemDrop = _itemDrop; // Mobs have a chance to drop a random item once they die
             specialAtkRecharge = _specialAtkRecharge;
-            health = _health;
-
-            
+            mobHealth = _mobHealth;
 
         }
 
     }
 
-    class Dragon : MobDefault
+    class Dragon : MobDefault // Dragon class
     {
+        SmoothConsole smoothPrinting = new SmoothConsole();
 
-        public Dragon(string _name, string _normalAtkName, string _specialAtkName, int _normalAtkDmg, int _specialAtkDmg, int _specialAtkRecharge, int _health) : base(_name, _normalAtkName, _specialAtkName, _normalAtkDmg, _specialAtkDmg, _specialAtkRecharge, _health)
+        public Dragon(string _name, Dictionary<string, int> _normalAtkNames, string _specialAtkName, int _normalAtkDmg, int _specialAtkDmg, int _specialAtkRecharge, int _mobHealth, Dictionary<string, (int, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkName, _normalAtkDmg, _specialAtkDmg, _specialAtkRecharge, _mobHealth, _itemDrop)
         {
+            // Default presets for a dragon, inherited from the mob default class
 
+            Dictionary<string, int> normalAtkNames = new Dictionary<string, int>() // Preset name for all dragon's normal attacks
+            {
+                { "Dragon's Claw", 30 },
+                { "Dragon's Breath", 40 },
+                { "Raging Tempest", 50 }
+            };
+
+
+            Dictionary<string, (int, string)> itemDrop = new Dictionary<string, (int, string)>()
+            {
+                { "Etherial Froststaff", (50, "(Unique)") },
+                { "Nightfall Rapier", (50, "(Unique)") },
+                { "Chaosfire Greatsword", (60, "(Unique)") },
+                { "Nightshade Arc", (55, "(Unique)") }
+            };
+
+            normalAtkNames = _normalAtkNames;
 
         }
 
-        public void exertPressure()
-        {
+        // Future reference: Create different types of dragons that have weaknesses (i.e. water dragons, shadow dragons etc)
 
+        public void exertPressure(int level) // Dragons will use to make humans fear them, should the users level be lower than expected
+        {
+            if (level < 10) // Should the users level be below level 10, then the dragon will exert pressure to the individual, reducing their attack value.
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                smoothPrinting.FastPrint("Your level is lower than expected, the Dragon exerts pressure, reducing your attack damage");
+            }
+        
+        }
+
+
+        public void dragonNormalAtk()
+        {
+            Random rd = new Random();
+            rd.Next(0, 2); // Generate a value from 0 to 2
+
+            smoothPrinting.FastPrint("Dragon has used " + normalAtkNames[rd] + "\n");
 
         }
-        public void dragonRoar()
+
+        public void dragonSpecialAtk() // If the dragons special attack recharge reaches 100%, then this will be activated
         {
+            // Future reference: make the dragons special attack dynamic with a dictionary
+
+            smoothPrinting.SlowPrint("Dragon has used " + specialAtkName + " and has dealt " + specialAtkDmg + "\n");
+
+        }
+
+        public void dropItem(int health)
+        {
+            if (mobHealth == 0)
+            {
+                Random itemDropChance = new Random();
+                itemDropChance.Next(0, 2);
+                smoothPrinting.FastPrint("Dragon has been defeated\n");
+
+
+                smoothPrinting.FastPrint("Item drop: ");
+
+
+            }
 
         }
 
