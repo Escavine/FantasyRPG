@@ -155,10 +155,12 @@ namespace FantasyRPG
     {
         SmoothConsole smoothPrinting = new SmoothConsole();
 
-        public Dragon(string _name, Dictionary<string, int> _normalAtkNames, string _specialAtkName, int _normalAtkDmg, int _specialAtkDmg, int _specialAtkRecharge, int _mobHealth, Dictionary<string, (int, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkName, _normalAtkDmg, _specialAtkDmg, _specialAtkRecharge, _mobHealth, _itemDrop)
+        public Dragon(string _name, Dictionary<string, int> _normalAtkNames, string _specialAtkName, int _normalAtkDmg, int _specialAtkDmg, int _specialAtkRecharge, int _mobHealth, Dictionary<string, (int, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkName, _normalAtkDmg, _specialAtkDmg, _specialAtkRecharge, _mobHealth, _itemDrop)
         {
             // Default presets for a dragon, inherited from the mob default class
 
+
+            // Dictionary containing dragon attacks and their associated damage value
             Dictionary<string, int> normalAtkNames = new Dictionary<string, int>() // Preset name for all dragon's normal attacks
             {
                 { "Dragon's Claw", 30 },
@@ -166,17 +168,19 @@ namespace FantasyRPG
                 { "Raging Tempest", 50 }
             };
 
-
-            Dictionary<string, (int, string)> itemDrop = new Dictionary<string, (int, string)>()
+            // Dictionary that contains weapon name, damage, rarity and weapon type
+            Dictionary<string, (int, string, string)> itemDrop = new Dictionary<string, (int, string, string)>()
             {
-                { "Etherial Froststaff", (50, "(Unique)") },
-                { "Nightfall Rapier", (50, "(Unique)") },
-                { "Chaosfire Greatsword", (60, "(Unique)") },
-                { "Nightshade Arc", (55, "(Unique)") }
+                { "Etherial Froststaff", (50, "(Unique)", "Staff") },
+                { "Nightfall Rapier", (50, "(Unique)", "Rapier/Sword") },
+                { "Chaosfire Greatsword", (60, "(Unique)", "Greatsword/Sword") },
+                { "Nightshade Arc", (55, "(Unique)", "Bow") },
+                { "Aerith's Heirloom", (80, "(Legendary)", "Staff") }
             };
 
+            itemDrop = _itemDrop;
             normalAtkNames = _normalAtkNames;
-
+            mobHealth = 350; // Dragons have 350HP by default
         }
 
         // Future reference: Create different types of dragons that have weaknesses (i.e. water dragons, shadow dragons etc)
@@ -195,17 +199,27 @@ namespace FantasyRPG
         public void dragonNormalAtk()
         {
             Random rd = new Random();
-            rd.Next(0, 2); // Generate a value from 0 to 2
+            List<string> attackNames = normalAtkNames.Keys.ToList(); // Get all attack names
 
-            smoothPrinting.FastPrint("Dragon has used " + normalAtkNames[rd] + "\n");
+            int randomIndex = rd.Next(0, attackNames.Count); // Generate a random index
 
+            string randomAttackName = attackNames[randomIndex]; // Get a random attack name
+            int damage = normalAtkNames[randomAttackName]; // Get the damage associated with the attack
+
+            smoothPrinting.FastPrint("Dragon has used " + randomAttackName + " dealing " + damage + " damage.\n");
         }
 
         public void dragonSpecialAtk() // If the dragons special attack recharge reaches 100%, then this will be activated
         {
             // Future reference: make the dragons special attack dynamic with a dictionary
 
-            smoothPrinting.SlowPrint("Dragon has used " + specialAtkName + " and has dealt " + specialAtkDmg + "\n");
+            if (specialAtkRecharge == 100) // Should the dragon's special attack recharge reach 100%, then it'll use its special ability, dealing high levels of damage, it also increases its health
+            {
+                smoothPrinting.SlowPrint("\nDragon ULT");
+                smoothPrinting.SlowPrint("\nDragon has used " + specialAtkName + " and has dealt " + specialAtkDmg + "\n");
+                smoothPrinting.RapidPrint("\nDragon has recovered +20 health");
+                mobHealth = mobHealth + 20; // Slight health regen
+            }
 
         }
 
@@ -341,7 +355,7 @@ namespace FantasyRPG
 
 
             // Arrays containing the variety of different magic choices, spells and weapons.
-            string[] magicChoices = { "Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic" };
+            string[] magicChoices = { "Fire-Magic", "Water-Magic", "Lighning-Magic", "Ice-Magic", "Dark-Magic", "Light-Magic", "Eucladian-Magic" };
 
 
             smoothPrinting.FastPrint("Mage's Prestiege!\n");
@@ -410,14 +424,7 @@ namespace FantasyRPG
                         { "Phoenix Fury", (12, 35) }
                     };
 
-            // Tuple dictionary for each Lightning magic spell, which is associated with a damage value and a mana requirement 
-            Dictionary<string, (int, int)> lightningMagicSpells = new Dictionary<string, (int, int)>()
-                    {
-                        { "Thunderstrike", (4, 15) },
-                        { "Striking Surge", (6, 20) },
-                        { "Volt Surge", (8, 25) },
-                        { "Arcane Thunder", (10, 30) }
-                    };
+
 
             // Tuple dictionary for each Water magic spell, which is associated with a damage value and a mana requirement 
             Dictionary<string, (int, int)> waterMagicSpells = new Dictionary<string, (int, int)>()
@@ -428,6 +435,26 @@ namespace FantasyRPG
                         { "Ripple Cascade", (8, 25) }
                     };
 
+            // Tuple dictionary for each Ice magic spell, which is associated with a damage value and a mana requirement
+            Dictionary<string, (int, int)> iceMagicSpells = new Dictionary<string, (int, int)>()
+            {
+                    { "Frostbite", (5, 20) },
+                    { "Ice Lance", (9, 30) },
+                    { "Blizzard Tundra", (15, 50) },
+                    { "Frozen Fury", (7, 25) }
+            };
+
+
+            // Tuple dictionary for each Lightning magic spell, which is associated with a damage value and a mana requirement 
+            Dictionary<string, (int, int)> lightningMagicSpells = new Dictionary<string, (int, int)>()
+                    {
+                        { "Thunderstrike", (4, 15) },
+                        { "Striking Surge", (6, 20) },
+                        { "Volt Surge", (8, 25) },
+                        { "Arcane Thunder", (10, 30) }
+                    };
+
+
             // Tuple dictionary for each Dark magic spell, which is associated with a damage value and a mana requirement 
             Dictionary<string, (int, int)> darkMagicSpells = new Dictionary<string, (int, int)>()
                     {
@@ -436,6 +463,7 @@ namespace FantasyRPG
                         { "Wraith's Curse", (7, 25) },
                         { "Eclipised Oblivion", (9, 30) }
                     };
+
 
             // Tuple dictionary for each Light magic spell, which is associated with a damage value and a mana requirement 
             Dictionary<string, (int, int)> lightMagicSpells = new Dictionary<string, (int, int)>()
@@ -447,6 +475,7 @@ namespace FantasyRPG
                         { "Divine Judgement", (12, 35) }
                     };
 
+
             // Tuple dictionary for each Eucladian magic spell, which is associated with a damage value and a mana requirement 
             Dictionary<string, (int, int)> eucladianMagicSpells = new Dictionary<string, (int, int)>()
                     {
@@ -457,7 +486,6 @@ namespace FantasyRPG
                     };
 
 
-
             // Convert all the following magic spells dictionary to array values to be used in the loop :3
 
             string[] fireSpells = new string[fireMagicSpells.Count];
@@ -465,6 +493,9 @@ namespace FantasyRPG
 
             string[] waterSpells = new string[waterMagicSpells.Count];
             waterMagicSpells.Keys.CopyTo(waterSpells, 0);
+
+            string[] iceSpells = new string[iceMagicSpells.Count];
+            iceMagicSpells.Keys.CopyTo(iceSpells, 0);
 
             string[] lightningSpells = new string[lightningMagicSpells.Count];
             lightningMagicSpells.Keys.CopyTo(lightningSpells, 0);
@@ -478,6 +509,8 @@ namespace FantasyRPG
             string[] eucladianSpells = new string[eucladianMagicSpells.Count];
             eucladianMagicSpells.Keys.CopyTo(eucladianSpells, 0);
 
+     
+
 
 
             // Will be used to check the magic specialities chosen by the user before displaying the range of spells they can pick
@@ -490,7 +523,7 @@ namespace FantasyRPG
 
                 switch (chosenMagicSpecialityByUser[z])
                 {
-                    case "Fire":
+                    case "Fire-Magic":
                         foreach (string spell in fireSpells)
                         {
                             smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
@@ -499,16 +532,8 @@ namespace FantasyRPG
                             Console.ReadLine();
                         }
                         break;
-                    case "Lightning":
-                        foreach (string spell in lightningSpells)
-                        {
-                            smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
-                            totalSpellsDisplayed++;
-                            Console.WriteLine("\nPress Enter to see the next spell...");
-                            Console.ReadLine();
-                        }
-                        break;
-                    case "Water":
+
+                    case "Water-Magic":
                         foreach (string spell in waterSpells)
                         {
                             smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
@@ -517,7 +542,28 @@ namespace FantasyRPG
                             Console.ReadLine();
                         }
                         break;
-                    case "Dark":
+
+                    case "Ice-Magic":
+                        foreach (string spell in iceSpells)
+                        {
+                            smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
+                            totalSpellsDisplayed++;
+                            Console.WriteLine("\nPress Enter to see the next spell....");
+                            Console.ReadLine();
+                        }
+                        break;
+
+                    case "Lightning-Magic":
+                        foreach (string spell in lightningSpells)
+                        {
+                            smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
+                            totalSpellsDisplayed++;
+                            Console.WriteLine("\nPress Enter to see the next spell...");
+                            Console.ReadLine();
+                        }
+                        break;
+
+                    case "Dark-Magic":
                         foreach (string spell in darkSpells)
                         {
                             smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
@@ -526,7 +572,8 @@ namespace FantasyRPG
                             Console.ReadLine();
                         }
                         break;
-                    case "Light":
+
+                    case "Light-Magic":
                         foreach (string spell in lightSpells)
                         {
                             smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
@@ -535,6 +582,7 @@ namespace FantasyRPG
                             Console.ReadLine();
                         }
                         break;
+
                     case "Eucladian-Magic":
                         foreach (string spell in eucladianSpells)
                         {
@@ -544,6 +592,7 @@ namespace FantasyRPG
                             Console.ReadLine();
                         }
                         break;
+
                     default:
                         smoothPrinting.FastPrint("Unknown Error");
                         Environment.Exit(0);
@@ -560,27 +609,31 @@ namespace FantasyRPG
 
             int specialityIndex = 0;
 
-            for (specialityIndex = 0; specialityIndex < 1; specialityIndex++) // User can learn 2 spells for the given magic speciality
+            for (specialityIndex = 0; specialityIndex < 1; specialityIndex++) // User can learn a single spell for the given magic speciality
             {
-                Console.WriteLine($"Select 2 magic spells for {magicSpecialties[specialityIndex]} by entering the corresponding numbers. (1-4 for each element)");
+                Console.WriteLine($"Select a magic spells for {magicSpecialties[specialityIndex]} by entering the corresponding numbers. (1-4 for each element)");
 
                 List<string> currentMagicSpells = new List<string>(); // Dynamic list which will be used to store the chosen magical spells of the users
 
                 switch (magicSpecialties[magicSpecialties.Length - 1]) // Fix this that way it only displays the spells for exclusively the new magic element learnt (e.g. if user learns fire, then only display fire magic spells)
                 {
-                    case "Fire":
+                    case "Fire-Magic":
                         currentMagicSpells = fireSpells.ToList();
                         break;
-                    case "Lightning":
-                        currentMagicSpells = lightningSpells.ToList();
-                        break;
-                    case "Water":
+                    case "Water-Magic":
                         currentMagicSpells = waterSpells.ToList();
                         break;
-                    case "Dark":
+                    case "Ice-Magic":
+                        currentMagicSpells = iceSpells.ToList();
+                        break;
+                    case "Lightning-Magic":
+                        currentMagicSpells = lightningSpells.ToList();
+                        break;
+
+                    case "Dark-Magic":
                         currentMagicSpells = darkSpells.ToList();
                         break;
-                    case "Light":
+                    case "Light-Magic":
                         currentMagicSpells = lightSpells.ToList();
                         break;
                     case "Eucladian-Magic":
@@ -931,7 +984,7 @@ namespace FantasyRPG
 
             // Defining the different classes and rarity of items
             string[] fantasyClasses = { "Mage", "Knight", "Somali Pirate", "Shadowwrath", "Archer", "Return to menu" }; // Predefined array of roles
-            string[] rarity = { "Archaic", "Uncommon", "Mythical", "Divine" }; // Predefined values :3
+            string[] rarity = { "Common", "Uncommon", "Rare", "Unique", "Legendary" }; // Predefined values :3
             int num = 1;
 
             smoothPrinting.RapidPrint("Welcome to the world of Arcania!\n");
@@ -955,7 +1008,7 @@ namespace FantasyRPG
                     int startMageJourneyInput;
 
                     // Arrays containing the variety of different magic choices, spells and weapons.
-                    string[] magicChoices = { "Fire", "Lightning", "Water", "Dark", "Light", "Eucladian-Magic" };
+                    string[] magicChoices = { "Fire-Magic", "Water-Magic", "Ice-Magic", "Lightning-Magic", "Dark-Magic", "Light-Magic", "Eucladian-Magic" };
                     int arcaniaGoldCoins = 0; // You start of as a brokie 
 
                     // Tuple dictionary for each Fire magic spell, which is associated with a damage value and a mana requirement 
@@ -968,6 +1021,25 @@ namespace FantasyRPG
                         { "Phoenix Fury", (12, 35) }
                     };
 
+                    // Tuple dictionary for each Water magic spell, which is associated with a damage value and a mana requirement 
+                    Dictionary<string, (int, int)> waterMagicSpells = new Dictionary<string, (int, int)>()
+                    {
+                        { "Aqua Torrent", (2, 10) },
+                        { "Hydroburst", (4, 15) },
+                        { "Lunar Tide", (6, 20) },
+                        { "Ripple Cascade", (8, 25) }
+                    };
+
+
+                    // Tuple dictionary for each Ice magic spell, which is associated with a damage value and a mana requirement
+                    Dictionary<string, (int, int)> iceMagicSpells = new Dictionary<string, (int, int)>()
+                    {
+                        { "Frostbite", (5, 20) },
+                        { "Ice Lance", (9, 30) },
+                        { "Blizzard Tundra", (15, 50) },
+                        { "Frozen Fury", (7, 25) }
+                    };
+
                     // Tuple dictionary for each Lightning magic spell, which is associated with a damage value and a mana requirement 
                     Dictionary<string, (int, int)> lightningMagicSpells = new Dictionary<string, (int, int)>()
                     {
@@ -977,14 +1049,6 @@ namespace FantasyRPG
                         { "Arcane Thunder", (10, 30) }
                     };
 
-                    // Tuple dictionary for each Water magic spell, which is associated with a damage value and a mana requirement 
-                    Dictionary<string, (int, int)> waterMagicSpells = new Dictionary<string, (int, int)>()
-                    {
-                        { "Aqua Torrent", (2, 10) },
-                        { "Hydroburst", (4, 15) },
-                        { "Lunar Tide", (6, 20) },
-                        { "Ripple Cascade", (8, 25) }
-                    };
 
                     // Tuple dictionary for each Dark magic spell, which is associated with a damage value and a mana requirement 
                     Dictionary<string, (int, int)> darkMagicSpells = new Dictionary<string, (int, int)>()
@@ -1017,16 +1081,16 @@ namespace FantasyRPG
                     // Tuple dictionary for the starter weapons, which is associated with a damage value and a rarity type
                     Dictionary<string, (int, string)> starterMageWeapons = new Dictionary<string, (int, string)>()
                     {
-                        { "Weathered Oakwind", (5, "Archaic") },
-                        { "Ancient Runestaff", (7, "Uncommon") },
-                        { "Runic Wooden Scepter", (3, "Archaic") },
-                        { "Dusty Relic Rod", (2, "Archaic") },
-                        { "Emerald Crystal Staff", (10, "Mythical") }
+                        { "Weathered Oakwind", (5, "(Common)") },
+                        { "Ancient Runestaff", (7, "(Uncommon)") },
+                        { "Runic Wooden Scepter", (3, "(Common)") },
+                        { "Dusty Relic Rod", (2, "(Common)") },
+                        { "Emerald Crystal Staff", (10, "(Unique)") }
                     };
 
                     Console.Clear(); // Cleaning purposes
-                    smoothPrinting.FastPrint("Mage's Route");
-                    smoothPrinting.FastPrint("\nYou undergo intense mana training and finally become a Mage.\n");
+                    smoothPrinting.RapidPrint("Mage's Route");
+                    smoothPrinting.RapidPrint("\nYou undergo intense mana training and finally become a Mage.\n");
 
                     Console.WriteLine("What is your name, adventurer?");
                     string mageName = Convert.ToString(Console.ReadLine());
@@ -1045,7 +1109,7 @@ namespace FantasyRPG
 
                     string staffWeaponType = "Staff"; // Fixed and cannot be changed
 
-                    smoothPrinting.FastPrint("\nChoose two magic specialties from the list: \n");
+                    smoothPrinting.RapidPrint("\nChoose a magic specialties from the list: \n");
 
                     List<string> magicSpecialties = new List<string>(); // Chosen magic specialities
                     List<string> magicSpells = new List<string>(); // Chosen magical spells
@@ -1066,6 +1130,9 @@ namespace FantasyRPG
                     string[] waterSpells = new string[waterMagicSpells.Count];
                     waterMagicSpells.Keys.CopyTo(waterSpells, 0);
 
+                    string[] iceSpells = new string[iceMagicSpells.Count];
+                    iceMagicSpells.Keys.CopyTo(iceSpells, 0);
+
                     string[] lightningSpells = new string[lightningMagicSpells.Count];
                     lightningMagicSpells.Keys.CopyTo(lightningSpells, 0);
 
@@ -1080,8 +1147,8 @@ namespace FantasyRPG
 
 
 
-                    // Allow the user to choose two magic specialties
-                    for (int k = 0; k < 2; k++)
+                    // Allow the user to choose a single magic speciality
+                    for (int k = 0; k < 1; k++)
                     {
                         int chosenSpecialtyIndex;
 
@@ -1111,7 +1178,7 @@ namespace FantasyRPG
 
                         switch (magicSpecialties[z])
                         {
-                            case "Fire":
+                            case "Fire-Magic":
                                 foreach (string spell in fireSpells)
                                 {
                                     smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
@@ -1120,16 +1187,8 @@ namespace FantasyRPG
                                     Console.ReadLine();
                                 }
                                 break;
-                            case "Lightning":
-                                foreach (string spell in lightningSpells)
-                                {
-                                    smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
-                                    totalSpellsDisplayed++;
-                                    Console.WriteLine("\nPress Enter to see the next spell...");
-                                    Console.ReadLine();
-                                }
-                                break;
-                            case "Water":
+
+                            case "Water-Magic":
                                 foreach (string spell in waterSpells)
                                 {
                                     smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
@@ -1138,7 +1197,28 @@ namespace FantasyRPG
                                     Console.ReadLine();
                                 }
                                 break;
-                            case "Dark":
+
+                            case "Lightning-Magic":
+                                foreach (string spell in lightningSpells)
+                                {
+                                    smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
+                                    totalSpellsDisplayed++;
+                                    Console.WriteLine("\nPress Enter to see the next spell...");
+                                    Console.ReadLine();
+                                }
+                                break;
+
+                            case "Ice-Magic":
+                                foreach (string spell in iceSpells)
+                                {
+                                    smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
+                                    totalSpellsDisplayed++;
+                                    Console.WriteLine("\nPress Enter to see the next spell...");
+                                    Console.ReadLine();
+                                }
+                                break;
+
+                            case "Dark-Magic":
                                 foreach (string spell in darkSpells)
                                 {
                                     smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
@@ -1147,7 +1227,8 @@ namespace FantasyRPG
                                     Console.ReadLine();
                                 }
                                 break;
-                            case "Light":
+
+                            case "Light-Magic":
                                 foreach (string spell in lightSpells)
                                 {
                                     smoothPrinting.FastPrint((totalSpellsDisplayed + 1) + ". " + spell);
@@ -1156,6 +1237,7 @@ namespace FantasyRPG
                                     Console.ReadLine();
                                 }
                                 break;
+
                             case "Eucladian-Magic":
                                 foreach (string spell in eucladianSpells)
                                 {
@@ -1165,6 +1247,7 @@ namespace FantasyRPG
                                     Console.ReadLine();
                                 }
                                 break;
+
                             default:
                                 smoothPrinting.FastPrint("Unknown Error");
                                 Environment.Exit(0);
@@ -1188,19 +1271,22 @@ namespace FantasyRPG
 
                         switch (magicSpecialties[specialityIndex])
                         {
-                            case "Fire":
+                            case "Fire-Magic":
                                 currentMagicSpells = fireSpells.ToList();
                                 break;
-                            case "Lightning":
-                                currentMagicSpells = lightSpells.ToList();
-                                break;
-                            case "Water":
+                            case "Water-Magic":
                                 currentMagicSpells = waterSpells.ToList();
                                 break;
-                            case "Dark":
+                            case "Ice-Magic":
+                                currentMagicSpells = iceSpells.ToList();
+                                break;
+                            case "Lightning-Magic":
+                                currentMagicSpells = lightSpells.ToList();
+                                break;
+                            case "Dark-Magic":
                                 currentMagicSpells = darkSpells.ToList();
                                 break;
-                            case "Light":
+                            case "Light-Magic":
                                 currentMagicSpells = lightSpells.ToList();
                                 break;
                             case "Eucladian-Magic":
@@ -1230,6 +1316,8 @@ namespace FantasyRPG
                     Console.Clear(); // Neatness
 
                     Mage newWizard = new Mage(mageName, staffName, staffWeaponType, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells.ToArray(), mageInventory.ToArray());
+
+                    newWizard.chooseNewSpeciality(magicSpecialties.ToArray(), mageName); // Debugging
 
                     smoothPrinting.FastPrint("Mage Name: " + mageName + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + staffName +
                     "\nMage's Magic Specialties: " + string.Join(", ", magicSpecialties));
@@ -1266,7 +1354,8 @@ namespace FantasyRPG
                 case 2:
                     Console.Clear();
                     Console.BackgroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Knight's aren't avaliable as of present :3");
+                    smoothPrinting.RapidPrint("\nKnight's aren't avaliable as of present :3");
+                    Console.ReadKey();
                     break;
 
 
@@ -1276,13 +1365,13 @@ namespace FantasyRPG
                     string pirateName;
 
                     // Dictionary to store the weapon types that a pirate can retrieve before embarking on their journey
-                    Dictionary<string, (int, string)> pirateWeaponChoice = new Dictionary<string, (int, string)>()
+                    Dictionary<string, (int, string, string)> pirateWeaponChoice = new Dictionary<string, (int, string, string)>()
                     {
-                        { "Sharp Cutlass", (6, "Sword") },
-                        { "Raging Horn", (8, "Longsword") },
-                        { "Somali Pride", (11, "Sword") },
-                        { "Mohamad's Dagger", (20, "Dagger") },
-                        { "Dilapidated Thorn", (14, "Katana") }
+                        { "Sharp Cutlass", (6, "Sword", "Common") },
+                        { "Raging Horn", (8, "Longsword", "Common") },
+                        { "Somali Pride", (11, "Sword", "Uncommon") },
+                        { "Mohamad's Dagger", (20, "Dagger", "Rare") },
+                        { "Dilapidated Thorn", (14, "Katana", "Rare") }
                     };
 
                     // Dictionary to store pirate aura types
@@ -1327,6 +1416,7 @@ namespace FantasyRPG
 
 
                     // Predefined attributes for a pirate
+                    // Future reference: Change the generic attack names and special attack names to be dynamic 
                     string pirateAtkName = "Slash";
                     string pirateSpecialAtkName = "Pirate's might";
                     string pirateWeaponType = "Sword/Longsword/Dagger/Blades";
@@ -1417,7 +1507,7 @@ namespace FantasyRPG
         public void usersFirstJourney(string name)
         {
             SmoothConsole smoothPrinting = new SmoothConsole();
-            smoothPrinting.FastPrint(fixedScenario + "\n");
+            smoothPrinting.RapidPrint(fixedScenario + "\n");
             Console.WriteLine("\nWhat do you do?");
 
             smoothPrinting.FastPrint("\n1. Fight back");
