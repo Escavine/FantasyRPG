@@ -125,6 +125,50 @@ namespace FantasyRPG
         }
 
     }
+
+    class MobDefault // Mob preset for the game
+    {
+        public string normalAtkName, specialAtkName, name;
+        public int normalAtkDmg, specialAtkDmg, specialAtkRecharge, health;
+        
+
+        public MobDefault(string _name, string _normalAtkName, string _specialAtkName, int _normalAtkDmg, int _specialAtkDmg, int _specialAtkRecharge, int _health) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
+        {
+            name = _name;
+            normalAtkName = _normalAtkName;
+            specialAtkName = _specialAtkName;
+            normalAtkDmg = _normalAtkDmg;
+            specialAtkDmg = _specialAtkDmg;
+            specialAtkRecharge = _specialAtkRecharge;
+            health = _health;
+
+            
+
+        }
+
+    }
+
+    class Dragon : MobDefault
+    {
+
+        public Dragon(string _name, string _normalAtkName, string _specialAtkName, int _normalAtkDmg, int _specialAtkDmg, int _specialAtkRecharge, int _health) : base(_name, _normalAtkName, _specialAtkName, _normalAtkDmg, _specialAtkDmg, _specialAtkRecharge, _health)
+        {
+
+
+        }
+
+        public void exertPressure()
+        {
+
+
+        }
+        public void dragonRoar()
+        {
+
+        }
+
+    }
+
     class Knight : CharacterDefault // Knight class properties and methods
     {
         public string normalAtkName;
