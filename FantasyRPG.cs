@@ -27,6 +27,7 @@ namespace FantasyRPG
         public float exp;
         public int level;
         private int experienceRequiredForNextLevel;
+        // public int randomDyingChance;
 
         public CharacterDefault(string _name, string _weaponName, string _weaponType, string[] _currentInventory, int _arcaniaGoldCoins) // Default preset for all classes during the start of the game :3
         {
@@ -128,26 +129,103 @@ namespace FantasyRPG
 
     class MobDefault // Mob preset for the game
     {
-        public string specialAtkName, name;
+        public string name;
         public int normalAtkDmg, specialAtkDmg, specialAtkRecharge, mobHealth;
 
 
         // Mobs can have different attack names and varying item drops, each associated with a rarity and damage value
         public Dictionary<string, (int, string, string)> itemDrop; // First string defines the weapon name, second integer defines the weapon damage, thirs stirng defines the weapon rarity and fourth string defines the weapon type
         public Dictionary<string, int> normalAtkNames;
+        public Dictionary<string, (int, string)> specialAtkNames;
 
-        public MobDefault(string _name, Dictionary<string, int> _normalAtkNames, string _specialAtkName, int _normalAtkDmg, int _specialAtkDmg, int _specialAtkRecharge, int _mobHealth, Dictionary<string, (int, string, string)> _itemDrop) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
+        public MobDefault(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _normalAtkDmg, int _specialAtkDmg, int _specialAtkRecharge, int _mobHealth, Dictionary<string, (int, string, string)> _itemDrop) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
         {
             name = _name;
             normalAtkNames = _normalAtkNames;
-            specialAtkName = _specialAtkName;
+            specialAtkNames = _specialAtkNames;
             normalAtkDmg = _normalAtkDmg;
-            specialAtkDmg = _specialAtkDmg;
+            specialAtkDmg = 100; // If your a beginner, this is a one shot 
             itemDrop = _itemDrop; // Mobs have a chance to drop a random item once they die
-            specialAtkRecharge = _specialAtkRecharge;
+            specialAtkRecharge = 100;
             mobHealth = _mobHealth;
 
         }
+
+    }
+
+
+    class Crawler : MobDefault // Crawler class
+    {
+        SmoothConsole smoothPrinting = new SmoothConsole();
+
+        public Crawler(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _normalAtkDmg, int _specialAtkDmg, int _specialAtkRecharge, int _mobHealth, Dictionary<string, (int, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _normalAtkDmg, _specialAtkDmg, _specialAtkRecharge, _mobHealth, _itemDrop)
+        {
+
+            // Default presets for a crawler, inherited from the mob default class
+
+            name = "Crawler";
+            mobHealth = 20; // Crawlers are very weak creatures, and by default have 20 health
+
+            // Dictionary containing crawler attacks and their associated damage value
+            Dictionary<string, int> normalAtkNames = new Dictionary<string, int>() // Preset name for all dragon's normal attacks
+            {
+                { "Crawler's Scratch", 5 },
+                { "Crawler's Screech", 10 },
+                { "Crawler's Bite", 3 }
+            };
+
+            // Dictionary that contains weapon name, damage, rarity and weapon type (item drops)
+            Dictionary<string, (int, string, string)> itemDrop = new Dictionary<string, (int, string, string)>()
+            {
+                { "Staff of Spite", (7, "(Common)", "Staff") },
+                { "Crawler's Revant", (10, "(Uncommon)", "Rapier/Sword") },
+            };
+
+            itemDrop = _itemDrop;
+            normalAtkNames = _normalAtkNames;
+
+        }
+
+
+        public void crawlerNormalAtk(int health)
+        {
+            Random rd = new Random();
+            List<string> attackNames = normalAtkNames.Keys.ToList(); // Get all attack names
+
+            int randomIndex = rd.Next(0, attackNames.Count); // Generate a random index
+
+            string randomAttackName = attackNames[randomIndex]; // Get a random attack name
+            int damage = normalAtkNames[randomAttackName]; // Get the damage associated with the attack
+
+            smoothPrinting.FastPrint("Crawler has used " + randomAttackName + " dealing " + damage + " damage.\n");
+        }
+
+
+        public void crawlerDeath(int mobHealth, int exp) // If the crawler dies, then the user gains exp and has a chance of receiving an item drop
+        {
+            if (mobHealth == 0)
+            {
+                Random itemDropChance = new Random();
+                int dropChance = itemDropChance.Next(1, 2); // 50% drop rate, as the mob is easy to defeat
+                smoothPrinting.FastPrint("\nDragon has been successfully defeated!");
+
+                if (dropChance == 0)
+                {
+                    dropItem(mobHealth); // Should the random number be zero, then the mob will drop an item
+                }
+
+                exp+=5; // User gets experience from the drop
+                smoothPrinting.SlowPrint("User has gained " + exp + " experience points!");
+
+            }
+        }
+
+        public void dropItem(int dropChance)
+        {
+
+
+        }
+
 
     }
 
@@ -155,32 +233,41 @@ namespace FantasyRPG
     {
         SmoothConsole smoothPrinting = new SmoothConsole();
 
-        public Dragon(string _name, Dictionary<string, int> _normalAtkNames, string _specialAtkName, int _normalAtkDmg, int _specialAtkDmg, int _specialAtkRecharge, int _mobHealth, Dictionary<string, (int, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkName, _normalAtkDmg, _specialAtkDmg, _specialAtkRecharge, _mobHealth, _itemDrop)
+        public Dragon(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _normalAtkDmg, int _specialAtkDmg, int _specialAtkRecharge, int _mobHealth, Dictionary<string, (int, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _normalAtkDmg, _specialAtkDmg, _specialAtkRecharge, _mobHealth, _itemDrop)
         {
             // Default presets for a dragon, inherited from the mob default class
 
+            name = "Dragon";
+            mobHealth = 350; // Dragons have 350HP by default
 
             // Dictionary containing dragon attacks and their associated damage value
-            Dictionary<string, int> normalAtkNames = new Dictionary<string, int>() // Preset name for all dragon's normal attacks
+            Dictionary<string, int> normalAtkNames = new Dictionary<string, int>() // Preset names for all dragon's normal attacks
             {
                 { "Dragon's Claw", 30 },
                 { "Dragon's Breath", 40 },
                 { "Raging Tempest", 50 }
             };
 
-            // Dictionary that contains weapon name, damage, rarity and weapon type
+            // Dictionary that contains weapon name, damage, rarity and weapon type (item drops)
             Dictionary<string, (int, string, string)> itemDrop = new Dictionary<string, (int, string, string)>()
             {
                 { "Etherial Froststaff", (50, "(Unique)", "Staff") },
                 { "Nightfall Rapier", (50, "(Unique)", "Rapier/Sword") },
-                { "Chaosfire Greatsword", (60, "(Unique)", "Greatsword/Sword") },
+                { "Chaosfire Greatsword", (60, "(Unique)", "Greatsword/Sword") }, // OP item drops
                 { "Nightshade Arc", (55, "(Unique)", "Bow") },
-                { "Aerith's Heirloom", (80, "(Legendary)", "Staff") }
+                { "Aerith's Heirloom", (80, "(Legendary)", "Staff") },
+                { "Eucladian's Aura", (55, "(Legendary)", "Aura") } // Should the individual get lucky, then they could potentially get an aura drop, this is only equipabble by knights, pirates, shadowwraths etc.
+            };
+
+            Dictionary<string, (int, string)> specialAtkNames = new Dictionary<string, (int, string)>() // Preset names for all dragon's special attacks
+            {
+                { "Arcane Nexus", (100, "Eucladian-Magic")}, // Eucladian type ULT
+                { "Umbral Charge", (120, "Dark-Magic")}, // Dark type ULT
+                { "Rampant Flame Charge", (200, "Fire-Magic") } // Flame type ULT
             };
 
             itemDrop = _itemDrop;
             normalAtkNames = _normalAtkNames;
-            mobHealth = 350; // Dragons have 350HP by default
         }
 
         // Future reference: Create different types of dragons that have weaknesses (i.e. water dragons, shadow dragons etc)
@@ -192,11 +279,10 @@ namespace FantasyRPG
                 Console.ForegroundColor = ConsoleColor.Red;
                 smoothPrinting.FastPrint("Your level is lower than expected, the Dragon exerts pressure, reducing your attack damage");
             }
-        
+
         }
 
-
-        public void dragonNormalAtk()
+        public void dragonNormalAtk(int health)
         {
             Random rd = new Random();
             List<string> attackNames = normalAtkNames.Keys.ToList(); // Get all attack names
@@ -209,37 +295,54 @@ namespace FantasyRPG
             smoothPrinting.FastPrint("Dragon has used " + randomAttackName + " dealing " + damage + " damage.\n");
         }
 
+
         public void dragonSpecialAtk() // If the dragons special attack recharge reaches 100%, then this will be activated
         {
-            // Future reference: make the dragons special attack dynamic with a dictionary
+            Random rd = new Random();
+
+            List<string> attackNames = specialAtkNames.Keys.ToList(); // Get all attack names
+            int randomIndex = rd.Next(0, attackNames.Count); // Generate a random index
+
+            string randomAttackName = attackNames[randomIndex]; // Get a random attack name
+            int damage = normalAtkNames[randomAttackName]; // Get the damage associated with the attack
 
             if (specialAtkRecharge == 100) // Should the dragon's special attack recharge reach 100%, then it'll use its special ability, dealing high levels of damage, it also increases its health
             {
                 smoothPrinting.SlowPrint("\nDragon ULT");
-                smoothPrinting.SlowPrint("\nDragon has used " + specialAtkName + " and has dealt " + specialAtkDmg + "\n");
+                smoothPrinting.SlowPrint("\nDragon has used " + randomAttackName + " and has dealt " + damage + "\n");
                 smoothPrinting.RapidPrint("\nDragon has recovered +20 health");
                 mobHealth = mobHealth + 20; // Slight health regen
+                specialAtkRecharge = 0; // The special attack has been used by this point, so therefore it should be set to zero.
             }
 
         }
 
-        public void dropItem(int health)
+        public void dragonDeath(int mobHealth, int exp)
         {
             if (mobHealth == 0)
             {
                 Random itemDropChance = new Random();
-                itemDropChance.Next(0, 2);
-                smoothPrinting.FastPrint("Dragon has been defeated\n");
+                int dropChance = itemDropChance.Next(0, 10); // 9% drop rate, due to OP item drops
+                smoothPrinting.FastPrint("\nDragon has been successfully defeated!");
 
+                if (dropChance == 0)
+                {
+                    dropItem(dropChance); // Should the random number be zero, then the mob will drop an item
+                }
 
-                smoothPrinting.FastPrint("Item drop: ");
-
+                exp += 300; // User gains huge exp from defeating the dragon 
 
             }
 
         }
 
+        public void dropItem(int dropChance)
+        {
+
+
+        }
     }
+      
 
     class Knight : CharacterDefault // Knight class properties and methods
     {
@@ -314,7 +417,7 @@ namespace FantasyRPG
         }
 
 
-        // methods for a wizard
+        // Methods for a mage
         public void SpellCast() // Spell casting for enemies
         {
             Console.WriteLine(name + " has casted " + spellUsage);
@@ -429,10 +532,10 @@ namespace FantasyRPG
             // Tuple dictionary for each Water magic spell, which is associated with a damage value and a mana requirement 
             Dictionary<string, (int, int)> waterMagicSpells = new Dictionary<string, (int, int)>()
                     {
-                        { "Aqua Torrent", (2, 10) },
-                        { "Hydroburst", (4, 15) },
-                        { "Lunar Tide", (6, 20) },
-                        { "Ripple Cascade", (8, 25) }
+                        { "Aqua Torrent", (3, 10) },
+                        { "Hydroburst", (5, 15) },
+                        { "Lunar Tide", (8, 20) },
+                        { "Ripple Cascade", (10, 25) }
                     };
 
             // Tuple dictionary for each Ice magic spell, which is associated with a damage value and a mana requirement
@@ -584,15 +687,14 @@ namespace FantasyRPG
                 }
             }
 
-            int specialityIndex = 0;
 
-            for (specialityIndex = 0; specialityIndex < 1; specialityIndex++) // User can learn a single spell for the given magic speciality
+
+            for (int specialityIndex = 0; specialityIndex < chosenMagicSpecialityByUser.Count; specialityIndex++)
             {
-                Console.WriteLine($"Select magic spells for {magicSpecialties[specialityIndex]} by entering the corresponding numbers. (1-4 for each element)");
-
+                Console.WriteLine($"Select magic spells for {chosenMagicSpecialityByUser[specialityIndex]} by entering the corresponding numbers. (1-4 for each element)");
                 List<string> currentMagicSpells = new List<string>(); // Dynamic list which will be used to store the chosen magical spells of the users
 
-                switch (magicSpecialties[magicSpecialties.Length - 1]) // Fix this that way it only displays the spells for exclusively the new magic element learnt (e.g. if user learns fire, then only display fire magic spells)
+                switch (chosenMagicSpecialityByUser[specialityIndex])
                 {
                     case "Fire-Magic":
                         currentMagicSpells = fireSpells.ToList();
@@ -606,7 +708,6 @@ namespace FantasyRPG
                     case "Lightning-Magic":
                         currentMagicSpells = lightningSpells.ToList();
                         break;
-
                     case "Dark-Magic":
                         currentMagicSpells = darkSpells.ToList();
                         break;
@@ -622,26 +723,20 @@ namespace FantasyRPG
                         break;
                 }
 
-
-                // Let the user pick 2 spells for the given magic specialty
-
-                int spellIndex = 0; // Keep track of index within array
-
+                // Allow the user to select spells for the current magic specialty
                 for (int spellNumber = 0; spellNumber < 2; spellNumber++)
                 {
-                    Console.WriteLine($"Choose magic spell #{spellNumber + 1} for {magicSpecialties[specialityIndex]}:");
+                    Console.WriteLine($"Choose magic spell #{spellNumber + 1} for {chosenMagicSpecialityByUser[specialityIndex]}:");
                     int magicSpellChoice;
 
                     string input = Console.ReadLine(); // Prompt for input inside the loop
-                    while (string.IsNullOrWhiteSpace(input) || !int.TryParse(input, out magicSpellChoice) || magicSpellChoice < 1 || magicSpellChoice > magicChoices.Length) // Mitigating empty or invalid input
+                    while (string.IsNullOrWhiteSpace(input) || !int.TryParse(input, out magicSpellChoice) || magicSpellChoice < 1 || magicSpellChoice > currentMagicSpells.Count) // Mitigating empty or invalid input
                     {
                         Console.WriteLine("Invalid choice. Please enter a valid number corresponding to the magic specialty.");
                         input = Console.ReadLine(); // Prompt again for input
                     }
                     magicSpells.Add(currentMagicSpells[magicSpellChoice - 1]);
-
                 }
-
             }
 
             Console.Clear(); // Neater
@@ -1286,6 +1381,7 @@ namespace FantasyRPG
                     Console.Clear(); // Neatness
 
                     Mage newWizard = new Mage(mageName, staffName, staffWeaponType, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells.ToArray(), mageInventory.ToArray());
+                    newWizard.chooseNewSpeciality(magicSpecialties.ToArray(), mageName); // Debugging
 
 
                     smoothPrinting.FastPrint("Mage Name: " + mageName + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + staffName +
