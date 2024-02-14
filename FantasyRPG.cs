@@ -1490,9 +1490,25 @@ namespace FantasyRPG
                     List<string> pirateNormalAtks = new List<string>(); // This will contain the chosen pirate normal attacks
                     List<string> pirateSpecialAtks = new List<string>(); // This will contain the chosen pirate special attacks
 
-                    foreach (var normalAtkChoices in  pirateNormalAtkChoices) // Display the normal attack choices to the user with other associated values
+                    int normalAtkNumCount = 0; // These will be used to keep track of the number of values outputted
+                    int specialAtkNumCount = 0;
+
+                    for (int i = 0; i < pirateNormalAtks.Count; i++)
                     {
-                        smoothPrinting.RapidPrint($"\n{normalAtkChoices.Key} - Damage: {normalAtkChoices.Value.Item1}, Mana Requirement for Activation: {normalAtkChoices.Value.Item2}, Element Type: {normalAtkChoices.Value.Item3}, Description: {normalAtkChoices.Value.Item4}");
+                        foreach (var normalAtkChoices in pirateNormalAtkChoices) // Display the normal attack choices to the user with other associated values
+                        {
+                            smoothPrinting.RapidPrint($"\n{normalAtkNumCount + 1}. {normalAtkChoices.Key} - Damage: {normalAtkChoices.Value.Item1}, Mana Requirement for Activation: {normalAtkChoices.Value.Item2}, Element Type: {normalAtkChoices.Value.Item3} \nDescription: {normalAtkChoices.Value.Item4}\n");
+                            normalAtkNumCount++;
+                        }
+
+                    }
+
+                    smoothPrinting.FastPrint("\nSelect 2 normal attacks: ");
+
+                    foreach (var specialAtkChoices in pirateSpecialAtkChoices) // Display the normal attack choices to the user with other associated values
+                    {
+                        smoothPrinting.RapidPrint($"\n{specialAtkNumCount + 1}. {specialAtkChoices.Key} - Damage: {specialAtkChoices.Value.Item1}, Mana Requirement for Activation: {specialAtkChoices.Value.Item2}, Element Type: {specialAtkChoices.Value.Item3} \nDescription: {specialAtkChoices.Value.Item4}\n");
+                        specialAtkNumCount++;
                     }
 
 
