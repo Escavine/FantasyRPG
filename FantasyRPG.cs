@@ -1477,9 +1477,10 @@ namespace FantasyRPG
                     Console.WriteLine("\n"); // Structuring
                     smoothPrinting.FastPrint("\nWeapon will be randomly assigned...");
                     smoothPrinting.FastPrint("\nAura will be randomly assigned...");
-                    Console.WriteLine("\n");
+
+                    Console.WriteLine("\n"); // Structuring
                     smoothPrinting.FastPrint("\nWould you like to continue?");
-                    Console.ReadKey();
+                    Console.ReadKey(); // Allow user to read contents
 
                     arcaniaGoldCoins = 0; // Preset zero
 
@@ -1507,7 +1508,7 @@ namespace FantasyRPG
                     // Future reference: Change the generic attack names and special attack names to be dynamic 
                     string pirateAtkName = "Slash";
                     string pirateSpecialAtkName = "Pirate's might";
-                    string pirateWeaponType = "Sword/Longsword/Dagger/Blades";
+                    string pirateWeaponType = pirateWeaponChoice.ElementAt(pirateRandomWeaponAssignment).Value.Item2;
 
                     SomaliPirate newPirate = new SomaliPirate(pirateName, pirateWeaponName, pirateWeaponType, pirateAuraName, pirateAtkName, pirateSpecialAtkName, pirateInventory.ToArray(), arcaniaGoldCoins); // Generate the pirate details
 
