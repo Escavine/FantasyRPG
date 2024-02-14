@@ -458,8 +458,7 @@ namespace FantasyRPG
 
 
             // Arrays containing the variety of different magic choices, spells and weapons.
-            string[] magicChoices = { "Fire-Magic", "Water-Magic", "Lightning-Magic", "Ice-Magic", "Dark-Magic", "Light-Magic", "Eucladian-Magic" };
-
+            string[] magicChoices = { "Fire-Magic", "Water-Magic", "Lightning-Magic", "Ice-Magic", "Dark-Magic", "Light-Magic", "Eucladian-Magic"}; // Future reference: add 'level' as an argument to make other magic specialities exclusive
 
             smoothPrinting.SlowPrint("Mage's Prestiege, congrats!\n");
             smoothPrinting.RapidPrint("\n" + name + "'s" + " current known magic specialities:" + "\n");
@@ -483,7 +482,7 @@ namespace FantasyRPG
             smoothPrinting.FastPrint("\nChoose a new speciality from the list: \n");
 
 
-            // Display all the magic speciality choices to the user
+            // Display generic magic choices to the user (i.e. fire, water, lightning, ice)
             for (int j = 0; j < updatedMagicChoices.Count; j++)
             {
                 smoothPrinting.FastPrint(choiceIncrementer + ". " + updatedMagicChoices[j] + "\n");
@@ -510,10 +509,10 @@ namespace FantasyRPG
                 magicSpecialties[magicSpecialties.Length - 1] = chosenMagicSpecialityByUser[0];
 
                 smoothPrinting.FastPrint($"\nUpdated magic specialties: {string.Join(", ", magicSpecialties)}\n");
-                learnNewSpells(magicSpecialties, magicSpells.ToList(), chosenMagicSpecialityByUser, magicChoices); // Pass as array to learnNewSpells
+                learnNewSpells(magicSpecialties, magicSpells.ToList(), chosenMagicSpecialityByUser, magicChoices, level); // Pass as array to learnNewSpells
             }
         }
-        public void learnNewSpells(string[] magicSpecialties, List<string> magicSpells, List<string> chosenMagicSpecialityByUser, string[] magicChoices)
+        public void learnNewSpells(string[] magicSpecialties, List<string> magicSpells, List<string> chosenMagicSpecialityByUser, string[] magicChoices, int level)
         {
             SmoothConsole smoothPrinting = new SmoothConsole(); // Cleaner output
 
@@ -1445,7 +1444,7 @@ namespace FantasyRPG
                         { "Bloodlust", (3, "Rare") },
                         { "Kraken's Pride", (4, "Rare") },
                         { "Mystical Remenance", (8, "Unique") },
-                        { "Wriath's Omen", (2, "Uncommon") },
+                        { "Wraiths's Omen", (2, "Uncommon") },
                         { "Devious Sigma Pirate", (20, "Legendary") },
                         { "Somalia's Exudance", (12, "Unique") }
                     };
@@ -1457,6 +1456,30 @@ namespace FantasyRPG
                     // Take users name
                     Console.WriteLine("Enter your name:");
                     pirateName = Convert.ToString(Console.ReadLine());
+
+
+                    smoothPrinting.FastPrint("\nDisplaying weapons...");
+
+                    foreach (var weapon in pirateWeaponChoice)
+                    {
+                        smoothPrinting.RapidPrint($"\n{weapon.Key} - Damage: {weapon.Value.Item1} - Weapon Type: {weapon.Value.Item2}, Item Rarity: {weapon.Value.Item3}");
+                    }
+
+                    Console.WriteLine("\n"); // Structuring
+                    smoothPrinting.FastPrint("\nDisplaying auras...");
+
+                    foreach (var aura in pirateAuras)
+                    {
+                        smoothPrinting.RapidPrint($"\n{aura.Key} - Damage: {aura.Value.Item1}, Rarity: {aura.Value.Item2}");
+                    }
+
+
+                    Console.WriteLine("\n"); // Structuring
+                    smoothPrinting.FastPrint("\nWeapon will be randomly assigned...");
+                    smoothPrinting.FastPrint("\nAura will be randomly assigned...");
+                    Console.WriteLine("\n");
+                    smoothPrinting.FastPrint("\nWould you like to continue?");
+                    Console.ReadKey();
 
                     arcaniaGoldCoins = 0; // Preset zero
 
