@@ -1428,29 +1428,50 @@ namespace FantasyRPG
                     Console.Clear();
                     string pirateName;
 
-                    // Dictionary to store the weapon types that a pirate can retrieve before embarking on their journey
-                    Dictionary<string, (int, string, string)> pirateWeaponChoice = new Dictionary<string, (int, string, string)>()
+                    Dictionary<string, (int, string, string, string)> pirateWeaponChoice = new Dictionary<string, (int, string, string, string)>()
                     {
-                        { "Sharp Cutlass", (6, "Sword", "Common") },
-                        { "Raging Horn", (8, "Longsword", "Common") },
-                        { "Somali Pride", (11, "Sword", "Uncommon") },
-                        { "Mohamad's Dagger", (20, "Dagger", "Rare") },
-                        { "Dilapidated Thorn", (14, "Katana", "Rare") }
+                        { "Sharp Cutlass", (6, "Sword", "Common", "A short, nimble sword ideal for quick strikes.") },
+                        { "Raging Horn", (8, "Longsword", "Common", "A curved longsword evoking power, perfect for forceful attacks.") },
+                        { "Somali Pride", (11, "Sword", "Uncommon", "A rare sword of Somali origin, passed down through generations.") },
+                        { "Mohamad's Dagger", (20, "Dagger", "Rare", "A concealable dagger named after a famous pirate, perfect for surprise attacks.") },
+                        { "Dilapidated Thorn", (14, "Katana", "Rare", "A worn katana with a sharp edge, nicknamed for its piercing ability.") },
                     };
 
-                    // Dictionary to store pirate aura types
-                    Dictionary<string, (int, string)> pirateAuras = new Dictionary<string, (int, string)>()
+                    // Auras give damage bonuses on attacks
+                    Dictionary<string, (int, string, string)> pirateAuras = new Dictionary<string, (int, string, string)>()
                     {
-                        { "Bloodlust", (3, "Rare") },
-                        { "Kraken's Pride", (4, "Rare") },
-                        { "Mystical Remenance", (8, "Unique") },
-                        { "Wraiths's Omen", (2, "Uncommon") },
-                        { "Devious Sigma Pirate", (20, "Legendary") },
-                        { "Somalia's Exudance", (12, "Unique") }
+                        { "Bloodlust", (3, "Rare", "Embrace your inner rage and strike fear into your enemies' hearts.") },
+                        { "Kraken's Pride", (4, "Rare", "Channel the power of the legendary Kraken, striking with unmatched ferocity.") },
+                        { "Mystical Remenance", (8, "Unique", "Harness the forgotten magic of the ancients, wielding arcane energy with devastating effect.") },
+                        { "Wraiths's Omen", (2, "Uncommon", "Command the chilling presence of the spectral realm, striking fear and reaping bonus rewards from fallen foes.") },
+                        { "Devious Sigma Pirate", (20, "Legendary", "Unleash the cunning and ruthlessness of the Sigma Pirate legend, your attacks imbued with an aura of tactical brilliance.") },
+                        { "Somalia's Exudance", (12, "Unique", "Tap into the vibrant energy of Somalia, bolstering your resilience and striking with invigorating fervor.") },
                     };
 
+                    // Dictionary values containing Pirate normal attack names, damage values, mana requirements, element type and a breif description
+                    Dictionary<string, (int, int, string, string)> pirateNormalAtkChoices = new Dictionary<string, (int, int, string, string)>()
+                    {
+                        // Single target attacks
+                        { "Riposte", (6, 20, "Physical", "Parry and counter with a swift strike.") },
+                        { "Savage Flurry", (10, 30, "Lighning", "Unleash a relentless series of slashes, imbuing your blade with lightning for each hit.") },
+                        { "Piercing Thrust", (8, 25, "Ice", "Aim for a gap and deliver a high-precision stab, infused with frost to slow your opponent.") },
+                        { "Whirlwind Strike", (7, 20, "Fire", "Spin, deflecting attacks and damaging nearby enemies with a fiery whirlwind.") },
+                    };
 
-                    // Story output
+                    // Dictionary values containing Pirate special attack names, damage values, mana requirements, element type and a breif description
+                    Dictionary<string, (int, int, string, string)> pirateSpecialAtkChoices = new Dictionary<string, (int, int, string, string)>()
+                    {
+                        // Single-target attacks
+                        { "Blazing Cut", (15, 50, "Fire", "Unleash a fiery slash, dealing high damage and burning your opponent.") },
+                        { "Icy Impale", (12, 40, "Ice", "Pierce your enemy with an ice-infused blade, slowing their movement and dealing moderate damage.") },
+                        // Unique and powerful attacks
+                        { "Shadow Blade", (25, 80, "Dark", "Forges a blade of pure darkness that cuts through defenses and inflicts grievous wounds." ) },
+                        { "Thunderous Fury", (25, 100, "Lightning", "Channel a powerful lightning bolt, dealing massive damage but leaving you vulnerable.") },
+                        { "Tidal Wave", (18, 60, "Water", "Summon a wave of water, pushing back and damaging all enemies in its path.") },
+                        { "Eucladian Cleave", (20, 70, "Eucladian", "Unleash a reality-bending slash, ignoring enemy defenses and dealing high damage.") },
+                    };
+
+                    // Story output (this will be further expanded)
                     smoothPrinting.FastPrint("You are a proud Somali Pirate, one who has explored the vast open seas for many years, and now you feel that your ready for a new adventure!\n");
 
                     // Take users name
@@ -1508,7 +1529,7 @@ namespace FantasyRPG
                     // Future reference: Change the generic attack names and special attack names to be dynamic 
                     string pirateAtkName = "Slash";
                     string pirateSpecialAtkName = "Pirate's might";
-                    string pirateWeaponType = pirateWeaponChoice.ElementAt(pirateRandomWeaponAssignment).Value.Item2;
+                    string pirateWeaponType = pirateWeaponChoice.ElementAt(pirateRandomWeaponAssignment).Value.Item2; // Assign the given weapon type of randomly generated weapon to the variable
 
                     SomaliPirate newPirate = new SomaliPirate(pirateName, pirateWeaponName, pirateWeaponType, pirateAuraName, pirateAtkName, pirateSpecialAtkName, pirateInventory.ToArray(), arcaniaGoldCoins); // Generate the pirate details
 
