@@ -1427,6 +1427,14 @@ namespace FantasyRPG
                     int startPirateJourneyInput;
                     Console.Clear();
                     string pirateName;
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+
+                    // Story output (this will be further expanded)
+                    smoothPrinting.FastPrint("You are a proud Somali Pirate, one who has explored the vast open seas for many years, and now you feel that your ready for a new adventure!\n");
+
+                    // Take users name
+                    Console.WriteLine("Enter your name:");
+                    pirateName = Convert.ToString(Console.ReadLine());
 
                     Dictionary<string, (int, string, string, string)> pirateWeaponChoice = new Dictionary<string, (int, string, string, string)>()
                     {
@@ -1478,13 +1486,10 @@ namespace FantasyRPG
                     string[] pirateAtkChoices = pirateNormalAtkChoices.Keys.ToArray();
                     string[] pirateSpecialChoices = pirateSpecialAtkChoices.Keys.ToArray();
 
-
-                    // Story output (this will be further expanded)
-                    smoothPrinting.FastPrint("You are a proud Somali Pirate, one who has explored the vast open seas for many years, and now you feel that your ready for a new adventure!\n");
-
-                    // Take users name
-                    Console.WriteLine("Enter your name:");
-                    pirateName = Convert.ToString(Console.ReadLine());
+                    foreach (var normalAtkChoices in  pirateNormalAtkChoices) // Display the normal attack choices to the user with other associated values
+                    {
+                        smoothPrinting.RapidPrint($"\n{normalAtkChoices.Key} - Damage: {normalAtkChoices.Value.Item1}, Mana Requirement for Activation: {normalAtkChoices.Value.Item2}, Element Type: {normalAtkChoices.Value.Item3}, Description: {normalAtkChoices.Value.Item4}");
+                    }
 
 
                     smoothPrinting.FastPrint("\nDisplaying weapons...");
