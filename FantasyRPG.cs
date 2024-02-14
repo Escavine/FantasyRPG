@@ -1486,6 +1486,10 @@ namespace FantasyRPG
                     string[] pirateAtkChoices = pirateNormalAtkChoices.Keys.ToArray();
                     string[] pirateSpecialChoices = pirateSpecialAtkChoices.Keys.ToArray();
 
+
+                    List<string> pirateNormalAtks = new List<string>(); // This will contain the chosen pirate normal attacks
+                    List<string> pirateSpecialAtks = new List<string>(); // This will contain the chosen pirate special attacks
+
                     foreach (var normalAtkChoices in  pirateNormalAtkChoices) // Display the normal attack choices to the user with other associated values
                     {
                         smoothPrinting.RapidPrint($"\n{normalAtkChoices.Key} - Damage: {normalAtkChoices.Value.Item1}, Mana Requirement for Activation: {normalAtkChoices.Value.Item2}, Element Type: {normalAtkChoices.Value.Item3}, Description: {normalAtkChoices.Value.Item4}");
