@@ -1471,6 +1471,14 @@ namespace FantasyRPG
                         { "Eucladian Cleave", (20, 70, "Eucladian", "Unleash a reality-bending slash, ignoring enemy defenses and dealing high damage.") },
                     };
 
+
+
+
+                    // Convert dictionaries to arrays of strings
+                    string[] pirateAtkChoices = pirateNormalAtkChoices.Keys.ToArray();
+                    string[] pirateSpecialChoices = pirateSpecialAtkChoices.Keys.ToArray();
+
+
                     // Story output (this will be further expanded)
                     smoothPrinting.FastPrint("You are a proud Somali Pirate, one who has explored the vast open seas for many years, and now you feel that your ready for a new adventure!\n");
 
