@@ -1491,6 +1491,9 @@ namespace FantasyRPG
                     int specialAttackChoiceCount = 0;
                     int chosenNormalAttackCount = 0;
 
+
+                    smoothPrinting.RapidPrint("\nNormal Attack Selection");
+
                     // Display pirate's normal attack choices
                     foreach (var normalAttackChoice in pirateNormalAttackChoices)
                     {
@@ -1537,7 +1540,8 @@ namespace FantasyRPG
                     Console.WriteLine("Confirmed normal attack selected by user:");
                     foreach (var attack in chosenNormalAttacks)
                     {
-                        smoothPrinting.RapidPrint($"\nAttack: {attack.attack}, Damage: {attack.damage}, Mana Requirement: {attack.manaRequirement}, Element Type: {attack.elementType}\nDescription: {attack.description}");
+                        smoothPrinting.RapidPrint($"* {attack.attack}, Damage: {attack.damage}, Mana Requirement: {attack.manaRequirement}, Element Type: {attack.elementType}\nDescription: {attack.description}");
+                        Console.WriteLine("\n"); // Neat structure for displaying selected normal attacks
                     }
 
                     Console.Read(); // Allow the user to check before proceeding into selecting special attack choices
