@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
@@ -1086,7 +1087,7 @@ namespace FantasyRPG
                     int arcaniaGoldCoins = 0; // You start of as a brokie 
 
                     // Tuple dictionary for each Fire magic spell, which is associated with a damage value and a mana requirement 
-                    Dictionary<string, (int, int)> fireMagicSpells = new Dictionary<string, (int, int)>()
+                    Dictionary<string, (int damage, int manaRequirement)> fireMagicSpells = new Dictionary<string, (int damage, int manaRequirement)>()
                     {
                         { "Infrared", (3, 15) },
                         { "Blazing Rage", (5, 20) },
@@ -1096,7 +1097,7 @@ namespace FantasyRPG
                     };
 
                     // Tuple dictionary for each Water magic spell, which is associated with a damage value and a mana requirement 
-                    Dictionary<string, (int, int)> waterMagicSpells = new Dictionary<string, (int, int)>()
+                    Dictionary<string, (int damage, int manaRequirement)> waterMagicSpells = new Dictionary<string, (int damage, int manaRequirement)>()
                     {
                         { "Aqua Torrent", (2, 10) },
                         { "Hydroburst", (4, 15) },
@@ -1104,9 +1105,8 @@ namespace FantasyRPG
                         { "Ripple Cascade", (8, 25) }
                     };
 
-
                     // Tuple dictionary for each Ice magic spell, which is associated with a damage value a mana requirement
-                    Dictionary<string, (int, int)> iceMagicSpells = new Dictionary<string, (int, int)>()
+                    Dictionary<string, (int damage, int manaRequirement)> iceMagicSpells = new Dictionary<string, (int damage, int manaRequirement)>()
                     {
                         { "Frostbite", (5, 20) },
                         { "Ice Lance", (9, 30) },
@@ -1115,7 +1115,7 @@ namespace FantasyRPG
                     };
 
                     // Tuple dictionary for each Lightning magic spell, which is associated with a damage value and a mana requirement 
-                    Dictionary<string, (int, int)> lightningMagicSpells = new Dictionary<string, (int, int)>()
+                    Dictionary<string, (int damage, int manaRequirement)> lightningMagicSpells = new Dictionary<string, (int damage, int manaRequirement)>()
                     {
                         { "Thunderstrike", (4, 15) },
                         { "Striking Surge", (6, 20) },
@@ -1123,9 +1123,8 @@ namespace FantasyRPG
                         { "Arcane Thunder", (10, 30) }
                     };
 
-
                     // Tuple dictionary for each Dark magic spell, which is associated with a damage value and a mana requirement 
-                    Dictionary<string, (int, int)> darkMagicSpells = new Dictionary<string, (int, int)>()
+                    Dictionary<string, (int damage, int manaRequirement)> darkMagicSpells = new Dictionary<string, (int damage, int manaRequirement)>()
                     {
                         { "Shadow Veil", (3, 15) },
                         { "Umbral Surge", (5, 20) },
@@ -1134,7 +1133,7 @@ namespace FantasyRPG
                     };
 
                     // Tuple dictionary for each Light magic spell, which is associated with a damage value and a mana requirement 
-                    Dictionary<string, (int, int)> lightMagicSpells = new Dictionary<string, (int, int)>()
+                    Dictionary<string, (int damage, int manaRequirement)> lightMagicSpells = new Dictionary<string, (int damage, int manaRequirement)>()
                     {
                         { "Luminous Beam", (3, 15) },
                         { "Solar Flare", (5, 20) },
@@ -1144,7 +1143,7 @@ namespace FantasyRPG
                     };
 
                     // Tuple dictionary for each Eucladian magic spell, which is associated with a damage value and a mana requirement 
-                    Dictionary<string, (int, int)> eucladianMagicSpells = new Dictionary<string, (int, int)>()
+                    Dictionary<string, (int damage, int manaRequirement)> eucladianMagicSpells = new Dictionary<string, (int damage, int manaRequirement)>()
                     {
                         { "Esoteric Paradigm", (3, 15) },
                         { "Fractural Fissure", (5, 20) },
@@ -1153,7 +1152,7 @@ namespace FantasyRPG
                     };
 
                     // Tuple dictionary for the starter weapons, which is associated with a damage value and a rarity type
-                    Dictionary<string, (int, string)> starterMageWeapons = new Dictionary<string, (int, string)>()
+                    Dictionary<string, (int damage, string rarity)> starterMageWeapons = new Dictionary<string, (int damage, string rarity)>()
                     {
                         { "Weathered Oakwind", (5, "(Common)") },
                         { "Ancient Runestaff", (7, "(Uncommon)") },
@@ -1241,7 +1240,7 @@ namespace FantasyRPG
                             case "Fire-Magic":
                                 foreach (var spell in fireMagicSpells)
                                 {
-                                    smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.Item1}, Mana Requirement for Activation: {spell.Value.Item2}");
+                                    smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage}, Mana Requirement for Activation: {spell.Value.manaRequirement}");
                                     totalSpellsDisplayed++;
                                     Console.WriteLine("\nPress Enter to see the next spell...");
                                     Console.ReadLine();
@@ -1251,7 +1250,7 @@ namespace FantasyRPG
                             case "Water-Magic":
                                 foreach (var spell in waterMagicSpells)
                                 {
-                                    smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.Item1}, Mana Requirement for Activation: {spell.Value.Item2}");
+                                    smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage}, Mana Requirement for Activation: {spell.Value.manaRequirement}");
                                     totalSpellsDisplayed++;
                                     Console.WriteLine("\nPress Enter to see the next spell...");
                                     Console.ReadLine();
