@@ -1449,11 +1449,12 @@ namespace FantasyRPG
                         // Single-target attacks
                         { "Blazing Cut", (15, 50, "Fire", "Unleash a fiery slash, dealing high damage and burning your opponent.") },
                         { "Icy Impale", (12, 40, "Ice", "Pierce your enemy with an ice-infused blade, slowing their movement and dealing moderate damage.") },
+
                         // Unique and powerful attacks
                         { "Shadow Blade", (25, 80, "Dark", "Forges a blade of pure darkness that cuts through defenses and inflicts grievous wounds." ) },
                         { "Thunderous Fury", (20, 65, "Lightning", "Channel a powerful lightning bolt, dealing massive damage but leaving you vulnerable.") },
                         { "Tidal Wave", (18, 60, "Water", "Summon a wave of water, pushing back and damaging all enemies in its path.") },
-                        { "Euclidian Cleave", (30, 90, "Euclidian", "Unleash a reality-bending slash, ignoring enemy defenses and dealing high damage.") },
+                        { "Eucladian Cleave", (30, 90, "Eucladian", "Unleash a reality-bending slash, ignoring enemy defenses and dealing high damage.") },
                     };
 
                     // Convert dictionaries to arrays of strings for display
