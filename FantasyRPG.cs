@@ -402,11 +402,11 @@ namespace FantasyRPG
     class Mage : CharacterDefault // Wizard class properties + methods
     {
         // Properties for common wizard attributes
-        public string[] magicSpells;
+        public List<(string magicSpell, int damage, int manaRequirement)> magicSpells = new List<(string magicSpell, int damage, int manaRequirement)>();
         string[] magicSpecialties; // User can have multiple magic specialties
         public int spellUsage; // Spell usage to keep spells in control
 
-        public Mage(string _name, string _weaponName, string _weaponType, string[] _magicSpecialties, int _arcaniaGoldCoins, string[] _magicSpells, string[] _currentInventory) : base(_name, _weaponName, _weaponType, _currentInventory, _arcaniaGoldCoins)
+        public Mage(string _name, string _weaponName, string _weaponType, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, string[] _currentInventory) : base(_name, _weaponName, _weaponType, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
             weaponName = _weaponName;
@@ -1185,7 +1185,7 @@ namespace FantasyRPG
                     smoothPrinting.RapidPrint("\nChoose a magic specialties from the list: \n");
 
                     List<string> magicSpecialties = new List<string>(); // Chosen magic specialities
-                    List<string> magicSpells = new List<string>(); // Chosen magical spells
+                    List<(string magicSpell, int damage, int manaRequirement)> magicSpells = new List<(string magicSpell, int damage, int manaRequirement)>(); // Chosen magical spells
 
                     // Display all the magic choices to the user
                     for (int j = 0; j < magicChoices.Length; j++)
@@ -1193,16 +1193,6 @@ namespace FantasyRPG
                         smoothPrinting.FastPrint(choiceIncrementer + ". " + magicChoices[j] + "\n");
                         choiceIncrementer++;
                     }
-
-
-                    // Convert dictionaries to arrays of strings
-                    string[] fireSpells = fireMagicSpells.Keys.ToArray();
-                    string[] waterSpells = waterMagicSpells.Keys.ToArray();
-                    string[] iceSpells = iceMagicSpells.Keys.ToArray();
-                    string[] lightningSpells = lightningMagicSpells.Keys.ToArray();
-                    string[] darkSpells = darkMagicSpells.Keys.ToArray();
-                    string[] lightSpells = lightMagicSpells.Keys.ToArray();
-                    string[] eucladianSpells = eucladianMagicSpells.Keys.ToArray();
 
 
 
@@ -1260,7 +1250,7 @@ namespace FantasyRPG
                             case "Lightning-Magic":
                                 foreach (var spell in lightningMagicSpells)
                                 {
-                                    smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.Item1}, Mana Requirement for Activation: {spell.Value.Item2}");
+                                    smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage} , Mana Requirement for Activation:  {spell.Value.manaRequirement}");
                                     totalSpellsDisplayed++;
                                     Console.WriteLine("\nPress Enter to see the next spell...");
                                     Console.ReadLine();
@@ -1270,7 +1260,7 @@ namespace FantasyRPG
                             case "Ice-Magic":
                                 foreach (var spell in iceMagicSpells)
                                 {
-                                    smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.Item1}, Mana Requirement for Activation: {spell.Value.Item2}");
+                                    smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage} , Mana Requirement for Activation:  {spell.Value.manaRequirement}");
                                     totalSpellsDisplayed++;
                                     Console.WriteLine("\nPress Enter to see the next spell...");
                                     Console.ReadLine();
@@ -1280,7 +1270,7 @@ namespace FantasyRPG
                             case "Dark-Magic":
                                 foreach (var spell in darkMagicSpells)
                                 {
-                                    smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.Item1}, Mana Requirement for Activation: {spell.Value.Item2}");
+                                    smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage} , Mana Requirement for Activation:  {spell.Value.manaRequirement}");
                                     totalSpellsDisplayed++;
                                     Console.WriteLine("\nPress Enter to see the next spell...");
                                     Console.ReadLine();
@@ -1290,7 +1280,7 @@ namespace FantasyRPG
                             case "Light-Magic":
                                 foreach (var spell in lightMagicSpells)
                                 {
-                                    smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.Item1}, Mana Requirement for Activation: {spell.Value.Item2}");
+                                    smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage} , Mana Requirement for Activation:  {spell.Value.manaRequirement}");
                                     totalSpellsDisplayed++;
                                     Console.WriteLine("\nPress Enter to see the next spell...");
                                     Console.ReadLine();
@@ -1300,7 +1290,7 @@ namespace FantasyRPG
                             case "Eucladian-Magic":
                                 foreach (var spell in eucladianMagicSpells)
                                 {
-                                    smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.Item1}, Mana Requirement for Activation: {spell.Value.Item2}");
+                                    smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage} , Mana Requirement for Activation:  {spell.Value.manaRequirement}");
                                     totalSpellsDisplayed++;
                                     Console.WriteLine("\nPress Enter to see the next spell...");
                                     Console.ReadLine();
@@ -1326,30 +1316,30 @@ namespace FantasyRPG
                     {
                         Console.WriteLine($"Select 2 magic spells for {magicSpecialties[specialityIndex]} by entering the corresponding numbers. (1-4 for each element)");
 
-                        List<string> currentMagicSpells = new List<string>(); // Dynamic list which will be used to store the chosen magical spells of the users
+                        List<(string magicSpell, int damage, int manaRequirement)> currentMagicSpells = new List<(string magicSpell, int damage, int manaRequirement)>();
 
                         switch (magicSpecialties[specialityIndex])
                         {
                             case "Fire-Magic":
-                                currentMagicSpells = fireSpells.ToList();
+                                currentMagicSpells = fireMagicSpells.Select(entry => (entry.Key, entry.Value.damage, entry.Value.manaRequirement)).ToList();
                                 break;
                             case "Water-Magic":
-                                currentMagicSpells = waterSpells.ToList();
+                                currentMagicSpells = waterMagicSpells.Select(entry => (entry.Key, entry.Value.damage, entry.Value.manaRequirement)).ToList();
                                 break;
                             case "Ice-Magic":
-                                currentMagicSpells = iceSpells.ToList();
+                                currentMagicSpells = iceMagicSpells.Select(entry => (entry.Key, entry.Value.damage, entry.Value.manaRequirement)).ToList();
                                 break;
                             case "Lightning-Magic":
-                                currentMagicSpells = lightSpells.ToList();
+                                currentMagicSpells = lightningMagicSpells.Select(entry => (entry.Key, entry.Value.damage, entry.Value.manaRequirement)).ToList();
                                 break;
                             case "Dark-Magic":
-                                currentMagicSpells = darkSpells.ToList();
+                                currentMagicSpells = darkMagicSpells.Select(entry => (entry.Key, entry.Value.damage, entry.Value.manaRequirement)).ToList();
                                 break;
                             case "Light-Magic":
-                                currentMagicSpells = lightSpells.ToList();
+                                currentMagicSpells = lightMagicSpells.Select(entry => (entry.Key, entry.Value.damage, entry.Value.manaRequirement)).ToList();
                                 break;
                             case "Eucladian-Magic":
-                                currentMagicSpells = eucladianSpells.ToList();
+                                currentMagicSpells = eucladianMagicSpells.Select(entry => (entry.Key, entry.Value.damage, entry.Value.manaRequirement)).ToList();
                                 break;
                             default:
                                 Console.WriteLine("Unknown magic speciality.");
@@ -1366,19 +1356,20 @@ namespace FantasyRPG
                             int magicSpellChoice;
 
                             string input = Console.ReadLine(); // Prompt for input inside the loop
-                            while (string.IsNullOrWhiteSpace(input) || !int.TryParse(input, out magicSpellChoice) || magicSpellChoice < 1 || magicSpellChoice > magicChoices.Length) // Mitigating empty or invalid input
+                            while (string.IsNullOrWhiteSpace(input) || !int.TryParse(input, out magicSpellChoice) || magicSpellChoice < 1 || magicSpellChoice > currentMagicSpells.Count) // Mitigating empty or invalid input
                             {
-                                Console.WriteLine("Invalid choice. Please enter a valid number corresponding to the magic specialty.");
+                                Console.WriteLine($"Invalid choice. Please enter a valid number corresponding to the magic specialty (1-{currentMagicSpells.Count}).");
                                 input = Console.ReadLine(); // Prompt again for input
                             }
+
+                            // Add the chosen magic spell to magicSpells
                             magicSpells.Add(currentMagicSpells[magicSpellChoice - 1]);
-                            spellIndex++;
                         }
                     }
 
                     Console.Clear(); // Neatness
 
-                    Mage newWizard = new Mage(mageName, staffName, staffWeaponType, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells.ToArray(), mageInventory.ToArray());
+                    Mage newWizard = new Mage(mageName, staffName, staffWeaponType, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory.ToArray());
                     newWizard.chooseNewSpeciality(magicSpecialties.ToArray(), mageName); // Debugging
 
 
