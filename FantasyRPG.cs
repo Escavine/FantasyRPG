@@ -1509,7 +1509,7 @@ namespace FantasyRPG
                         Console.WriteLine($"\nSelect #{attackChoiceIndex + 1} normal attack (1-4 for each move choice):");
 
                         // Prompt user for input
-                        Console.Write("Enter the number of the attack: ");
+                        smoothPrinting.FastPrint("Enter the number of the attack: ");
                         if (int.TryParse(Console.ReadLine().Trim(), out int selectedAttackNumber))
                         {
                             // Check if the entered number corresponds to a valid attack
