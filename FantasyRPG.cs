@@ -903,6 +903,7 @@ namespace FantasyRPG
                     loadingSaveData(); // Lead user to the method
                     break;
                 case 3:
+                    Console.Clear(); // Neatness structuring
                     helpSection(); // Lead user to the method
                     break;
                 case 4:
@@ -961,22 +962,24 @@ namespace FantasyRPG
                     "Having a strong romantical bond with someone, can potentially increase your abilities.", "There are many classes to choose from, all having unique features.",
                     "Avoid fighting overpowered foes early in-game (i.e. dragons), you'll probably get destroyed." };
             smoothPrint.FastPrint("--------Help Section--------\n");
+            Console.WriteLine();
             smoothPrint.FastPrint("What is FantasyRPG?\n");
 
             // Introduction to Arcania, the world of FantasyRPG
-            smoothPrint.FastPrint("Welcome to FantasyRPG, a text-based adventure that transports you to the mystical realm of Arcania!");
-            smoothPrint.FastPrint("Embark on an epic journey through a vast and enchanting world, where hidden treasures await discovery at every turn.");
-            smoothPrint.FastPrint("Prepare yourself for the challenges ahead, as you confront life-and-death situations, battle formidable foes, and overcome treacherous obstacles.");
+            smoothPrint.RapidPrint("\nWelcome to FantasyRPG, a text-based adventure that transports you to the mystical realm of Arcania!");
+            smoothPrint.RapidPrint(" Embark on an epic journey through a vast and enchanting world, where hidden treasures await discovery at every turn.");
+            smoothPrint.RapidPrint(" Prepare yourself for the challenges ahead, as you confront life-and-death situations, battle formidable foes, and overcome treacherous obstacles.\n");
             Console.WriteLine();
-            smoothPrint.FastPrint("In Arcania, your choices shape your destiny. Navigate the immersive landscape, forge alliances with fellow travelers, and encounter mythical creatures that will test your courage and resolve.");
+            smoothPrint.RapidPrint("In Arcania, your choices shape your destiny. Navigate the immersive landscape, forge alliances with fellow travelers, and encounter mythical creatures that will test your courage and resolve.");
             Console.WriteLine();
-            smoothPrint.FastPrint("But beware, adventurer, for danger lurks in the shadows. Face cunning enemies, solve challenging puzzles, and unravel the mysteries that lie dormant in this magical land.");
+            smoothPrint.RapidPrint("\nBut beware, adventurer, for danger lurks in the shadows. Face cunning enemies, solve challenging puzzles, and unravel the mysteries that lie dormant in this magical land.");
             Console.WriteLine();
-            smoothPrint.FastPrint("Amidst the chaos, there is also the promise of something more. As you progress, open your heart to the possibility of romantic connections, adding depth to your personal story.");
+            smoothPrint.RapidPrint("\nAmidst the chaos, there is also the promise of something more. As you progress, open your heart to the possibility of romantic connections, adding depth to your personal story.\n");
             Console.WriteLine();
             smoothPrint.FastPrint("Are you ready to embark on a journey into the heart of Arcania, where every decision shapes your fate? Your adventure begins now!\n");
 
             // Ask if the user wants to see any game advice in the help section
+            Console.WriteLine();
             smoothPrint.FastPrint("Would you like to see any game advice?\n");
             Console.WriteLine("1. Yes");
             Console.WriteLine("2. No");
@@ -985,16 +988,23 @@ namespace FantasyRPG
             switch (userInput)
             {
                 case 1:
+                    Console.Clear();
                     smoothPrint.FastPrint("Game Advice:\n");
 
                     foreach (string s in gameAdvice) // Display game advice
                     {
-                        smoothPrint.FastPrint(s + "\n");
+                        smoothPrint.FastPrint("* " + s + "\n");
                     }
+
+                    Console.ReadKey();
+                    Console.Clear();
+                    gameMenu(); // Redirect user back to the menu...
+
                     break;
 
-                case 2: // Future reference: Move the game menu code to different methods rather than the main, that way you can utilise recursion
-                    Environment.Exit(0); // Terminate the game session
+                case 2:
+                    Console.Clear();
+                    gameMenu(); // Redirect user back to the menu...
                     break;
                 default:
                     Console.WriteLine("Invalid input, please try again.");
@@ -1010,6 +1020,8 @@ namespace FantasyRPG
             SmoothConsole smooth = new SmoothConsole();
             smooth.FastPrint("Send a message to kmescavine@gmail.com in order to send your ideas!"); // Future reference: Use an SMTP feature to allow the user to input their email and send their suggestion
             Console.ReadKey();
+            Console.Clear();
+            gameMenu(); // Redirect user back to the menu...
         }
 
         public void futurePlans() // Future plans for the game development
@@ -1026,7 +1038,9 @@ namespace FantasyRPG
                 count++;
             }
 
-            Console.ReadKey(); // Wait for key input
+            Console.ReadKey();
+            Console.Clear();
+            gameMenu(); // Redirect user back to the menu...
 
 
         }
@@ -1141,16 +1155,29 @@ namespace FantasyRPG
                     // Tuple dictionary for the starter weapons, which is associated with a damage value and a rarity type
                     Dictionary<string, (int damage, string rarity)> starterMageWeapons = new Dictionary<string, (int damage, string rarity)>()
                     {
-                        { "Weathered Oakwind", (5, "(Common)") },
-                        { "Ancient Runestaff", (7, "(Uncommon)") },
-                        { "Runic Wooden Scepter", (3, "(Common)") },
-                        { "Dusty Relic Rod", (2, "(Common)") },
-                        { "Emerald Crystal Staff", (10, "(Unique)") }
+                        { "Weathered Oakwind", (5, "Common") },
+                        { "Ancient Runestaff", (7, "Uncommon") },
+                        { "Runic Wooden Scepter", (3, "Common") },
+                        { "Dusty Relic Rod", (2, "Common") },
+                        { "Emerald Crystal Staff", (10, "Unique") }
                     };
 
                     Console.Clear(); // Cleaning purposes
-                    smoothPrinting.RapidPrint("Mage's Route");
-                    smoothPrinting.RapidPrint("\nYou undergo intense mana training and finally become a Mage.\n");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    smoothPrinting.RapidPrint("Mage's Route\n\n");
+
+                    smoothPrinting.RapidPrint("\nAs a fledgling mage, you embark on a journey of discovery and growth, eager to unlock the secrets of the arcane.\n\n");
+
+                    smoothPrinting.RapidPrint("After years of dedicated study and rigorous training, you finally feel a spark of power awakening within you. The arcane energies, once elusive and mysterious, begin to take shape under your guidance.\n\n");
+
+                    smoothPrinting.RapidPrint("Your journey is filled with challenges and trials as you undergo intense mana training. Each spell cast and incantation spoken pushes you closer to mastering the arcane arts. You spend countless hours in solitude, practicing spells, weaving intricate magical patterns, and honing your control over the elemental forces.\n\n");
+
+                    smoothPrinting.RapidPrint("Through perseverance and determination, you overcome obstacles and setbacks, slowly but steadily progressing on your path. With each small victory, you gain confidence in your abilities and deepen your understanding of magic.\n\n");
+
+                    smoothPrinting.RapidPrint("And then, one day, it happens. In a moment of clarity and focus, you feel a surge of power rushing through you. The raw energy of the arcane flows effortlessly from your fingertips, illuminating the world around you with its brilliance.\n\n");
+
+                    smoothPrinting.RapidPrint("With newfound confidence and a hunger for knowledge, you step into a world of endless possibilities. As a novice mage, your journey has only just begun, and the mysteries of magic await your exploration.\n\n");
+
 
                     Console.WriteLine("What is your name, adventurer?");
                     string mageName = Convert.ToString(Console.ReadLine());
@@ -1161,11 +1188,30 @@ namespace FantasyRPG
 
                     string[] mageWeaponNames = new string[starterMageWeapons.Count]; // All values will be assigned to the array
                     starterMageWeapons.Keys.CopyTo(mageWeaponNames, 0);
+
+
                     string staffName = mageWeaponNames[random_index]; // Assign a weapon randomly to the user from the converted dictionary
+                    List<(string weaponName, int damage, string rarity)> mageStaff = new List<(string, int, string)>(); // The weapon will be stored in this variable
+
+
+                    // Display the starter weapons
+                    smoothPrinting.RapidPrint("\nDisplaying starter weapons...");
+                    Console.WriteLine("\n"); // Neat stucturing
+
+                    foreach (var starterWeapon in starterMageWeapons)
+                    {
+                        smoothPrinting.RapidPrint($"\n* {starterWeapon.Key} - Damage {starterWeapon.Value.damage}, Rarity - {starterWeapon.Value.rarity}");
+                    }
+
+                    Console.WriteLine("\n"); // Neat structuring
+                    smoothPrinting.RapidPrint("Assigning weapon...");
+                    Console.WriteLine("\n"); // Neat structuring
 
                     List<string> mageInventory = new List<string>();
                     mageInventory.Add(staffName); // Add the staff to the users current inventory
 
+                    Console.ReadKey();
+                    Console.Clear();
 
                     string staffWeaponType = "Staff"; // Fixed and cannot be changed
 
@@ -1357,14 +1403,20 @@ namespace FantasyRPG
                     Console.Clear(); // Neatness
 
                     Mage newWizard = new Mage(mageName, staffName, staffWeaponType, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory.ToArray());
-                    newWizard.chooseNewSpeciality(magicSpecialties.ToArray(), mageName); // Debugging
 
 
                     smoothPrinting.FastPrint("Mage Name: " + mageName + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + staffName +
                     "\nMage's Magic Specialties: " + string.Join(", ", magicSpecialties));
-                    smoothPrinting.FastPrint("\nMage's Chosen Spells: " + string.Join(", ", magicSpells));
 
+                    // Display users chosen spells
+                    smoothPrinting.FastPrint("\nMage's Chosen Spells: ");
 
+                    foreach (var chosenSpell in magicSpells)
+                    {
+                        smoothPrinting.RapidPrint($"\n{chosenSpell.magicSpell}: Damage - {chosenSpell.damage}, Mana Requirement - {chosenSpell.manaRequirement}");
+                    };
+
+                    Console.WriteLine("\n"); // Neat structuring
                     Console.WriteLine("\nWould you like to now embark on your journey in the world of Arcania? (1 for Yes and 2 for No)");
                     startMageJourneyInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
 
