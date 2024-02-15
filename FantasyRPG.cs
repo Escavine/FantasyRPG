@@ -678,30 +678,30 @@ namespace FantasyRPG
             for (int specialityIndex = 0; specialityIndex < chosenMagicSpecialtyByUser.Count; specialityIndex++)
             {
                 Console.WriteLine($"Select magic spells for {chosenMagicSpecialtyByUser[specialityIndex]} by entering the corresponding numbers. (1-4 for each element)");
-                List<string> currentMagicSpells = new List<string>(); // Dynamic list which will be used to store the chosen magical spells of the users
+                List<(string magicSpell, int damage, int manaRequirement)> currentMagicSpells = new List<(string magicSpell, int damage, int manaRequirement)>(); // Dynamic list which will be used to store the chosen magical spells of the users
 
                 switch (chosenMagicSpecialtyByUser[specialityIndex])
                 {
                     case "Fire-Magic":
-                        currentMagicSpells = fireSpells.ToList();
+                        currentMagicSpells = fireMagicSpells.Select(entry => (entry.Key, entry.Value.damage, entry.Value.manaRequirement)).ToList();
                         break;
                     case "Water-Magic":
-                        currentMagicSpells = waterSpells.ToList();
+                        currentMagicSpells = waterMagicSpells.Select(entry => (entry.Key, entry.Value.damage, entry.Value.manaRequirement)).ToList();
                         break;
                     case "Ice-Magic":
-                        currentMagicSpells = iceSpells.ToList();
+                        currentMagicSpells = iceMagicSpells.Select(entry => (entry.Key, entry.Value.damage, entry.Value.manaRequirement)).ToList();
                         break;
                     case "Lightning-Magic":
-                        currentMagicSpells = lightningSpells.ToList();
+                        currentMagicSpells = lightningMagicSpells.Select(entry => (entry.Key, entry.Value.damage, entry.Value.manaRequirement)).ToList();
                         break;
                     case "Dark-Magic":
-                        currentMagicSpells = darkSpells.ToList();
+                        currentMagicSpells = darkMagicSpells.Select(entry => (entry.Key, entry.Value.damage, entry.Value.manaRequirement)).ToList();
                         break;
                     case "Light-Magic":
-                        currentMagicSpells = lightSpells.ToList();
+                        currentMagicSpells = lightMagicSpells.Select(entry => (entry.Key, entry.Value.damage, entry.Value.manaRequirement)).ToList();
                         break;
                     case "Eucladian-Magic":
-                        currentMagicSpells = eucladianSpells.ToList();
+                        currentMagicSpells = eucladianMagicSpells.Select(entry => (entry.Key, entry.Value.damage, entry.Value.manaRequirement)).ToList();
                         break;
                     default:
                         Console.WriteLine("Unknown magic speciality.");
@@ -712,7 +712,7 @@ namespace FantasyRPG
                 // Allow the user to select spells for the current magic specialty
                 for (int spellNumber = 0; spellNumber < 2; spellNumber++)
                 {
-                    Console.WriteLine($"Choose magic spell #{spellNumber + 1} for {chosenMagicSpecialityByUser[specialityIndex]}:");
+                    Console.WriteLine($"Choose magic spell #{spellNumber + 1} for {chosenMagicSpecialtyByUser[specialityIndex]}:");
                     int magicSpellChoice;
 
                     string input = Console.ReadLine(); // Prompt for input inside the loop
@@ -737,16 +737,17 @@ namespace FantasyRPG
 
             smoothPrinting.FastPrint("\n" + name + "'s " + "current known magical spells/abilities:\n");
 
-            for (int i = 0; i < magicSpells.Count; i++) // Display users updated magic spells
+            foreach (var spell in magicSpells)
             {
-                smoothPrinting.FastPrint("* " + magicSpells[i] + "\n");
+                smoothPrinting.FastPrint($"\n* {spell.magicSpell}: Damage - {spell.damage}, Mana Requirement - {spell.manaRequirement}");
             }
 
-            chosenMagicSpecialityByUser = null; // Clear the array of any specialties, for the next time this is executed when the user reaches this point in the game again
+
+            chosenMagicSpecialtyByUser = null; // Clear the array of any specialties, for the next time this is executed when the user reaches this point in the game again
 
 
             int userContinue = 0;
-            Console.WriteLine("\nAre you ready to go back? (1 for yes)"); // Give mage user time to read their updated information
+            Console.WriteLine("\nAre you ready to go back? (1 for Yes)"); // Give mage user time to read their updated information
             userContinue = Convert.ToInt32(Console.ReadLine());
 
             switch (userContinue)
