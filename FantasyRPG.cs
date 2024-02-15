@@ -14,8 +14,7 @@ namespace FantasyRPG
         // Generic character attributes
         public string name;
         public int health;
-        public string weaponType;
-        public string weaponName;
+        public List<(string weaponName, int damage, int rarity)> weaponName;
         public float numOfPotionsInInventory;
         public float maxPotions;
         public int mana;
@@ -30,7 +29,7 @@ namespace FantasyRPG
         private int experienceRequiredForNextLevel;
         // public int randomDyingChance;
 
-        public CharacterDefault(string _name, string _weaponName, string _weaponType, string[] _currentInventory, int _arcaniaGoldCoins) // Default preset for all classes during the start of the game :3
+        public CharacterDefault(string _name, string _weaponName, string[] _currentInventory, int _arcaniaGoldCoins) // Default preset for all classes during the start of the game :3
         {
             name = _name;
             weaponType = _weaponType;
@@ -406,7 +405,7 @@ namespace FantasyRPG
         string[] magicSpecialties; // User can have multiple magic specialties
         public int spellUsage; // Spell usage to keep spells in control
 
-        public Mage(string _name, string _weaponName, string _weaponType, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, string[] _currentInventory) : base(_name, _weaponName, _weaponType, _currentInventory, _arcaniaGoldCoins)
+        public Mage(string _name, List<(string weaponName, int damage, string rarity)> _weaponName, string _weaponType, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, string[] _currentInventory) : base(_name, _weaponName, _weaponType, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
             weaponName = _weaponName;
@@ -1402,10 +1401,10 @@ namespace FantasyRPG
 
                     Console.Clear(); // Neatness
 
-                    Mage newWizard = new Mage(mageName, staffName, staffWeaponType, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory.ToArray());
+                    Mage newWizard = new Mage(mageName, mageStaff, staffWeaponType, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory.ToArray());
 
 
-                    smoothPrinting.FastPrint("Mage Name: " + mageName + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + staffName +
+                    smoothPrinting.FastPrint("Mage Name: " + mageName + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + mageStaff +
                     "\nMage's Magic Specialties: " + string.Join(", ", magicSpecialties));
 
                     // Display users chosen spells
