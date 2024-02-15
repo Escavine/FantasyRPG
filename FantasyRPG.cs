@@ -1456,59 +1456,98 @@ namespace FantasyRPG
                         { "Somalia's Exudance", (12, "Unique", "Tap into the vibrant energy of Somalia, bolstering your resilience and striking with invigorating fervor.") },
                     };
 
-                    // Dictionary values containing Pirate normal attack names, damage values, mana requirements, element type and a breif description
-                    Dictionary<string, (int, int, string, string)> pirateNormalAtkChoices = new Dictionary<string, (int, int, string, string)>()
+                    // Dictionary for storing pirate's normal attack choices
+                    Dictionary<string, (int damage, int manaRequirement, string elementType, string description)> pirateNormalAttackChoices = new Dictionary<string, (int, int, string, string)>()
                     {
                         // Single target attacks
                         { "Riposte", (6, 20, "Physical", "Parry and counter with a swift strike.") },
-                        { "Savage Flurry", (10, 30, "Lighning", "Unleash a relentless series of slashes, imbuing your blade with lightning for each hit.") },
+                        { "Savage Flurry", (10, 30, "Lightning", "Unleash a relentless series of slashes, imbuing your blade with lightning for each hit.") },
                         { "Piercing Thrust", (8, 25, "Ice", "Aim for a gap and deliver a high-precision stab, infused with frost to slow your opponent.") },
                         { "Whirlwind Strike", (7, 20, "Fire", "Spin, deflecting attacks and damaging nearby enemies with a fiery whirlwind.") },
                     };
 
-                    // Dictionary values containing Pirate special attack names, damage values, mana requirements, element type and a breif description
-                    Dictionary<string, (int, int, string, string)> pirateSpecialAtkChoices = new Dictionary<string, (int, int, string, string)>()
+                    // Dictionary for storing pirate's special attack choices
+                    Dictionary<string, (int damage, int manaRequirement, string elementType, string description)> pirateSpecialAttackChoices = new Dictionary<string, (int, int, string, string)>()
                     {
                         // Single-target attacks
                         { "Blazing Cut", (15, 50, "Fire", "Unleash a fiery slash, dealing high damage and burning your opponent.") },
                         { "Icy Impale", (12, 40, "Ice", "Pierce your enemy with an ice-infused blade, slowing their movement and dealing moderate damage.") },
                         // Unique and powerful attacks
                         { "Shadow Blade", (25, 80, "Dark", "Forges a blade of pure darkness that cuts through defenses and inflicts grievous wounds." ) },
-                        { "Thunderous Fury", (25, 100, "Lightning", "Channel a powerful lightning bolt, dealing massive damage but leaving you vulnerable.") },
+                        { "Thunderous Fury", (20, 65, "Lightning", "Channel a powerful lightning bolt, dealing massive damage but leaving you vulnerable.") },
                         { "Tidal Wave", (18, 60, "Water", "Summon a wave of water, pushing back and damaging all enemies in its path.") },
-                        { "Eucladian Cleave", (20, 70, "Eucladian", "Unleash a reality-bending slash, ignoring enemy defenses and dealing high damage.") },
+                        { "Euclidian Cleave", (30, 90, "Euclidian", "Unleash a reality-bending slash, ignoring enemy defenses and dealing high damage.") },
                     };
 
+                    // Convert dictionaries to arrays of strings for display
+                    string[] pirateNormalAttackChoicesKeys = pirateNormalAttackChoices.Keys.ToArray();
+                    string[] pirateSpecialAttackChoicesKeys = pirateSpecialAttackChoices.Keys.ToArray();
 
+                    // List to store chosen pirate special attacks
+                    List<string> chosenPirateSpecialAttacks = new List<string>();
 
+                    // Counter variables for output tracking
+                    int normalAttackChoiceCount = 0;
+                    int specialAttackChoiceCount = 0;
+                    int chosenNormalAttackCount = 0;
 
-                    // Convert dictionaries to arrays of strings
-                    string[] pirateAtkChoices = pirateNormalAtkChoices.Keys.ToArray();
-                    string[] pirateSpecialChoices = pirateSpecialAtkChoices.Keys.ToArray();
-
-
-                    List<string> pirateNormalAtks = new List<string>(); // This will contain the chosen pirate normal attacks
-                    List<string> pirateSpecialAtks = new List<string>(); // This will contain the chosen pirate special attacks
-
-                    int normalAtkNumCount = 0; // These will be used to keep track of the number of values outputted
-                    int specialAtkNumCount = 0;
-
-                    for (int i = 0; i < pirateNormalAtks.Count; i++)
+                    // Display pirate's normal attack choices
+                    foreach (var normalAttackChoice in pirateNormalAttackChoices)
                     {
-                        foreach (var normalAtkChoices in pirateNormalAtkChoices) // Display the normal attack choices to the user with other associated values
-                        {
-                            smoothPrinting.RapidPrint($"\n{normalAtkNumCount + 1}. {normalAtkChoices.Key} - Damage: {normalAtkChoices.Value.Item1}, Mana Requirement for Activation: {normalAtkChoices.Value.Item2}, Element Type: {normalAtkChoices.Value.Item3} \nDescription: {normalAtkChoices.Value.Item4}\n");
-                            normalAtkNumCount++;
-                        }
-
+                        smoothPrinting.RapidPrint($"\n{normalAttackChoiceCount + 1}. {normalAttackChoice.Key} - Damage: {normalAttackChoice.Value.damage}, Mana Requirement for Activation: {normalAttackChoice.Value.manaRequirement}, Element Type: {normalAttackChoice.Value.elementType} \nDescription: {normalAttackChoice.Value.description}\n");
+                        normalAttackChoiceCount++;
                     }
 
-                    smoothPrinting.FastPrint("\nSelect 2 normal attacks: ");
+                    // Store selected normal attacks with all details
+                    List<(string attack, int damage, int manaRequirement, string elementType, string description)> chosenNormalAttacks = new List<(string, int, int, string, string)>();
 
-                    foreach (var specialAtkChoices in pirateSpecialAtkChoices) // Display the normal attack choices to the user with other associated values
+                    for (int attackChoiceIndex = 0; attackChoiceIndex < 2; attackChoiceIndex++)
                     {
-                        smoothPrinting.RapidPrint($"\n{specialAtkNumCount + 1}. {specialAtkChoices.Key} - Damage: {specialAtkChoices.Value.Item1}, Mana Requirement for Activation: {specialAtkChoices.Value.Item2}, Element Type: {specialAtkChoices.Value.Item3} \nDescription: {specialAtkChoices.Value.Item4}\n");
-                        specialAtkNumCount++;
+                        Console.WriteLine($"\nSelect #{attackChoiceIndex + 1} normal attack (1-4 for each move choice):");
+
+                        // Prompt user for input
+                        Console.Write("Enter the number of the attack: ");
+                        if (int.TryParse(Console.ReadLine().Trim(), out int selectedAttackNumber))
+                        {
+                            // Check if the entered number corresponds to a valid attack
+                            if (selectedAttackNumber >= 1 && selectedAttackNumber <= pirateNormalAttackChoices.Count)
+                            {
+                                string[] attackKeys = pirateNormalAttackChoices.Keys.ToArray();
+                                string selectedAttackKey = attackKeys[selectedAttackNumber - 1];
+
+                                var attackDetails = pirateNormalAttackChoices[selectedAttackKey];
+                                chosenNormalAttacks.Add((selectedAttackKey, attackDetails.damage, attackDetails.manaRequirement, attackDetails.elementType, attackDetails.description));
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid attack number. Please enter a number corresponding to the provided options.");
+                                attackChoiceIndex--; // Decrement to re-ask for the current attack slot
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input. Please enter a valid number.");
+                            attackChoiceIndex--; // Decrement to re-ask for the current attack slot
+                        }
+                    }
+
+                    Console.Clear(); // Cleaning the console for neatness
+
+                    // Display selected normal attacks with all details
+                    Console.WriteLine("Confirmed normal attack selected by user:");
+                    foreach (var attack in chosenNormalAttacks)
+                    {
+                        smoothPrinting.RapidPrint($"\nAttack: {attack.attack}, Damage: {attack.damage}, Mana Requirement: {attack.manaRequirement}, Element Type: {attack.elementType}\nDescription: {attack.description}");
+                    }
+
+                    Console.Read(); // Allow the user to check before proceeding into selecting special attack choices
+
+
+
+                    foreach (var specialAtkChoices in pirateSpecialAttackChoices) // Display the normal attack choices to the user with other associated values
+                    {
+                        smoothPrinting.RapidPrint($"\n{specialAttackChoiceCount + 1}. {specialAtkChoices.Key} - Damage: {specialAtkChoices.Value.Item1}, Mana Requirement for Activation: {specialAtkChoices.Value.Item2}, Element Type: {specialAtkChoices.Value.Item3} \nDescription: {specialAtkChoices.Value.Item4}\n");
+                        specialAttackChoiceCount++;
                     }
 
 
