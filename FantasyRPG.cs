@@ -1017,6 +1017,7 @@ namespace FantasyRPG
 
         public void makeGameSuggestion() // Game suggestions
         {
+            Console.Clear();
             SmoothConsole smooth = new SmoothConsole();
             smooth.FastPrint("Send a message to kmescavine@gmail.com in order to send your ideas!"); // Future reference: Use an SMTP feature to allow the user to input their email and send their suggestion
             Console.ReadKey();
@@ -1026,6 +1027,7 @@ namespace FantasyRPG
 
         public void futurePlans() // Future plans for the game development
         {
+            Console.Clear();
             SmoothConsole smoothOutput = new SmoothConsole();
 
             int count = 1;
@@ -1186,13 +1188,11 @@ namespace FantasyRPG
                     int random_index = ranNum.Next(0, starterMageWeapons.Count); // Select a random weapon for the user
 
 
-                    string[] mageWeaponNames = new string[starterMageWeapons.Count]; // All values will be assigned to the array
-                    starterMageWeapons.Keys.CopyTo(mageWeaponNames, 0);
+                    List<(string weaponName, int damage, string rarity)> starterMageWeaponChoices = starterMageWeapons.Select(entry => (entry.Key, entry.Value.damage, entry.Value.rarity)).ToList();
 
+                    List<(string weaponName, int damage, string rarity)> mageStaff = new List<(string, int, string)>(starterMageWeaponChoices);
 
-                    string staffName = mageWeaponNames[random_index]; // Assign a weapon randomly to the user from the converted dictionary
-                    List<(string weaponName, int damage, string rarity)> mageStaff = new List<(string, int, string)>(); // The weapon will be stored in this variable
-
+                    starterMageWeaponChoices = starterMageWeapons.Select(entry => (entry.Key, entry.Value.damage, entry.Value.rarity)).ToList();
 
                     // Display the starter weapons
                     smoothPrinting.RapidPrint("\nDisplaying starter weapons...");
@@ -1208,7 +1208,7 @@ namespace FantasyRPG
                     Console.WriteLine("\n"); // Neat structuring
 
                     List<string> mageInventory = new List<string>();
-                    mageInventory.Add(staffName); // Add the staff to the users current inventory
+                    // Future reference:: Add the staff to the users inventory
 
                     Console.ReadKey();
                     Console.Clear();
