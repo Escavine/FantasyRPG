@@ -1064,7 +1064,7 @@ namespace FantasyRPG
 
             userChoice = Convert.ToInt32(Console.ReadLine());
 
-            switch (userChoice)
+            switch (userChoice) // Future reference: Rather than have a userchoice fixed to a single method, add multiple methods for different classes (i.e. a mage class if a user chooses the mage role etc, that way you can implement recursion if the user wants to reset their details)
             {
                 // Should the user decided to become a Mage
                 case 1:
@@ -1579,23 +1579,61 @@ namespace FantasyRPG
                         Console.WriteLine("\n"); // Neat structure for displaying selected normal attacks
                     }
 
-                    Console.WriteLine("Affirmative? If so, enter '1' to move on.");
+                    Console.WriteLine("Affirmative? Press any key to continue.");
                     Console.ReadKey(); // Allow the user to check before proceeding into selecting special attack choices
 
+                    Console.Clear(); // Neatness
 
-
+                    Console.WriteLine("Special Attack Selection");
                     foreach (var specialAtkChoices in pirateSpecialAttackChoices) // Display the normal attack choices to the user with other associated values
                     {
                         smoothPrinting.RapidPrint($"\n{specialAttackChoiceCount + 1}. {specialAtkChoices.Key} - Damage: {specialAtkChoices.Value.Item1}, Mana Requirement for Activation: {specialAtkChoices.Value.Item2}, Element Type: {specialAtkChoices.Value.Item3} \nDescription: {specialAtkChoices.Value.Item4}\n");
                         specialAttackChoiceCount++;
                     }
 
+                    List<(string attack, int damage, int manaRequirement, string elementType, string description)> chosenSpecialAttacks = new List<(string, int, int, string, string)>();
 
-                    smoothPrinting.FastPrint("\nDisplaying weapons...");
+                    for (int specialChoiceIndex = 0; specialChoiceIndex < 1; specialChoiceIndex++)
+                    {
+                        Console.WriteLine($"\nSelect #{specialChoiceIndex + 1} normal attack (1-4 for each move choice):");
+
+                        // Prompt user for input
+                        smoothPrinting.FastPrint("Enter the number of the attack: ");
+                        if (int.TryParse(Console.ReadLine().Trim(), out int selectedSpecialAtkNumber))
+                        {
+                            // Check if the entered number corresponds to a valid attack
+                            if (selectedSpecialAtkNumber >= 1 && selectedSpecialAtkNumber <= pirateSpecialAttackChoices.Count)
+                            {
+                                string[] attackKeys = pirateNormalAttackChoices.Keys.ToArray();
+                                string selectedAttackKey = attackKeys[selectedSpecialAtkNumber - 1];
+
+                                var attackDetails = pirateNormalAttackChoices[selectedAttackKey];
+                                chosenNormalAttacks.Add((selectedAttackKey, attackDetails.damage, attackDetails.manaRequirement, attackDetails.elementType, attackDetails.description));
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid attack number. Please enter a number corresponding to the provided options.");
+                                specialChoiceIndex--; // Decrement to re-ask for the current attack slot
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input. Please enter a valid number.");
+                            specialChoiceIndex--; // Decrement to re-ask for the current attack slot
+                        }
+                    }
+
+                    Console.WriteLine("Affirmative? Press any key to continue.");
+                    Console.ReadKey(); // Allow the user to check before proceeding into selecting special attack choices
+
+                    Console.Clear(); // Neatness
+
+
+                    smoothPrinting.FastPrint("\nDisplaying starter weapons...");
 
                     foreach (var weapon in pirateWeaponChoices)
                     {
-                        smoothPrinting.RapidPrint($"\n{weapon.Key} - Damage: {weapon.Value.Item1} - Weapon Type: {weapon.Value.Item2}, Item Rarity: {weapon.Value.Item3}");
+                        smoothPrinting.RapidPrint($"\n{weapon.Key} - Damage: {weapon.Value.damage} - Weapon Type: {weapon.Value.weaponType}, Item Rarity: {weapon.Value.rarity}");
                     }
 
                     Console.WriteLine("\n"); // Structuring
@@ -1657,8 +1695,8 @@ namespace FantasyRPG
 
                     // Display information to the user
                     smoothPrinting.FastPrint($"Pirate's Name: {pirateName} \nPirate's Weapon Type: {randomPirateWeapon.Value.weaponType} \nPirate's Weapon: {randomPirateWeapon.Key} \nPirate's Aura: {pirateAuraName}");
-                    smoothPrinting.FastPrint("\nPirate's Normal Attacks: " + string.Join(", ", pirateNormalAttackChoices));
-                    smoothPrinting.FastPrint("\nPirate's Special Attacks: " + string.Join(", ", pirateSpecialAttackChoices));
+                    smoothPrinting.FastPrint("\nPirate's Normal Attacks: " + string.Join(", ", chosenNormalAttacks));
+                    smoothPrinting.FastPrint("\nPirate's Special Attacks: " + string.Join(", ", chosenSpecialAttacks));
 
                     Console.WriteLine("\nWould you like to now embark on your journey in the world of Arcania? (1 for Yes and 2 for No)");
                     startPirateJourneyInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
