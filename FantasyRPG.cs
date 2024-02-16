@@ -1479,7 +1479,7 @@ namespace FantasyRPG
                     };
 
                     // Auras give damage bonuses on attacks
-                    Dictionary<string, (int, string, string)> pirateAuras = new Dictionary<string, (int, string, string)>()
+                    Dictionary<string, (int damage, string rarity, string auraDescription)> pirateAuras = new Dictionary<string, (int, string, string)>()
                     {
                         { "Bloodlust", (3, "Rare", "Embrace your inner rage and strike fear into your enemies' hearts.") },
                         { "Kraken's Pride", (4, "Rare", "Channel the power of the legendary Kraken, striking with unmatched ferocity.") },
@@ -1626,7 +1626,7 @@ namespace FantasyRPG
                     Console.Clear(); // Neatness
 
                     // Display selected special attacks with all details
-                    Console.WriteLine("Confirmed normal attack selected by user:");
+                    Console.WriteLine("Confirmed special attack selected by user:");
                     foreach (var attack in chosenSpecialAttacks)
                     {
                         smoothPrinting.RapidPrint($"* {attack.attack}, Damage: {attack.damage}, Mana Requirement: {attack.manaRequirement}, Element Type: {attack.elementType}\nDescription: {attack.description}");
@@ -1642,21 +1642,22 @@ namespace FantasyRPG
 
                     smoothPrinting.FastPrint("Displaying starter weapons...");
 
-                    foreach (var weapon in pirateWeaponChoices)
+                    foreach (var weapon in pirateWeaponChoices) // Display starter weapons
                     {
-                        smoothPrinting.RapidPrint($"\n{weapon.Key} - Damage: {weapon.Value.damage} - Weapon Type: {weapon.Value.weaponType}, Item Rarity: {weapon.Value.rarity}");
+                        smoothPrinting.RapidPrint($"\n{weapon.Key} - Damage: {weapon.Value.damage} - Weapon Type: {weapon.Value.weaponType}, Item Rarity: {weapon.Value.rarity}\nWeapon Description: {weapon.Value.weaponDescription}\n");
                     }
 
-                    Console.WriteLine("\n"); // Structuring
-                    smoothPrinting.FastPrint("\nDisplaying auras...");
+                    smoothPrinting.FastPrint("\nIf everything is clear, press any key to continue to the auras.");
+                    Console.ReadKey();
+                    Console.Clear(); // Clear the console to display the auras, since displaying both weapons and auras at once takes too much space
 
-                    foreach (var aura in pirateAuras)
+                    smoothPrinting.FastPrint("Displaying auras..."); // Display auras
+
+                    foreach (var aura in pirateAuras)  
                     {
-                        smoothPrinting.RapidPrint($"\n{aura.Key} - Damage: {aura.Value.Item1}, Rarity: {aura.Value.Item2}");
+                        smoothPrinting.RapidPrint($"\n{aura.Key} - Damage: {aura.Value.damage}, Rarity: {aura.Value.rarity}\nAura Description: {aura.Value.auraDescription}\n");
                     }
 
-
-                    Console.WriteLine("\n"); // Structuring
                     smoothPrinting.FastPrint("\nWeapon will be randomly assigned...");
                     smoothPrinting.FastPrint("\nAura will be randomly assigned...");
 
@@ -1689,8 +1690,11 @@ namespace FantasyRPG
                     Random auraPirateRandom = new Random();
                     int pirateAuraRoll = auraPirateRandom.Next(0, pirateAuras.Count); // Allow for the random generation between index 0 and length of the dictionary
 
-                    // Generate random aura for pirate
-                    string pirateAuraName = pirateAuras.ElementAt(pirateAuraRoll).Key;
+                    List<(string auraName, int damage, string rarity, string description)> pirateAura = new List<(string auraName, int damage, string rarity, string description)>(); // Aura will be stored in a list
+
+                    var randomAuraIndex = pirateAuras.ElementAt(pirateAuraRoll); // Assign a random index to the aura
+
+                    pirateAura.Add(randomAuraIndex.Key);
 
 
                     // Predefined attributes for a pirate
@@ -1705,21 +1709,20 @@ namespace FantasyRPG
 
 
                     // Display information to the user
-                    smoothPrinting.FastPrint($"Pirate's Name: {pirateName} \nPirate's Weapon Type: {randomPirateWeapon.Value.weaponType} \nPirate's Weapon: {randomPirateWeapon.Key} \nPirate's Aura: {pirateAuraName}");
-                    smoothPrinting.FastPrint("\nPirate's Special Attacks: " + string.Join(", ", chosenSpecialAttacks));
+                    smoothPrinting.FastPrint($"Pirate's Name: {pirateName} \nPirate's Weapon Type: {randomPirateWeapon.Value.weaponType}, \nPirate's Weapon: {randomPirateWeapon.Key}, Damage: {randomPirateWeapon.Value.damage} \nPirate's Aura: {pirateAuraName}");
 
-                    smoothPrinting.FastPrint("\nPirate's Normal Attacks: ");
+                    smoothPrinting.FastPrint("\n\nPirate's Normal Attacks: ");
 
                     foreach (var chosenNormalAttack in chosenNormalAttacks) // Display all chosen normal attacks moves of the user
                     {
-                        smoothPrinting.RapidPrint($"\n{chosenNormalAttack}: Damage - {chosenNormalAttack.damage}, Mana Requirement - {chosenNormalAttack.manaRequirement}, \nDescription: {chosenNormalAttack.description}");
+                        smoothPrinting.RapidPrint($"\n* {chosenNormalAttack.attack}: Damage - {chosenNormalAttack.damage}, Mana Requirement - {chosenNormalAttack.manaRequirement}, Element Type - {chosenNormalAttack.elementType} \nDescription: {chosenNormalAttack.description}");
                     };
 
-                    smoothPrinting.FastPrint("\nPirate's Special Attacks: ");
+                    smoothPrinting.FastPrint("\n\nPirate's Special Attacks: ");
 
                     foreach (var chosenSpecialAttack in chosenSpecialAttacks) // Display all chosen special attacks moves of the user
                     {
-                        smoothPrinting.RapidPrint($"\n{chosenSpecialAttack}: Damage - {chosenSpecialAttack.damage}, Mana Requirement - {chosenSpecialAttack.manaRequirement}, \nDescription: {chosenSpecialAttack.description}");
+                        smoothPrinting.RapidPrint($"\n* {chosenSpecialAttack.attack}: Damage - {chosenSpecialAttack.damage}, Mana Requirement - {chosenSpecialAttack.manaRequirement}, Element Type - {chosenSpecialAttack.elementType} \nDescription: {chosenSpecialAttack.description}");
                     };
 
                     Console.WriteLine("\nWould you like to now embark on your journey in the world of Arcania? (1 for Yes)");
