@@ -14,7 +14,7 @@ namespace FantasyRPG
         // Generic character attributes
         public string name;
         public int health;
-        public List<(string weaponName, int damage, string rarity, string weaponType)> weapon;
+        public List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> weapon;
         public float numOfPotionsInInventory;
         public float maxPotions;
         public int mana;
@@ -29,7 +29,7 @@ namespace FantasyRPG
         private int experienceRequiredForNextLevel;
         // public int randomDyingChance;
 
-        public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins) // Default preset for all classes during the start of the game :3
+        public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins) // Default preset for all classes during the start of the game :3
         {
             name = _name;
             weapon = _weapon; // WIll store the details of the given weapon (i.e. weapon name, type, damage, etc.)
@@ -183,6 +183,8 @@ namespace FantasyRPG
             itemDrop = _itemDrop;
             normalAtkNames = _normalAtkNames;
 
+
+            // Future reference: Add a condition to insert the item into the users inventory, the user has a choice to accept/decline, should they decline, the weapon gets discareded into parts which can be used to refine other weapons
         }
 
 
@@ -351,7 +353,7 @@ namespace FantasyRPG
         public int normalAtkDmg;
         public int specialAtkRecharge;// Percentage value representing 100%
 
-        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType)> _weapon, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
+        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
             weapon = _weapon;
@@ -403,7 +405,7 @@ namespace FantasyRPG
         string[] magicSpecialties; // User can have multiple magic specialties
         public int spellUsage; // Spell usage to keep spells in control
 
-        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, string[] _currentInventory) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
+        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, string[] _currentInventory) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
             weapon = _weapon;
@@ -767,7 +769,7 @@ namespace FantasyRPG
     {
         public string weaponAura, normalAtkName, specialAtkName;
         public int normalAtkDmg, specialAtkDmg, specialAtkCharge;
-        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType)> _weapon, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
+        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
             weapon = _weapon;
@@ -809,7 +811,7 @@ namespace FantasyRPG
 
     class Archer : CharacterDefault
     {
-        public Archer(string _name, List<(string weaponName, int damage, string rarity, string weaponType)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
+        public Archer(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
             weapon = _weapon;
@@ -821,7 +823,7 @@ namespace FantasyRPG
     // Warrior class
     class Warrior : CharacterDefault
     {
-        public Warrior(string _name, List<(string weaponName, int damage, string rarity, string weaponType)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
+        public Warrior(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
             weapon = _weapon;
@@ -1139,11 +1141,11 @@ namespace FantasyRPG
                     };
 
                     // Tuple dictionary for the starter weapons, which is associated with a damage value and a rarity type
-                    Dictionary<string, (int damage, string rarity, string weaponType)> starterMageWeapons = new Dictionary<string, (int damage, string rarity, string weaponType)>()
+                    Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> starterMageWeapons = new Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)>()
                     {
-                        { "Weathered Oakwind", (5, "Common", "Staff") },
-                        { "Ancient Runestaff", (7, "Uncommon", "Staff") },
-                        { "Runic Wooden Scepter", (3, "Common", "Staff") },
+                        { "Weathered Oakwind", (5, "Common", "Staff", "A primitive staff made with oak, that has been weathered down with time. Has the potential to regain it's once lost status, should it be with the 'Chosen One'.") },
+                        { "Ancient Runestaff", (7, "Uncommon", "Staff", "Found in the lost ruins, filled with ancient mysteries yet to be untold.") },
+                        { "Runic Wooden Scepter", (3, "Common", "Staff", ) },
                         { "Dusty Relic Rod", (2, "Common", "Staff") },
                         { "Emerald Crystal Staff", (10, "Unique", "Staff") }
                     };
@@ -1178,6 +1180,16 @@ namespace FantasyRPG
                         smoothPrinting.RapidPrint($"\n* {starterWeapon.Key} - Damage {starterWeapon.Value.damage}, Rarity - {starterWeapon.Value.rarity}");
                     }
 
+                    smoothPrinting.RapidPrint("Would you like to pick a weapon?");
+                    Console.ReadKey();
+
+
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    smoothPrinting.RapidPrint("Did you seriously think you had a choice as to what you get to pick hahahahaha"); // User isn't given a choice :3
+                    Console.ReadKey();
+                    Console.Clear();
+                  
+                    Console.ForegroundColor = ConsoleColor.White; // Reset the console color output
                     Console.WriteLine("\n"); // Neat structuring
                     smoothPrinting.RapidPrint("Assigning weapon...");
                     Console.WriteLine("\n"); // Neat structuring
@@ -1475,6 +1487,7 @@ namespace FantasyRPG
                         { "Wraiths's Omen", (2, "Uncommon", "Command the chilling presence of the spectral realm, striking fear and reaping bonus rewards from fallen foes.") },
                         { "Devious Sigma Pirate", (20, "Legendary", "Unleash the cunning and ruthlessness of the Sigma Pirate legend, your attacks imbued with an aura of tactical brilliance.") },
                         { "Somalia's Exudance", (12, "Unique", "Tap into the vibrant energy of Somalia, bolstering your resilience and striking with invigorating fervor.") },
+                        { "Eucladian's Myst", (25, "Legendary", "Relish in it's power and strike fear into your enemies hearts! Eucladian's authority will ensure that no one stands in your way!") }
                     };
 
                     // Dictionary for storing pirate's normal attack choices
@@ -1566,7 +1579,8 @@ namespace FantasyRPG
                         Console.WriteLine("\n"); // Neat structure for displaying selected normal attacks
                     }
 
-                    Console.Read(); // Allow the user to check before proceeding into selecting special attack choices
+                    Console.WriteLine("Affirmative? If so, enter '1' to move on.");
+                    Console.ReadKey(); // Allow the user to check before proceeding into selecting special attack choices
 
 
 
@@ -1609,6 +1623,8 @@ namespace FantasyRPG
                     Random weaponPirateRandom = new Random();
                     int pirateRandomWeaponAssignment = weaponPirateRandom.Next(0, pirateWeaponChoice.Count); // Allow for the random generation between index 0 and length of the dictionary
 
+                    List<(string weaponName, int damage, string rarity, string weaponType)>
+                    
                     // Get a random weapon name from the dictionary
                     string pirateWeaponName = pirateWeaponChoice.ElementAt(pirateRandomWeaponAssignment).Key;
 
