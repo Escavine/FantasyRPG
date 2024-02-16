@@ -1145,9 +1145,9 @@ namespace FantasyRPG
                     {
                         { "Weathered Oakwind", (5, "Common", "Staff", "A primitive staff made with oak, that has been weathered down with time. Has the potential to regain it's once lost status, should it be with the 'Chosen One'.") },
                         { "Ancient Runestaff", (7, "Uncommon", "Staff", "Found in the lost ruins, filled with ancient mysteries yet to be untold.") },
-                        { "Runic Wooden Scepter", (3, "Common", "Staff", ) },
-                        { "Dusty Relic Rod", (2, "Common", "Staff") },
-                        { "Emerald Crystal Staff", (10, "Unique", "Staff") }
+                        { "Runic Wooden Scepter", (3, "Common", "Staff", ".") },
+                        { "Dusty Relic Rod", (2, "Common", "Staff", "Dusty and archaic staff, tough luck if you receive this staff.") },
+                        { "Emerald Crystal Staff", (10, "Unique", "Staff", "A staff adorned with a seraphic crystal, bolstering its power. This staff is a sign of blessed luck!") }
                     };
 
                     Console.Clear(); // Cleaning purposes
@@ -1177,7 +1177,7 @@ namespace FantasyRPG
 
                     foreach (var starterWeapon in starterMageWeapons)
                     {
-                        smoothPrinting.RapidPrint($"\n* {starterWeapon.Key} - Damage {starterWeapon.Value.damage}, Rarity - {starterWeapon.Value.rarity}");
+                        smoothPrinting.RapidPrint($"\n* {starterWeapon.Key}, Damage: {starterWeapon.Value.damage}, Rarity: {starterWeapon.Value.rarity}");
                     }
 
                     smoothPrinting.RapidPrint("Would you like to pick a weapon?");
@@ -1185,7 +1185,7 @@ namespace FantasyRPG
 
 
                     Console.ForegroundColor = ConsoleColor.Red;
-                    smoothPrinting.RapidPrint("Did you seriously think you had a choice as to what you get to pick hahahahaha"); // User isn't given a choice :3
+                    smoothPrinting.RapidPrint("Did you seriously think you had a choice as to what you get to pick? You don't."); // User isn't given a choice :3
                     Console.ReadKey();
                     Console.Clear();
                   
@@ -1195,9 +1195,9 @@ namespace FantasyRPG
                     Console.WriteLine("\n"); // Neat structuring
 
 
-                    List<(string weaponName, int damage, string rarity, string weaponType)> starterMageWeaponChoices = starterMageWeapons.Select(entry => (entry.Key, entry.Value.damage, entry.Value.rarity, entry.Value.weaponType)).ToList();
+                    List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> starterMageWeaponChoices = starterMageWeapons.Select(entry => (entry.Key, entry.Value.damage, entry.Value.rarity, entry.Value.weaponType, entry.Value.weaponDescription)).ToList();
 
-                    List<(string weaponName, int damage, string rarity, string weaponType)> mageStaff = new List<(string, int, string, string)>(starterMageWeaponChoices);
+                    List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> mageStaff = new List<(string, int, string, string, string)>(starterMageWeaponChoices);
 
                     Random ranNum = new Random();
                     int random_index = ranNum.Next(0, starterMageWeaponChoices.Count); // Generates random value that'll decide on which weapon the user gets 
@@ -1213,7 +1213,7 @@ namespace FantasyRPG
 
                     Console.ForegroundColor = ConsoleColor.Magenta;
                     var randomWeapon = mageStaff.First(); // Retrieve the only element added to mageStaff
-                    smoothPrinting.FastPrint($"Assigned weapon: {randomWeapon.weaponName}, Damage: {randomWeapon.damage}, Rarity: {randomWeapon.rarity}, Weapon Type: {randomWeapon.weaponType}"); // Display the assigned weapon to the user
+                    smoothPrinting.FastPrint($"Assigned weapon: {randomWeapon.weaponName}, Damage: {randomWeapon.damage}, Rarity: {randomWeapon.rarity}, Weapon Type: {randomWeapon.weaponType}, \nWeapon Description: {randomWeapon.weaponDescription}"); // Display the assigned weapon to the user
 
                     Console.WriteLine("Affirmative? Press any key to continue.");
                     Console.ReadKey();
@@ -1469,7 +1469,7 @@ namespace FantasyRPG
                     Console.WriteLine("Enter your name:");
                     pirateName = Convert.ToString(Console.ReadLine());
 
-                    Dictionary<string, (int, string, string, string)> pirateWeaponChoice = new Dictionary<string, (int, string, string, string)>()
+                    Dictionary<string, (int damage, string weaponType, string rarity, string weaponDescription)> pirateWeaponChoices = new Dictionary<string, (int, string, string, string)>()
                     {
                         { "Sharp Cutlass", (6, "Sword", "Common", "A short, nimble sword ideal for quick strikes.") },
                         { "Raging Horn", (8, "Longsword", "Common", "A curved longsword evoking power, perfect for forceful attacks.") },
@@ -1593,7 +1593,7 @@ namespace FantasyRPG
 
                     smoothPrinting.FastPrint("\nDisplaying weapons...");
 
-                    foreach (var weapon in pirateWeaponChoice)
+                    foreach (var weapon in pirateWeaponChoices)
                     {
                         smoothPrinting.RapidPrint($"\n{weapon.Key} - Damage: {weapon.Value.Item1} - Weapon Type: {weapon.Value.Item2}, Item Rarity: {weapon.Value.Item3}");
                     }
@@ -1621,14 +1621,18 @@ namespace FantasyRPG
 
                     // User will be randomly assigned a weapon
                     Random weaponPirateRandom = new Random();
-                    int pirateRandomWeaponAssignment = weaponPirateRandom.Next(0, pirateWeaponChoice.Count); // Allow for the random generation between index 0 and length of the dictionary
+                    int pirateRandomWeaponAssignment = weaponPirateRandom.Next(0, pirateWeaponChoices.Count); // Allow for the random generation between index 0 and length of the dictionary
 
-                    List<(string weaponName, int damage, string rarity, string weaponType)>
-                    
-                    // Get a random weapon name from the dictionary
-                    string pirateWeaponName = pirateWeaponChoice.ElementAt(pirateRandomWeaponAssignment).Key;
+                    List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> pirateWeapon = new List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)>(); // This list will store the assigned weapon for the pirate class
 
-                    pirateInventory.Add(pirateWeaponName); // Insert the weapon into the user's inventory
+                    // Access the weapon details directly using the index
+                    var randomPirateWeapon = pirateWeaponChoices.ElementAt(pirateRandomWeaponAssignment);
+
+                    // Add the weapon details to the pirateWeapon list
+                    pirateWeapon.Add((randomPirateWeapon.Key, randomPirateWeapon.Value.damage, randomPirateWeapon.Value.weaponType, randomPirateWeapon.Value.rarity, randomPirateWeapon.Value.weaponDescription));
+
+                    // Add the weapon name to the pirateInventory list
+                    pirateInventory.Add(randomPirateWeapon.Key);
 
 
                     // User will be randomly assigned an aura
@@ -1643,9 +1647,9 @@ namespace FantasyRPG
                     // Future reference: Change the generic attack names and special attack names to be dynamic 
                     string pirateAtkName = "Slash";
                     string pirateSpecialAtkName = "Pirate's might";
-                    string pirateWeaponType = pirateWeaponChoice.ElementAt(pirateRandomWeaponAssignment).Value.Item2; // Assign the given weapon type of randomly generated weapon to the variable
 
-                    SomaliPirate newPirate = new SomaliPirate(pirateName, pirateWeaponName, pirateWeaponType, pirateAuraName, pirateAtkName, pirateSpecialAtkName, pirateInventory.ToArray(), arcaniaGoldCoins); // Generate the pirate details
+
+                    SomaliPirate newPirate = new SomaliPirate(pirateName, pirateWeapon, pirateAuraName, pirateAtkName, pirateSpecialAtkName, pirateInventory.ToArray(), arcaniaGoldCoins); // Generate the pirate details
 
                     Console.Clear(); // Neater
 
