@@ -14,7 +14,7 @@ namespace FantasyRPG
         // Generic character attributes
         public string name;
         public int health;
-        public List<(string weaponName, int damage, int rarity)> weaponName;
+        public List<(string weaponName, int damage, string rarity, string weaponType)> weapon;
         public float numOfPotionsInInventory;
         public float maxPotions;
         public int mana;
@@ -29,11 +29,10 @@ namespace FantasyRPG
         private int experienceRequiredForNextLevel;
         // public int randomDyingChance;
 
-        public CharacterDefault(string _name, string _weaponName, string[] _currentInventory, int _arcaniaGoldCoins) // Default preset for all classes during the start of the game :3
+        public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins) // Default preset for all classes during the start of the game :3
         {
             name = _name;
-            weaponType = _weaponType;
-            weaponName = _weaponName;
+            weapon = _weapon; // WIll store the details of the given weapon (i.e. weapon name, type, damage, etc.)
             currentInventory = _currentInventory;
             arcaniaGoldCoins = 0;
             health = 100;
@@ -251,12 +250,12 @@ namespace FantasyRPG
             // Dictionary that contains weapon name, damage, rarity and weapon type (item drops)
             Dictionary<string, (int, string, string)> itemDrop = new Dictionary<string, (int, string, string)>()
             {
-                { "Etherial Froststaff", (50, "(Unique)", "Staff") },
-                { "Nightfall Rapier", (50, "(Unique)", "Rapier/Sword") },
-                { "Chaosfire Greatsword", (60, "(Unique)", "Greatsword/Sword") }, // OP item drops
-                { "Nightshade Arc", (55, "(Unique)", "Bow") },
-                { "Aerith's Heirloom", (80, "(Legendary)", "Staff") },
-                { "Eucladian's Aura", (55, "(Legendary)", "Aura") } // Should the individual get lucky, then they could potentially get an aura drop, this is only equipabble by knights, pirates, shadowwraths etc.
+                { "Etherial Froststaff", (50, "Unique", "Staff") },
+                { "Nightfall Rapier", (50, "Unique", "Rapier/Sword") },
+                { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword") }, // OP item drops
+                { "Nightshade Arc", (55, "Unique", "Bow") },
+                { "Aerith's Heirloom", (80, "Legendary", "Staff") },
+                { "Eucladian's Aura", (55, "Legendary", "Aura") } // Should the individual get lucky, then they could potentially get an aura drop, this is only equipabble by knights, pirates, shadowwraths etc.
             };
 
             Dictionary<string, (int, string)> specialAtkNames = new Dictionary<string, (int, string)>() // Preset names for all dragon's special attacks
@@ -352,11 +351,10 @@ namespace FantasyRPG
         public int normalAtkDmg;
         public int specialAtkRecharge;// Percentage value representing 100%
 
-        public Knight(string _name, string _weaponName, string _weaponType, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weaponName, _weaponType, _currentInventory, _arcaniaGoldCoins)
+        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType)> _weapon, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
-            weaponName = _weaponName;
-            weaponType = _weaponType;
+            weapon = _weapon;
             specialAtkName = _specialAtkName;
             currentInventory = _currentInventory;
             normalAtkName = "Sword Slash";
@@ -405,11 +403,10 @@ namespace FantasyRPG
         string[] magicSpecialties; // User can have multiple magic specialties
         public int spellUsage; // Spell usage to keep spells in control
 
-        public Mage(string _name, List<(string weaponName, int damage, string rarity)> _weaponName, string _weaponType, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, string[] _currentInventory) : base(_name, _weaponName, _weaponType, _currentInventory, _arcaniaGoldCoins)
+        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, string[] _currentInventory) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
-            weaponName = _weaponName;
-            weaponType = _weaponType;
+            weapon = _weapon;
             magicSpecialties = _magicSpecialties;
             currentInventory = _currentInventory;
             magicSpells = _magicSpells; // Predefined variables for every new wizard in the game
@@ -770,14 +767,13 @@ namespace FantasyRPG
     {
         public string weaponAura, normalAtkName, specialAtkName;
         public int normalAtkDmg, specialAtkDmg, specialAtkCharge;
-        public SomaliPirate(string _name, string _weaponName, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weaponName, _weaponName, _currentInventory, _arcaniaGoldCoins)
+        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType)> _weapon, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
-            weaponName = _weaponName;
-            weaponType = _weaponType;
+            weapon = _weapon;
             weaponAura = _weaponAura;
             normalAtkName = _normalAtkName; // Presets for all new Somali Pirates in the game
-            arcaniaGoldCoins = _arcaniaGoldCoins;
+            arcaniaGoldCoins = 0;
             specialAtkName = _specialAtkName;
             currentInventory = _currentInventory;
             normalAtkDmg = 8;
@@ -789,12 +785,12 @@ namespace FantasyRPG
         // All methods for the somaliPirate class
         public void PirateNormalAtk()
         {
-            Console.WriteLine("The brave Somali Pirate named " + name + " has used " + weaponName + " to deal " + normalAtkDmg);
+            Console.WriteLine("The brave Somali Pirate named " + name + " has used " + weapon + " to deal " + normalAtkDmg);
         }
 
         public void PirateSpecialAtk()
         {
-            Console.WriteLine("The brave Somali Pirate named " + name + " has used " + weaponName + " to deal " + specialAtkDmg);
+            Console.WriteLine("The brave Somali Pirate named " + name + " has used " + weapon + " to deal " + specialAtkDmg);
         }
 
         public void PirateTraining()
@@ -813,33 +809,22 @@ namespace FantasyRPG
 
     class Archer : CharacterDefault
     {
-        public Archer(string _name, string _weaponName, string _weaponType, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weaponName, _weaponType, _currentInventory, _arcaniaGoldCoins)
+        public Archer(string _name, List<(string weaponName, int damage, string rarity, string weaponType)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
-            weaponName = _weaponName;
-            weaponType = _weaponType;
+            weapon = _weapon;
             arcaniaGoldCoins = _arcaniaGoldCoins;
         }
     }
 
 
-    public class Weapon // Equip/Unequip weapon 
-    {
-        public string Name { get; set; }
-        public int Damage { get; set; }
-        public string WeaponName { get; set; }
-        public string WeaponType { get; set; }
-
-    }
-
     // Warrior class
     class Warrior : CharacterDefault
     {
-        public Warrior(string _name, string _weaponName, string _weaponType, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weaponName, _weaponType, _currentInventory, _arcaniaGoldCoins)
+        public Warrior(string _name, List<(string weaponName, int damage, string rarity, string weaponType)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
-            weaponName = _weaponName;
-            weaponType = _weaponType;
+            weapon = _weapon;
             currentInventory = _currentInventory;
             arcaniaGoldCoins = _arcaniaGoldCoins;
         }
@@ -1154,13 +1139,13 @@ namespace FantasyRPG
                     };
 
                     // Tuple dictionary for the starter weapons, which is associated with a damage value and a rarity type
-                    Dictionary<string, (int damage, string rarity)> starterMageWeapons = new Dictionary<string, (int damage, string rarity)>()
+                    Dictionary<string, (int damage, string rarity, string weaponType)> starterMageWeapons = new Dictionary<string, (int damage, string rarity, string weaponType)>()
                     {
-                        { "Weathered Oakwind", (5, "Common") },
-                        { "Ancient Runestaff", (7, "Uncommon") },
-                        { "Runic Wooden Scepter", (3, "Common") },
-                        { "Dusty Relic Rod", (2, "Common") },
-                        { "Emerald Crystal Staff", (10, "Unique") }
+                        { "Weathered Oakwind", (5, "Common", "Staff") },
+                        { "Ancient Runestaff", (7, "Uncommon", "Staff") },
+                        { "Runic Wooden Scepter", (3, "Common", "Staff") },
+                        { "Dusty Relic Rod", (2, "Common", "Staff") },
+                        { "Emerald Crystal Staff", (10, "Unique", "Staff") }
                     };
 
                     Console.Clear(); // Cleaning purposes
@@ -1183,15 +1168,6 @@ namespace FantasyRPG
                     Console.WriteLine("What is your name, adventurer?");
                     string mageName = Convert.ToString(Console.ReadLine());
 
-                    Random ranNum = new Random();
-                    int random_index = ranNum.Next(0, starterMageWeapons.Count); // Select a random weapon for the user
-
-
-                    List<(string weaponName, int damage, string rarity)> starterMageWeaponChoices = starterMageWeapons.Select(entry => (entry.Key, entry.Value.damage, entry.Value.rarity)).ToList();
-
-                    List<(string weaponName, int damage, string rarity)> mageStaff = new List<(string, int, string)>(starterMageWeaponChoices);
-
-                    starterMageWeaponChoices = starterMageWeapons.Select(entry => (entry.Key, entry.Value.damage, entry.Value.rarity)).ToList();
 
                     // Display the starter weapons
                     smoothPrinting.RapidPrint("\nDisplaying starter weapons...");
@@ -1206,13 +1182,30 @@ namespace FantasyRPG
                     smoothPrinting.RapidPrint("Assigning weapon...");
                     Console.WriteLine("\n"); // Neat structuring
 
-                    List<string> mageInventory = new List<string>();
-                    // Future reference:: Add the staff to the users inventory
 
+                    List<(string weaponName, int damage, string rarity, string weaponType)> starterMageWeaponChoices = starterMageWeapons.Select(entry => (entry.Key, entry.Value.damage, entry.Value.rarity, entry.Value.weaponType)).ToList();
+
+                    List<(string weaponName, int damage, string rarity, string weaponType)> mageStaff = new List<(string, int, string, string)>(starterMageWeaponChoices);
+
+                    Random ranNum = new Random();
+                    int random_index = ranNum.Next(0, starterMageWeaponChoices.Count); // Generates random value that'll decide on which weapon the user gets 
+                    mageStaff.Add(starterMageWeaponChoices[random_index]); // Append the weapon into the mage staff list
+
+
+                    List<string> mageInventory = new List<string>();
+                    mageInventory.Add(starterMageWeaponChoices[random_index].weaponName); // Store the weapon in the users inventory
+
+                    smoothPrinting.RapidPrint("\nOnce you are done reading the details, press any key to move on.");
                     Console.ReadKey();
                     Console.Clear();
 
-                    string staffWeaponType = "Staff"; // Fixed and cannot be changed
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    var randomWeapon = mageStaff.First(); // Retrieve the only element added to mageStaff
+                    smoothPrinting.FastPrint($"Assigned weapon: {randomWeapon.weaponName}, Damage: {randomWeapon.damage}, Rarity: {randomWeapon.rarity}, Weapon Type: {randomWeapon.weaponType}"); // Display the assigned weapon to the user
+
+                    Console.WriteLine("Affirmative? Press any key to continue.");
+                    Console.ReadKey();
+                    Console.Clear();
 
                     smoothPrinting.RapidPrint("\nChoose a magic specialties from the list: \n");
 
@@ -1401,11 +1394,11 @@ namespace FantasyRPG
 
                     Console.Clear(); // Neatness
 
-                    Mage newWizard = new Mage(mageName, mageStaff, staffWeaponType, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory.ToArray());
+                    Mage newWizard = new Mage(mageName, mageStaff, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory.ToArray());
 
 
-                    smoothPrinting.FastPrint("Mage Name: " + mageName + "\nMage's Weapon Type: " + staffWeaponType + "\nMage's Weapon: " + mageStaff +
-                    "\nMage's Magic Specialties: " + string.Join(", ", magicSpecialties));
+                    smoothPrinting.FastPrint($"Mage Name: {mageName} \nMage's Weapon Type: {randomWeapon.weaponType} \nMage's Weapon: {randomWeapon.weaponName}");
+                    smoothPrinting.FastPrint("\nMage's Magic Specialities: " + string.Join(", ", magicSpecialties));
 
                     // Display users chosen spells
                     smoothPrinting.FastPrint("\nMage's Chosen Spells: ");
@@ -1416,7 +1409,7 @@ namespace FantasyRPG
                     };
 
                     Console.WriteLine("\n"); // Neat structuring
-                    Console.WriteLine("\nWould you like to now embark on your journey in the world of Arcania? (1 for Yes and 2 for No)");
+                    Console.WriteLine("\nWould you like to now embark on your journey in the world of Arcania? (Enter 1 for Yes)");
                     startMageJourneyInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
 
 
@@ -1432,12 +1425,12 @@ namespace FantasyRPG
 
                         case 2:
                             Console.BackgroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Why are you here then?");
-                            Console.ReadLine();
+                            smoothPrinting.RapidPrint("Don't try play tricks, this game isn't easy");
+                            smoothPrinting.RapidPrint("\nYou died :3");
                             break;
-
                         default:
-                            Console.WriteLine("Invalid input, please input a sensible value again.");
+                            Console.WriteLine("Invalid input, ensure that you enter the correct value (in this case, the value '1').");
+                            Console.Clear();
                             break;
 
                     }
