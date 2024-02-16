@@ -769,7 +769,7 @@ namespace FantasyRPG
     {
         public string weaponAura, normalAtkName, specialAtkName;
         public int normalAtkDmg, specialAtkDmg, specialAtkCharge;
-        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _weaponType, string _weaponAura, string _normalAtkName, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
+        public SomaliPirate(string _name, List<(string weapon, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _weaponAura, string _normalAtkName, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
             weapon = _weapon;
@@ -1635,6 +1635,7 @@ namespace FantasyRPG
                     pirateInventory.Add(randomPirateWeapon.Key);
 
 
+
                     // User will be randomly assigned an aura
                     Random auraPirateRandom = new Random();
                     int pirateAuraRoll = auraPirateRandom.Next(0, pirateAuras.Count); // Allow for the random generation between index 0 and length of the dictionary
@@ -1653,9 +1654,11 @@ namespace FantasyRPG
 
                     Console.Clear(); // Neater
 
-                    smoothPrinting.FastPrint("Pirates name: " + pirateName + "\nPirate's Weapon Type: " + pirateWeaponType + "\nPirate's Weapon: " + pirateWeaponName +
-                    "\nPirate's Aura: " + string.Join(", ", pirateAuraName)); // Display information to the user
 
+                    // Display information to the user
+                    smoothPrinting.FastPrint($"Pirate's Name: {pirateName} \nPirate's Weapon Type: {randomPirateWeapon.Value.weaponType} \nPirate's Weapon: {randomPirateWeapon.Key} \nPirate's Aura: {pirateAuraName}");
+                    smoothPrinting.FastPrint("\nPirate's Normal Attacks: " + string.Join(", ", pirateNormalAttackChoices));
+                    smoothPrinting.FastPrint("\nPirate's Special Attacks: " + string.Join(", ", pirateSpecialAttackChoices));
 
                     Console.WriteLine("\nWould you like to now embark on your journey in the world of Arcania? (1 for Yes and 2 for No)");
                     startPirateJourneyInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
