@@ -767,14 +767,15 @@ namespace FantasyRPG
 
     class SomaliPirate : CharacterDefault
     {
-        public string weaponAura, normalAtkName, specialAtkName;
-        public int normalAtkDmg, specialAtkDmg, specialAtkCharge;
-        public SomaliPirate(string _name, List<(string weapon, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _weaponAura, string _normalAtkName, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
+
+        public List<(int damage, string elementType, string normalAttackDescription)> pirateNormalAtks; // Normal attack list
+        public List<(int damage, string elementType, string specialAttackDescription)> pirateSpecialAtks; // Special attack list
+        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string auraName, int damage, string rarity, string description)> _weaponAura, List<(int damage, string elementType, string normalAttackDescription)> _pirateNormalAtks, List<(int damage, string elementType, string specialAttackDescription)> _pirateSpecialAtks, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
         {
             name = _name;
             weapon = _weapon;
             weaponAura = _weaponAura;
-            normalAtkName = _normalAtkName; // Presets for all new Somali Pirates in the game
+            pirateNormalAtks = _pirateNormalAtks; // Presets for all new Somali Pirates in the game
             arcaniaGoldCoins = 0;
             specialAtkName = _specialAtkName;
             currentInventory = _currentInventory;
@@ -1479,7 +1480,7 @@ namespace FantasyRPG
                     };
 
                     // Auras give damage bonuses on attacks
-                    Dictionary<string, (int damage, string rarity, string auraDescription)> pirateAuras = new Dictionary<string, (int, string, string)>()
+                    Dictionary<string, (int damage, string rarity, string auraDescription)> pirateWeaponAuras = new Dictionary<string, (int, string, string)>()
                     {
                         { "Bloodlust", (3, "Rare", "Embrace your inner rage and strike fear into your enemies' hearts.") },
                         { "Kraken's Pride", (4, "Rare", "Channel the power of the legendary Kraken, striking with unmatched ferocity.") },
@@ -1537,7 +1538,7 @@ namespace FantasyRPG
                     }
 
                     // Store selected normal attacks with all details
-                    List<(string attack, int damage, int manaRequirement, string elementType, string description)> chosenNormalAttacks = new List<(string, int, int, string, string)>();
+                    List<(string attack, int damage, int manaRequirement, string elementType, string description)> chosenPirateNormalAttacks = new List<(string, int, int, string, string)>();
 
                     for (int normalAttackChoiceIndex = 0; normalAttackChoiceIndex < 2; normalAttackChoiceIndex++)
                     {
@@ -1554,7 +1555,7 @@ namespace FantasyRPG
                                 string selectedNormalAttackKey = attackKeys[selectedAttackNumber - 1];
 
                                 var normalAttackDetails = pirateNormalAttackChoices[selectedNormalAttackKey];
-                                chosenNormalAttacks.Add((selectedNormalAttackKey, normalAttackDetails.damage, normalAttackDetails.manaRequirement, normalAttackDetails.elementType, normalAttackDetails.description));
+                                chosenPirateNormalAttacks.Add((selectedNormalAttackKey, normalAttackDetails.damage, normalAttackDetails.manaRequirement, normalAttackDetails.elementType, normalAttackDetails.description));
                             }
                             else
                             {
@@ -1573,7 +1574,7 @@ namespace FantasyRPG
 
                     // Display selected normal attacks with all details
                     Console.WriteLine("Confirmed normal attack selected by user:");
-                    foreach (var attack in chosenNormalAttacks)
+                    foreach (var attack in chosenPirateNormalAttacks)
                     {
                         smoothPrinting.RapidPrint($"* {attack.attack}, Damage: {attack.damage}, Mana Requirement: {attack.manaRequirement}, Element Type: {attack.elementType}\nDescription: {attack.description}");
                         Console.WriteLine("\n"); // Neat structure for displaying selected normal attacks
@@ -1651,11 +1652,11 @@ namespace FantasyRPG
                     Console.ReadKey();
                     Console.Clear(); // Clear the console to display the auras, since displaying both weapons and auras at once takes too much space
 
-                    smoothPrinting.FastPrint("Displaying auras..."); // Display auras
+                    smoothPrinting.FastPrint("Displaying auras..."); // Display weapon auras
 
-                    foreach (var aura in pirateAuras)  
+                    foreach (var weaponAura in pirateWeaponAuras)  
                     {
-                        smoothPrinting.RapidPrint($"\n{aura.Key} - Damage: {aura.Value.damage}, Rarity: {aura.Value.rarity}\nAura Description: {aura.Value.auraDescription}\n");
+                        smoothPrinting.RapidPrint($"\n{weaponAura.Key} - Damage: {weaponAura.Value.damage}, Rarity: {weaponAura.Value.rarity}\nAura Description: {weaponAura.Value.auraDescription}\n");
                     }
 
                     smoothPrinting.FastPrint("\nWeapon will be randomly assigned...");
@@ -1688,22 +1689,16 @@ namespace FantasyRPG
 
                     // User will be randomly assigned an aura
                     Random auraPirateRandom = new Random();
-                    int pirateAuraRoll = auraPirateRandom.Next(0, pirateAuras.Count); // Allow for the random generation between index 0 and length of the dictionary
+                    int pirateAuraRoll = auraPirateRandom.Next(0, pirateWeaponAuras.Count); // Allow for the random generation between index 0 and length of the dictionary
 
-                    List<(string auraName, int damage, string rarity, string description)> pirateAura = new List<(string auraName, int damage, string rarity, string description)>(); // Aura will be stored in a list
+                    List<(string auraName, int damage, string rarity, string description)> pirateWeaponAura = new List<(string auraName, int damage, string rarity, string description)>(); // Aura will be stored in a list
 
-                    var randomAuraIndex = pirateAuras.ElementAt(pirateAuraRoll); // Assign a random index to the aura
+                    var randomAuraIndex = pirateWeaponAuras.ElementAt(pirateAuraRoll); // Assign a random index to the aura
 
-                    pirateAura.Add(randomAuraIndex.Key);
-
-
-                    // Predefined attributes for a pirate
-                    // Future reference: Change the generic attack names and special attack names to be dynamic 
-                    string pirateAtkName = "Slash";
-                    string pirateSpecialAtkName = "Pirate's might";
+                    pirateWeaponAura.Add(randomAuraIndex.Key, randomAuraIndex.Value.damage, randomAuraIndex.Value.rarity, randomAuraIndex.Value.auraDescription); // Add the entire key-value pair to the list
 
 
-                    SomaliPirate newPirate = new SomaliPirate(pirateName, pirateWeapon, pirateAuraName, pirateAtkName, pirateSpecialAtkName, pirateInventory.ToArray(), arcaniaGoldCoins); // Generate the pirate details
+                    SomaliPirate newPirate = new SomaliPirate(pirateName, pirateWeapon, pirateWeaponAura, chosenPirateNormalAttacks, chosenPirateSpecialAttacks, pirateInventory.ToArray(), arcaniaGoldCoins); // Generate the pirate details
 
                     Console.Clear(); // Neater
 
@@ -1713,7 +1708,7 @@ namespace FantasyRPG
 
                     smoothPrinting.FastPrint("\n\nPirate's Normal Attacks: ");
 
-                    foreach (var chosenNormalAttack in chosenNormalAttacks) // Display all chosen normal attacks moves of the user
+                    foreach (var chosenNormalAttack in chosenPirateNormalAttacks) // Display all chosen normal attacks moves of the user
                     {
                         smoothPrinting.RapidPrint($"\n* {chosenNormalAttack.attack}: Damage - {chosenNormalAttack.damage}, Mana Requirement - {chosenNormalAttack.manaRequirement}, Element Type - {chosenNormalAttack.elementType} \nDescription: {chosenNormalAttack.description}");
                     };
