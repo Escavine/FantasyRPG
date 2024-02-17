@@ -20,6 +20,7 @@ namespace FantasyRPG
         public int mana;
         public string[] currentInventory; // Will contain the users potions and other weapons.
         public int arcaniaGoldCoins; // Currency for the city of Arcanith
+        public int specialAtkRecharge;// Percentage value, going upto 100%
         // public int atk;
         // public int def;
 
@@ -29,11 +30,12 @@ namespace FantasyRPG
         private int experienceRequiredForNextLevel;
         // public int randomDyingChance;
 
-        public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins) // Default preset for all classes during the start of the game :3
+        public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins, int specialAtkRecharge) // Default preset for all classes during the start of the game :3
         {
             name = _name;
             weapon = _weapon; // WIll store the details of the given weapon (i.e. weapon name, type, damage, etc.)
             currentInventory = _currentInventory;
+            specialAtkRecharge = 0; // Preset to 0%, as user attacks this will linearly rise
             arcaniaGoldCoins = 0;
             health = 100;
             exp = 0f;
@@ -348,21 +350,19 @@ namespace FantasyRPG
     class Knight : CharacterDefault // Knight class properties and methods
     {
         public string normalAtkName;
-        public string specialAtkName;
+        public string specialAtkName; // Remove these static features
         public int specialAtkDmg;
         public int normalAtkDmg;
-        public int specialAtkRecharge;// Percentage value representing 100%
 
-        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
+        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge)
         {
             name = _name;
             weapon = _weapon;
             specialAtkName = _specialAtkName;
             currentInventory = _currentInventory;
-            normalAtkName = "Sword Slash";
-            specialAtkRecharge = 0; // 0% preset, every time the user attacks, this will increase
-            specialAtkDmg = 10; // Preset damage from sword special attack
-            normalAtkDmg = 4;
+            normalAtkName = "Sword Slash"; // Remove these static features
+            specialAtkDmg = 10; // Remove these static features
+            normalAtkDmg = 4; // Remove these static features
         }
 
         public void BasicAtk() // Primitive knight attack
@@ -405,7 +405,7 @@ namespace FantasyRPG
         string[] magicSpecialties; // User can have multiple magic specialties
         public int spellUsage; // Spell usage to keep spells in control
 
-        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, string[] _currentInventory) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
+        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, string[] _currentInventory, int _specialAtkRecharge) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge)
         {
             name = _name;
             weapon = _weapon;
@@ -768,30 +768,31 @@ namespace FantasyRPG
     class SomaliPirate : CharacterDefault
     {
 
-        public List<(int damage, string elementType, string normalAttackDescription)> pirateNormalAtks; // Normal attack list
-        public List<(int damage, string elementType, string specialAttackDescription)> pirateSpecialAtks; // Special attack list
-        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string auraName, int damage, string rarity, string description)> _weaponAura, List<(int damage, string elementType, string normalAttackDescription)> _pirateNormalAtks, List<(int damage, string elementType, string specialAttackDescription)> _pirateSpecialAtks, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
+        public List<(string attack, int damage, int manaRequirement, string elementType, string description)> pirateNormalAtks; 
+        public List<(string attack, int damage, int manaRequirement, string elementType, string description)> pirateSpecialAtks; // Normal and special attack lists, containing all relevant information
+        public List<(string auraName, int damage, string rarity, string description)> weaponAura; // Weapon aura
+
+        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string auraName, int damage, string rarity, string description)> _weaponAura, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateNormalAtks, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateSpecialAtks, string[] _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge)
         {
             name = _name;
             weapon = _weapon;
             weaponAura = _weaponAura;
             pirateNormalAtks = _pirateNormalAtks; // Presets for all new Somali Pirates in the game
-            arcaniaGoldCoins = 0;
-            specialAtkName = _specialAtkName;
+            pirateSpecialAtks = _pirateSpecialAtks;
             currentInventory = _currentInventory;
-            normalAtkDmg = 8;
-            specialAtkDmg = 16;
-            specialAtkCharge = 100;
 
         }
 
+
+
+
         // All methods for the somaliPirate class
-        public void PirateNormalAtk()
+        public void PirateNormalAtk(List<(string attack, int damage, int manaRequirement, string elementType, string description)> pirateNormalAtks, int mobHealth)
         {
             Console.WriteLine("The brave Somali Pirate named " + name + " has used " + weapon + " to deal " + normalAtkDmg);
         }
 
-        public void PirateSpecialAtk()
+        public void PirateSpecialAtk(List<(string attack, int damage, int manaRequirement, string elementType, string description)> pirateSpecialAtks, int mobHealth)
         {
             Console.WriteLine("The brave Somali Pirate named " + name + " has used " + weapon + " to deal " + specialAtkDmg);
         }
@@ -812,11 +813,10 @@ namespace FantasyRPG
 
     class Archer : CharacterDefault
     {
-        public Archer(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
+        public Archer(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge)
         {
             name = _name;
             weapon = _weapon;
-            arcaniaGoldCoins = _arcaniaGoldCoins;
         }
     }
 
@@ -824,12 +824,11 @@ namespace FantasyRPG
     // Warrior class
     class Warrior : CharacterDefault
     {
-        public Warrior(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins)
+        public Warrior(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge)
         {
             name = _name;
             weapon = _weapon;
             currentInventory = _currentInventory;
-            arcaniaGoldCoins = _arcaniaGoldCoins;
         }
     }
 
@@ -1462,6 +1461,7 @@ namespace FantasyRPG
                     Console.Clear();
                     string pirateName;
                     Console.ForegroundColor = ConsoleColor.Cyan;
+                    int specialAtkRecharge = 0; // This remains fixed
 
                     // Story output (this will be further expanded)
                     smoothPrinting.FastPrint("You are a proud Somali Pirate, one who has explored the vast open seas for many years, and now you feel that your ready for a new adventure!\n");
@@ -1698,7 +1698,7 @@ namespace FantasyRPG
                     pirateWeaponAura.Add(randomAuraIndex.Key, randomAuraIndex.Value.damage, randomAuraIndex.Value.rarity, randomAuraIndex.Value.auraDescription); // Add the entire key-value pair to the list
 
 
-                    SomaliPirate newPirate = new SomaliPirate(pirateName, pirateWeapon, pirateWeaponAura, chosenPirateNormalAttacks, chosenPirateSpecialAttacks, pirateInventory.ToArray(), arcaniaGoldCoins); // Generate the pirate details
+                    SomaliPirate newPirate = new SomaliPirate(pirateName, pirateWeapon, pirateWeaponAura, chosenPirateNormalAttacks, chosenPirateSpecialAttacks, pirateInventory.ToArray(), arcaniaGoldCoins, specialAtkRecharge); // Generate the pirate details
 
                     Console.Clear(); // Neater
 
