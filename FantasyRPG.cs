@@ -779,8 +779,7 @@ namespace FantasyRPG
             weaponAura = _weaponAura;
             pirateNormalAtks = _pirateNormalAtks; // Presets for all new Somali Pirates in the game
             pirateSpecialAtks = _pirateSpecialAtks;
-            currentInventory = _currentInventory;
-
+            currentInventory = _currentInventory; // This will be readjusted to a list in the future
         }
 
 
@@ -1406,7 +1405,9 @@ namespace FantasyRPG
 
                     Console.Clear(); // Neatness
 
-                    Mage newWizard = new Mage(mageName, mageStaff, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory.ToArray());
+                    int mageSpecialAtkRecharge = 0; // Preset
+
+                    Mage newWizard = new Mage(mageName, mageStaff, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory.ToArray(), mageSpecialAtkRecharge);
 
 
                     smoothPrinting.FastPrint($"Mage Name: {mageName} \nMage's Weapon Type: {randomWeapon.weaponType} \nMage's Weapon: {randomWeapon.weaponName}");
@@ -1824,11 +1825,27 @@ namespace FantasyRPG
 
         }
 
+    }
 
+    public class Combat // Will be used to initialize the combat system
+    {
+        public void Fighting()
+        {
+
+
+
+        }
 
 
     }
 
+    public class InfiniteDungeon
+    {
+        public void dungeon()
+        {
+
+        }
+    }
 
 
     public class gameDashboard
