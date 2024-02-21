@@ -1705,24 +1705,24 @@ namespace FantasyRPG
 
 
                     // Display information to the user
-                    smoothPrinting.RapidPrint("Pirate Class\n");
+                    smoothPrinting.CenterPrint("Pirate Class\n");
                     smoothPrinting.FastPrint($"Pirate's Name: {pirateName} \nPirate's Weapon Type: {randomPirateWeapon.Value.weaponType} \nPirate's Weapon: {randomPirateWeapon.Key}, Damage: {randomPirateWeapon.Value.damage} \nPirate's Aura: {randomAura.Key}");
 
                     smoothPrinting.FastPrint("\n\nPirate's Normal Attacks: ");
 
                     foreach (var chosenNormalAttack in chosenPirateNormalAttacks) // Display all chosen normal attacks moves of the user
                     {
-                        smoothPrinting.RapidPrint($"\n* {chosenNormalAttack.attack}: Damage - {chosenNormalAttack.damage}, Mana Requirement - {chosenNormalAttack.manaRequirement}, Element Type - {chosenNormalAttack.elementType} \n\nDescription: {chosenNormalAttack.description}");
+                        smoothPrinting.RapidPrint($"\n* {chosenNormalAttack.attack}: Damage - {chosenNormalAttack.damage}, Mana Requirement - {chosenNormalAttack.manaRequirement}, Element Type - {chosenNormalAttack.elementType} \nDescription: {chosenNormalAttack.description}");
                     };
 
                     smoothPrinting.FastPrint("\n\nPirate's Special Attacks: ");
 
                     foreach (var chosenSpecialAttack in chosenSpecialAttacks) // Display all chosen special attacks moves of the user
                     {
-                        smoothPrinting.RapidPrint($"\n* {chosenSpecialAttack.attack}: Damage - {chosenSpecialAttack.damage}, Mana Requirement - {chosenSpecialAttack.manaRequirement}, Element Type - {chosenSpecialAttack.elementType} \n\nDescription: {chosenSpecialAttack.description}");
+                        smoothPrinting.RapidPrint($"\n* {chosenSpecialAttack.attack}: Damage - {chosenSpecialAttack.damage}, Mana Requirement - {chosenSpecialAttack.manaRequirement}, Element Type - {chosenSpecialAttack.elementType} \nDescription: {chosenSpecialAttack.description}");
                     };
 
-                    Console.WriteLine("\nWould you like to now embark on your journey in the world of Arcania? (1 for Yes)");
+                    Console.WriteLine("\n\nWould you like to now embark on your journey in the world of Arcania? (1 for Yes, 2 to be directed back to class selection and 3 for the Menu)");
                     startPirateJourneyInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
 
                     // Future reference: For each class chosen, make a seperate method for them
@@ -1733,6 +1733,27 @@ namespace FantasyRPG
                             Console.WriteLine("You will now be sent to the world of Arcania, make sure to not die.");
                             FirstScenario pirateJourney = new FirstScenario(); // Journey start!
                             pirateJourney.usersFirstJourney(pirateName);
+                            break;
+                        case 2:
+                            pirateName = null;
+                            pirateWeapon = null;
+                            pirateWeaponAura = null;
+                            chosenPirateNormalAttacks = null; // Clear all parameters from their initial values
+                            chosenSpecialAttacks = null;
+                            pirateInventory = null;
+                            Console.Clear(); // Clear the console to prevent confusion + cleaner look
+                            userClass(); // Redirect user back to class selection
+                            break;
+                        case 3:
+                            pirateName = null;
+                            pirateWeapon = null;
+                            pirateWeaponAura = null;
+                            chosenPirateNormalAttacks = null; // Clear all parameters from their initial values
+                            chosenSpecialAttacks = null;
+                            pirateInventory = null;
+                            GameMenu menu = new GameMenu();
+                            Console.Clear(); // Clear the console to prevent confusion + cleaner look
+                            menu.gameMenu(); // Redirect user back to the the game menu
                             break;
                         default:
                             Console.WriteLine("Invalid input, please input a sensible value again.");
