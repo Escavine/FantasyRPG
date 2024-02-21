@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 // FantasyRPG: A console based RPG game, which sole purpose is to improve on my current programming skills (mainly OOP as that is my weakness).
 
 namespace FantasyRPG
-{
+{ 
     class CharacterDefault // fixed preset for all classes
     {
         // Generic character attributes
@@ -788,12 +788,12 @@ namespace FantasyRPG
         // All methods for the somaliPirate class
         public void PirateNormalAtk(List<(string attack, int damage, int manaRequirement, string elementType, string description)> pirateNormalAtks, int mobHealth)
         {
-            Console.WriteLine("The brave Somali Pirate named " + name + " has used " + weapon + " to deal " + normalAtkDmg);
+            // Console.WriteLine("The brave Somali Pirate named " + name + " has used " + weapon + " to deal " + normalAtkDmg);
         }
 
         public void PirateSpecialAtk(List<(string attack, int damage, int manaRequirement, string elementType, string description)> pirateSpecialAtks, int mobHealth)
         {
-            Console.WriteLine("The brave Somali Pirate named " + name + " has used " + weapon + " to deal " + specialAtkDmg);
+            // Console.WriteLine("The brave Somali Pirate named " + name + " has used " + weapon + " to deal " + specialAtkDmg);
         }
 
         public void PirateTraining()
@@ -1460,7 +1460,6 @@ namespace FantasyRPG
                 case 3:
                     int startPirateJourneyInput;
                     Console.Clear();
-                    string pirateName;
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     int specialAtkRecharge = 0; // This remains fixed
 
@@ -1469,7 +1468,7 @@ namespace FantasyRPG
 
                     // Take users name
                     Console.WriteLine("Enter your name:");
-                    pirateName = Convert.ToString(Console.ReadLine());
+                    string pirateName = Convert.ToString(Console.ReadLine());
 
                     Dictionary<string, (int damage, string weaponType, string rarity, string weaponDescription)> pirateWeaponChoices = new Dictionary<string, (int, string, string, string)>()
                     {
@@ -1586,7 +1585,7 @@ namespace FantasyRPG
 
                     Console.Clear(); // Neatness
 
-                    Console.WriteLine("Special Attack Selection");
+                    smoothPrinting.FastPrint("Special Attack Selection");
                     foreach (var specialAtkChoices in pirateSpecialAttackChoices) // Display the normal attack choices to the user with other associated values
                     {
                         smoothPrinting.RapidPrint($"\n{specialAttackChoiceCount + 1}. {specialAtkChoices.Key} - Damage: {specialAtkChoices.Value.Item1}, Mana Requirement for Activation: {specialAtkChoices.Value.Item2}, Element Type: {specialAtkChoices.Value.Item3} \nDescription: {specialAtkChoices.Value.Item4}\n");
@@ -1694,31 +1693,33 @@ namespace FantasyRPG
 
                     List<(string auraName, int damage, string rarity, string description)> pirateWeaponAura = new List<(string auraName, int damage, string rarity, string description)>(); // Aura will be stored in a list
 
-                    var randomAuraIndex = pirateWeaponAuras.ElementAt(pirateAuraRoll); // Assign a random index to the aura
+                    var randomAura = pirateWeaponAuras.ElementAt(pirateAuraRoll); // Assign a random aura from the dictionary
 
-                    pirateWeaponAura.Add(randomAuraIndex.Key, randomAuraIndex.Value.damage, randomAuraIndex.Value.rarity, randomAuraIndex.Value.auraDescription); // Add the entire key-value pair to the list
+                    // Add the random aura to the list
+                    pirateWeaponAura.Add((randomAura.Key, randomAura.Value.damage, randomAura.Value.rarity, randomAura.Value.auraDescription));
 
 
-                    SomaliPirate newPirate = new SomaliPirate(pirateName, pirateWeapon, pirateWeaponAura, chosenPirateNormalAttacks, chosenPirateSpecialAttacks, pirateInventory.ToArray(), arcaniaGoldCoins, specialAtkRecharge); // Generate the pirate details
+                    SomaliPirate newPirate = new SomaliPirate(pirateName, pirateWeapon, pirateWeaponAura, chosenPirateNormalAttacks, chosenSpecialAttacks, pirateInventory.ToArray(), arcaniaGoldCoins, specialAtkRecharge); // Generate the pirate details
 
                     Console.Clear(); // Neater
 
 
                     // Display information to the user
-                    smoothPrinting.FastPrint($"Pirate's Name: {pirateName} \nPirate's Weapon Type: {randomPirateWeapon.Value.weaponType}, \nPirate's Weapon: {randomPirateWeapon.Key}, Damage: {randomPirateWeapon.Value.damage} \nPirate's Aura: {pirateAuraName}");
+                    smoothPrinting.RapidPrint("Pirate Class\n");
+                    smoothPrinting.FastPrint($"Pirate's Name: {pirateName} \nPirate's Weapon Type: {randomPirateWeapon.Value.weaponType} \nPirate's Weapon: {randomPirateWeapon.Key}, Damage: {randomPirateWeapon.Value.damage} \nPirate's Aura: {randomAura.Key}");
 
                     smoothPrinting.FastPrint("\n\nPirate's Normal Attacks: ");
 
                     foreach (var chosenNormalAttack in chosenPirateNormalAttacks) // Display all chosen normal attacks moves of the user
                     {
-                        smoothPrinting.RapidPrint($"\n* {chosenNormalAttack.attack}: Damage - {chosenNormalAttack.damage}, Mana Requirement - {chosenNormalAttack.manaRequirement}, Element Type - {chosenNormalAttack.elementType} \nDescription: {chosenNormalAttack.description}");
+                        smoothPrinting.RapidPrint($"\n* {chosenNormalAttack.attack}: Damage - {chosenNormalAttack.damage}, Mana Requirement - {chosenNormalAttack.manaRequirement}, Element Type - {chosenNormalAttack.elementType} \n\nDescription: {chosenNormalAttack.description}");
                     };
 
                     smoothPrinting.FastPrint("\n\nPirate's Special Attacks: ");
 
                     foreach (var chosenSpecialAttack in chosenSpecialAttacks) // Display all chosen special attacks moves of the user
                     {
-                        smoothPrinting.RapidPrint($"\n* {chosenSpecialAttack.attack}: Damage - {chosenSpecialAttack.damage}, Mana Requirement - {chosenSpecialAttack.manaRequirement}, Element Type - {chosenSpecialAttack.elementType} \nDescription: {chosenSpecialAttack.description}");
+                        smoothPrinting.RapidPrint($"\n* {chosenSpecialAttack.attack}: Damage - {chosenSpecialAttack.damage}, Mana Requirement - {chosenSpecialAttack.manaRequirement}, Element Type - {chosenSpecialAttack.elementType} \n\nDescription: {chosenSpecialAttack.description}");
                     };
 
                     Console.WriteLine("\nWould you like to now embark on your journey in the world of Arcania? (1 for Yes)");
@@ -1867,6 +1868,14 @@ namespace FantasyRPG
 
     public class SmoothConsole // This will be used to ensure output from the console is smooth and aesthetic looking
     {
+
+        public void CenterPrint(string text) // Will center user output
+        {
+            int width = Console.WindowWidth;
+            int spaces = (width - text.Length) / 2;
+            Console.WriteLine(new string(' ', spaces) + text);
+            Thread.Sleep(10);
+        }
 
         public void RapidPrint(string text) // Even faster console output
         {
