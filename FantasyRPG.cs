@@ -860,7 +860,7 @@ namespace FantasyRPG
             "For you down bad individuals, I MIGHT introduce a harem feature, perhaps implement it with AI, imagine how insane that'll be? LOL" }; // Array containing necessary game tips, more will be added in the future.
 
             // Initiation of the console game
-            smoothOutput.FastPrint("---------FantasyRPG----------\n");
+            smoothOutput.CenterPrint("---------FantasyRPG----------\n");
             Console.WriteLine("\nGame advice: When inputting values, input a corresponding value to the action (e.g. enter the value 1 in order to start the game\n"); // Display game advice
             Random ran = new Random();
             int ran_num = ran.Next(0, 5);
@@ -1422,7 +1422,7 @@ namespace FantasyRPG
                     };
 
                     Console.WriteLine("\n"); // Neat structuring
-                    Console.WriteLine("\nWould you like to now embark on your journey in the world of Arcania? (Enter 1 for Yes)");
+                    Console.WriteLine("\nWould you like to now embark on your journey in the world of Arcania? (Enter 1 for Yes, 2 to select a different class and 3 to be redirected back to the Menu)");
                     startMageJourneyInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
 
 
@@ -1435,14 +1435,32 @@ namespace FantasyRPG
                             FirstScenario wizardJourney = new FirstScenario(); // Journey start!
                             wizardJourney.usersFirstJourney(mageName);
                             break;
-
                         case 2:
-                            Console.BackgroundColor = ConsoleColor.Red;
-                            smoothPrinting.RapidPrint("Don't try play tricks, this game isn't easy");
-                            smoothPrinting.RapidPrint("\nYou died :3");
+                            mageName = null;
+                            mageStaff = null;
+                            magicSpecialties = null;
+                            magicSpells = null; // Clear all parameters from their initial values
+                            mageInventory = null;
+                            smoothPrinting.FastPrint("\nYou will now be redirected to the class selection screen...");
+                            Console.ForegroundColor = ConsoleColor.White; // Reset console color
+                            Console.Clear(); // Clear the console to prevent confusion + cleaner look
+                            userClass(); // Redirect user to select a different class...
                             break;
+                        case 3:
+                            mageName = null;
+                            mageStaff = null;
+                            magicSpecialties = null;
+                            magicSpells = null; // Clear all parameters from their initial values
+                            mageInventory = null;
+                            GameMenu menu = new GameMenu();
+                            smoothPrinting.FastPrint("\nYou will now be directed to the game menu..."); 
+                            Console.ForegroundColor = ConsoleColor.White; // Reset console color
+                            Console.Clear(); // Clear the console to prevent confusion + cleaner look
+                            menu.gameMenu(); // Redirect user back to the the game menu
+                            break;
+
                         default:
-                            Console.WriteLine("Invalid input, ensure that you enter the correct value (in this case, the value '1').");
+                            Console.WriteLine("Invalid input, ensure that you enter the correct value (i.e. the value '1').");
                             Console.Clear();
                             break;
 
@@ -1741,6 +1759,7 @@ namespace FantasyRPG
                             chosenPirateNormalAttacks = null; // Clear all parameters from their initial values
                             chosenSpecialAttacks = null;
                             pirateInventory = null;
+                            smoothPrinting.FastPrint("\nYou will now be redirected to the class selection screen...");
                             Console.Clear(); // Clear the console to prevent confusion + cleaner look
                             userClass(); // Redirect user back to class selection
                             break;
@@ -1751,6 +1770,7 @@ namespace FantasyRPG
                             chosenPirateNormalAttacks = null; // Clear all parameters from their initial values
                             chosenSpecialAttacks = null;
                             pirateInventory = null;
+                            smoothPrinting.FastPrint("\nYou will now be redirected to the game menu...");
                             GameMenu menu = new GameMenu();
                             Console.Clear(); // Clear the console to prevent confusion + cleaner look
                             menu.gameMenu(); // Redirect user back to the the game menu
@@ -1894,7 +1914,7 @@ namespace FantasyRPG
         {
             int width = Console.WindowWidth;
             int spaces = (width - text.Length) / 2;
-            Console.WriteLine(new string(' ', spaces) + text);
+            Console.Write(new string(' ', spaces) + text);
             Thread.Sleep(10);
         }
 
