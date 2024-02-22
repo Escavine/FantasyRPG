@@ -857,7 +857,7 @@ namespace FantasyRPG
 
             // Future reference: Implementing AI mobs and perhaps AI individuals
 
-            int userChoice; // Used for the start of the game
+            int? userChoice; // Used for the start of the game
             string[] gameTips = {"Did you know that every 10 levels, you can get an extra ability/speciality?",
                 "This game is still in development, so if there's an issue please contact me through my GitHub (Escavine) and send a pull request which I'll review.",
             "Eucladian abilities are very overpowered, but in turn they'll cost you some health.", "This game have a sneaky RNG factor, you'll see later as you play :3",
@@ -892,6 +892,7 @@ namespace FantasyRPG
                     break;
                 case 3:
                     Console.Clear(); // Neatness structuring
+                    userChoice = null;
                     helpSection(); // Lead user to the method
                     break;
                 case 4:
@@ -950,48 +951,67 @@ namespace FantasyRPG
                     "Having a strong romantical bond with someone, can potentially increase your abilities.", "There are many classes to choose from, all having unique features.",
                     "Avoid fighting overpowered foes early in-game (i.e. dragons), you'll probably get destroyed." };
             smoothPrint.CenterPrint("--------Help Section--------\n");
-            Console.WriteLine();
-            smoothPrint.FastPrint("What is FantasyRPG?\n");
 
-            // Introduction to Arcania, the world of FantasyRPG
-            smoothPrint.RapidPrint("\nWelcome to FantasyRPG, a text-based adventure that transports you to the mystical realm of Arcania!");
-            smoothPrint.RapidPrint(" Embark on an epic journey through a vast and enchanting world, where hidden treasures await discovery at every turn.");
-            smoothPrint.RapidPrint(" Prepare yourself for the challenges ahead, as you confront life-and-death situations, battle formidable foes, and overcome treacherous obstacles.\n");
-            Console.WriteLine();
-            smoothPrint.RapidPrint("In Aeolus, your choices shape your destiny. Navigate the immersive landscape, forge alliances with fellow travelers, and encounter mythical creatures that will test your courage and resolve.");
-            Console.WriteLine();
-            smoothPrint.RapidPrint("\nBut beware, adventurer, for danger lurks in the shadows. Face cunning enemies, solve challenging puzzles, and unravel the mysteries that lie dormant in this magical land.");
-            Console.WriteLine();
-            smoothPrint.RapidPrint("\nAmidst the chaos, there is also the promise of something more. As you progress, open your heart to the possibility of romantic connections, adding depth to your personal story.\n");
-            Console.WriteLine();
-            smoothPrint.FastPrint("Are you ready to embark on a journey into the heart of Arcania, where every decision shapes your fate? Your adventure begins now!\n");
+            Console.WriteLine("Input the following options: ");
+            smoothPrint.RapidPrint("\n1. What is FantasyRPG?\n");
+            smoothPrint.RapidPrint("\n2. Arcania's Magic Council\n");
+            smoothPrint.RapidPrint("\n3. Game advice from the developers\n");
 
             // Ask if the user wants to see any game advice in the help section
             Console.WriteLine();
-            smoothPrint.FastPrint("Would you like to see any game advice?\n");
-            Console.WriteLine("1. Yes");
-            Console.WriteLine("2. No");
             userInput = Convert.ToInt32(Console.ReadLine());
 
             switch (userInput)
             {
                 case 1:
                     Console.Clear();
+                    smoothPrint.FastPrint("What is FantasyRPG?\n");
+                    // Introduction to Arcania, the world of FantasyRPG
+                    smoothPrint.RapidPrint("\nWelcome to FantasyRPG, a text-based adventure that transports you to the mystical realm of Aeolus!");
+                    smoothPrint.RapidPrint(" Embark on an epic journey through a vast and enchanting world, where hidden treasures await discovery at every turn.");
+                    smoothPrint.RapidPrint(" Prepare yourself for the challenges ahead, as you confront life-and-death situations, battle formidable foes, and overcome treacherous obstacles.\n");
+                    Console.WriteLine();
+                    smoothPrint.RapidPrint("In Aeolus, your choices shape your destiny. Navigate the immersive landscape, forge alliances with fellow travelers, and encounter mythical creatures that will test your courage and resolve.");
+                    Console.WriteLine();
+                    smoothPrint.RapidPrint("\nBut beware, adventurer, for danger lurks in the shadows. Face cunning enemies, solve challenging puzzles, and unravel the mysteries that lie dormant in this magical land.");
+                    Console.WriteLine();
+                    smoothPrint.RapidPrint("\nAmidst the chaos, there is also the promise of something more. As you progress, open your heart to the possibility of romantic connections, adding depth to your personal story.\n");
+                    Console.WriteLine();
+                    smoothPrint.FastPrint("Are you ready to embark on a journey into the heart of Arcania, where every decision shapes your fate? Your adventure begins now!\n");
                     smoothPrint.FastPrint("Game Advice:\n");
 
+
+                    Console.ReadKey();
+                    Console.Clear();
+                    gameMenu(); // Redirect user back to the menu...
+                    break;
+                case 2:
+                    Console.Clear();
+                    smoothPrint.CenterPrint("--------Arcania's Magic Council--------\n");
+                    Console.WriteLine(); // Neatness
+                    smoothPrint.RapidPrint("The Magic Council consists of the 10 strongest individuals from the world of Arcania, ranging from 1 being the strongest to 10 being the weakest. Each member holds immense power and knowledge in their respective fields of magic, making them formidable forces within the realm. \r\n\r\nRoles and Responsibilities: \r\n\r\nThe council members oversee and regulate magical affairs across Arcania, ensuring balance and order in the realm. They adjudicate disputes among magical practitioners, enforce magical laws, and protect the realm from magical threats. Additionally, they serve as advisors to the ruling powers of Arcania, providing counsel on matters relating to magic and arcane knowledge. \r\n\r\nChallenging for a Seat: \r\n\r\nShould you possess the strength and develop a certain level of reputation, you’ll be able to challenge one of their members for a seat within the council. However, this is no easy feat, as the cost for losing is death, resulting in the game being reset. Yet, if you emerge victorious, you can rightfully claim their seat as your own and slowly rise in the ranks. \r\n\r\nBenefits of Council Membership: \r\n\r\nBeing a member of the Magic Council grants numerous benefits, including access to rare magical artifacts, exclusive knowledge of ancient spells, and influence over magical institutions and organizations. Council members also enjoy protection and prestige within Arcania, as well as opportunities for further personal and magical growth. ");
+                    // Display the Arcania's Magic Council members
+                    Console.WriteLine(); // Neatness
+                    smoothPrint.RapidPrint("\nAffirmative? If so, click any key to see the current rankers within the Magic Council. ");
+                    Console.ReadKey();
+                    Console.Clear(); // Neatness
+                    smoothPrint.CenterPrint("--------Arcania's Magic Council (Rankings)--------\n");
+                    Console.WriteLine(); // Neatness
+                    smoothPrint.RapidPrint("Rank 1: ??? - Rank: S** (Class: ???, Race: ???) \r\n\r\nRank 2: ??? - Rank: S* (Class: ???, Race: ???) \r\n\r\nRank 3: ??? - Rank: S (Class: ???, Race: ???) \r\n\r\nRank 4: Lister Everbright - Rank: A* (Class: Knight, Race: Elf) \r\n\r\nRank 5: Aurelia Eucladian-Nine - Rank: S- (Class: Mage, Race: Human) \r\n\r\nRank 6: Kaelen Stormer - Rank: S* (Class: Assassin, Race: Dark Elf) \r\n\r\nRank 7: Lyra Leywin - Rank: S- (Class: Necromancer, Race: Demon) \r\n\r\nRank 8: Windsom - Rank: A* (Class: Guardian, Race: Dragon) \r\n\r\nRank 9: Selene - Rank: A (Class: Succubus, Race: Demon) \r\n\r\nRank 10: Evelyn Everbright - Rank: S- (Class: High-Elf Warrior, Race: Elf) ");
+                    Console.WriteLine(); // Neatness
+                    smoothPrint.RapidPrint("\nAffirmative? If so, click anywhere to be redirected back to the Menu. ");
+                    Console.ReadKey();
+                    Console.Clear(); // Neatness
+                    gameMenu(); // Redirect user back to the menu...
+                    break;
+
+                case 3:
+                    Console.Clear();
                     foreach (string s in gameAdvice) // Display game advice
                     {
                         smoothPrint.FastPrint("* " + s + "\n");
                     }
 
-                    Console.ReadKey();
-                    Console.Clear();
-                    gameMenu(); // Redirect user back to the menu...
-
-                    break;
-
-                case 2:
-                    Console.Clear();
                     gameMenu(); // Redirect user back to the menu...
                     break;
                 default:
@@ -1884,7 +1904,6 @@ namespace FantasyRPG
 
                     smoothPrinting.PrintLine("Fighting isn't available yet.");
                     Console.Read(); // Terminate afterwards
-
                     break;
 
                 case 2:
