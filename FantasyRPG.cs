@@ -845,9 +845,9 @@ namespace FantasyRPG
         static void Main(string[] args) // Future reference: With the implementation of the authentication system soon, this will be moved.
         {
             GameMenu menu = new GameMenu();
-            FirstScenario firstScenario = new FirstScenario();
-            firstScenario.usersFirstJourney("Jahid");
-            // menu.gameMenu(); // User is first directed to the game menu method
+            // FirstScenario firstScenario = new FirstScenario();
+            // firstScenario.usersFirstJourney("Jahid");
+            menu.gameMenu(); // User is first directed to the game menu method
         }
 
 
@@ -1158,34 +1158,32 @@ namespace FantasyRPG
 
                     Console.Clear(); // Cleaning purposes
                     Console.ForegroundColor = ConsoleColor.White;
-                    smoothPrinting.CenterPrint("---------Mage Class----------\n");
+                    smoothPrinting.PrintLine("---------Mage Class----------\n");
 
-                    Console.WriteLine("What is your name, adventurer?");
+                    smoothPrinting.RapidPrint("What is your name, adventurer? ");
                     string mageName = Convert.ToString(Console.ReadLine());
 
 
                     // Display the starter weapons
-                    smoothPrinting.RapidPrint("\nDisplaying starter weapons...");
-                    Console.WriteLine("\n"); // Neat stucturing
+                    // smoothPrinting.RapidPrint("\nDisplaying starter weapons...");
+                    // Console.WriteLine("\n"); // Neat stucturing
 
-                    foreach (var starterWeapon in starterMageWeapons)
-                    {
-                        smoothPrinting.RapidPrint($"\n* {starterWeapon.Key}, Damage: {starterWeapon.Value.damage}, Rarity: {starterWeapon.Value.rarity}");
-                    }
+                    // foreach (var starterWeapon in starterMageWeapons) {
+                 
+                    // smoothPrinting.RapidPrint($"\n* {starterWeapon.Key}, Damage: {starterWeapon.Value.damage}, Rarity: {starterWeapon.Value.rarity}");
+                    // }
 
-                    smoothPrinting.RapidPrint("Would you like to pick a weapon?");
-                    Console.ReadKey();
+                    // smoothPrinting.RapidPrint("Would you like to pick a weapon?");
+                    // Console.ReadKey();
 
 
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    smoothPrinting.RapidPrint("Did you seriously think you had a choice as to what you get to pick? You don't."); // User isn't given a choice :3
-                    Console.ReadKey();
-                    Console.Clear();
+                    // Console.ForegroundColor = ConsoleColor.Red;
+                    // smoothPrinting.RapidPrint("Did you seriously think you had a choice as to what you get to pick? You don't."); // User isn't given a choice :3
+                    // Console.ReadKey();
+                    // Console.Clear();
                   
                     Console.ForegroundColor = ConsoleColor.White; // Reset the console color output
-                    Console.WriteLine("\n"); // Neat structuring
-                    smoothPrinting.RapidPrint("Assigning weapon...");
-                    Console.WriteLine("\n"); // Neat structuring
+                    smoothPrinting.RapidPrint("\nYou will be randomly assigned a weapon...");
 
 
                     List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> starterMageWeaponChoices = starterMageWeapons.Select(entry => (entry.Key, entry.Value.damage, entry.Value.rarity, entry.Value.weaponType, entry.Value.weaponDescription)).ToList();
@@ -1403,20 +1401,20 @@ namespace FantasyRPG
 
                     Mage newWizard = new Mage(mageName, mageStaff, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory.ToArray(), mageSpecialAtkRecharge);
 
-
+                    smoothPrinting.PrintLine("---------Mage Status----------\n"); // Display the users status (i.e. their chosen attack types, weapon etc.)
                     smoothPrinting.FastPrint($"Mage Name: {mageName} \nMage's Weapon Type: {randomWeapon.weaponType} \nMage's Weapon: {randomWeapon.weaponName}");
                     smoothPrinting.FastPrint("\nMage's Magic Specialities: " + string.Join(", ", magicSpecialties));
 
                     // Display users chosen spells
-                    smoothPrinting.FastPrint("\nMage's Chosen Spells: ");
+                    smoothPrinting.FastPrint("\n---------Mage's Chosen Spells---------");
 
                     foreach (var chosenSpell in magicSpells)
                     {
                         smoothPrinting.RapidPrint($"\n{chosenSpell.magicSpell}: Damage - {chosenSpell.damage}, Mana Requirement - {chosenSpell.manaRequirement}");
                     };
 
-                    Console.WriteLine("\n"); // Neat structuring
-                    Console.WriteLine("\n\nWould you like to embark on your journey in the world of Arcania?");
+                    Console.WriteLine(); // Seperate lines
+                    smoothPrinting.CenterPrint("\nWould you like to embark on your journey in the world of Arcania?");
                     Console.WriteLine("Enter the following value, to be directed\n");
                     Console.WriteLine("1: Start your adventure");
                     Console.WriteLine("2: Return to class selection");
@@ -1430,6 +1428,8 @@ namespace FantasyRPG
                             Console.Clear(); // Neatness
                             smoothPrinting.FastPrint("First scenario\n");
                             Console.WriteLine("You will now be sent to the world of Arcania, make sure to not die.");
+                            Console.Clear(); // Neatness
+                            Console.ForegroundColor = ConsoleColor.White; // Reset the console colour
                             FirstScenario wizardJourney = new FirstScenario(); // Journey start!
                             wizardJourney.usersFirstJourney(mageName);
                             break;
@@ -1543,7 +1543,7 @@ namespace FantasyRPG
                     int chosenNormalAttackCount = 0;
 
 
-                    smoothPrinting.CenterPrint("---------Normal Attack Selection----------\n");
+                    smoothPrinting.PrintLine("---------Normal Attack Selection----------\n");
 
                     // Display pirate's normal attack choices
                     foreach (var normalAttackChoice in pirateNormalAttackChoices)
@@ -1588,7 +1588,7 @@ namespace FantasyRPG
                     Console.Clear(); // Cleaning the console for neatness
 
                     // Display selected normal attacks with all details
-                    smoothPrinting.CenterPrint("---------Selected Normal Attacks----------\n");
+                    smoothPrinting.PrintLine("---------Selected Normal Attacks----------\n");
                     foreach (var attack in chosenPirateNormalAttacks)
                     {
                         smoothPrinting.RapidPrint($"* {attack.attack}, Damage: {attack.damage}, Mana Requirement: {attack.manaRequirement}, Element Type: {attack.elementType}\nDescription: {attack.description}");
@@ -1600,7 +1600,7 @@ namespace FantasyRPG
 
                     Console.Clear(); // Neatness
 
-                    smoothPrinting.CenterPrint("---------Special Attack Selection----------\n");
+                    smoothPrinting.PrintLine("---------Special Attack Selection----------\n");
                     foreach (var specialAtkChoices in pirateSpecialAttackChoices) // Display the normal attack choices to the user with other associated values
                     {
                         smoothPrinting.RapidPrint($"\n{specialAttackChoiceCount + 1}. {specialAtkChoices.Key} - Damage: {specialAtkChoices.Value.Item1}, Mana Requirement for Activation: {specialAtkChoices.Value.Item2}, Element Type: {specialAtkChoices.Value.Item3} \nDescription: {specialAtkChoices.Value.Item4}\n");
@@ -1642,7 +1642,7 @@ namespace FantasyRPG
                     Console.Clear(); // Neatness
 
                     // Display selected special attacks with all details
-                    smoothPrinting.CenterPrint("---------Selected Normal Attacks----------\n");
+                    smoothPrinting.PrintLine("---------Selected Normal Attacks----------\n");
                     foreach (var attack in chosenSpecialAttacks)
                     {
                         smoothPrinting.RapidPrint($"* {attack.attack}, Damage: {attack.damage}, Mana Requirement: {attack.manaRequirement}, Element Type: {attack.elementType}\nDescription: {attack.description}");
@@ -1721,11 +1721,11 @@ namespace FantasyRPG
 
 
                     // Display information to the user
-                    smoothPrinting.CenterPrint("---------Pirate Status----------\n"); // Display the users status (i.e. their chosen attack types, weapon etc.)
+                    smoothPrinting.PrintLine("---------Pirate Status----------\n"); // Display the users status (i.e. their chosen attack types, weapon etc.)
                     smoothPrinting.FastPrint($"Pirate's Name: {pirateName} \nPirate's Weapon Type: {randomPirateWeapon.Value.weaponType} \nPirate's Weapon: {randomPirateWeapon.Key}, Damage: {randomPirateWeapon.Value.damage}, Rarity: {randomPirateWeapon.Value.rarity} \nPirate's Aura: {randomAura.Key}, Damage: {randomAura.Value.damage}, Rarity: {randomAura.Value.rarity}");
 
                     Console.WriteLine(); // Seperate lines
-                    smoothPrinting.RapidPrint("\n---------Chosen Normal Attacks----------"); // Display the users chosen normal attack skills
+                    smoothPrinting.PrintLine("\n---------Chosen Normal Attacks----------"); // Display the users chosen normal attack skills
 
                     foreach (var chosenNormalAttack in chosenPirateNormalAttacks) // Display all chosen normal attacks moves of the user
                     {
@@ -1733,7 +1733,7 @@ namespace FantasyRPG
                     };
 
                     Console.WriteLine(); // Seperate lines
-                    smoothPrinting.RapidPrint("\n---------Chosen Special Attack----------"); // Display the users special attack skill
+                    smoothPrinting.PrintLine("\n---------Chosen Special Attack----------"); // Display the users special attack skill
 
                     foreach (var chosenSpecialAttack in chosenSpecialAttacks) // Display all chosen special attacks moves of the user
                     {
@@ -1755,6 +1755,8 @@ namespace FantasyRPG
                         case 1:
                             Console.Clear(); // Neatness
                             Console.WriteLine("You will now be sent to the world of Arcania, make sure to not die.");
+                            Console.ForegroundColor = ConsoleColor.White; // Reset the console colour
+                            Console.Clear(); // Neatness
                             FirstScenario pirateJourney = new FirstScenario(); // Journey start!
                             pirateJourney.usersFirstJourney(pirateName);
                             break;
