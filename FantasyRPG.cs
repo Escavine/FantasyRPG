@@ -1718,17 +1718,17 @@ namespace FantasyRPG
 
 
                     // Display information to the user
-                    smoothPrinting.CenterPrint("Pirate Class\n");
+                    smoothPrinting.CenterPrint("---------Pirate Status----------\n"); // Display the users status (i.e. their chosen attack types, weapon etc.)
                     smoothPrinting.FastPrint($"Pirate's Name: {pirateName} \nPirate's Weapon Type: {randomPirateWeapon.Value.weaponType} \nPirate's Weapon: {randomPirateWeapon.Key}, Damage: {randomPirateWeapon.Value.damage} \nPirate's Aura: {randomAura.Key}");
 
-                    smoothPrinting.FastPrint("\n\nPirate's Normal Attacks: ");
+                    smoothPrinting.CenterPrint("---------Chosen Normal Attacks----------\n"); // Display the users chosen normal attack skills
 
                     foreach (var chosenNormalAttack in chosenPirateNormalAttacks) // Display all chosen normal attacks moves of the user
                     {
                         smoothPrinting.RapidPrint($"\n* {chosenNormalAttack.attack}: Damage - {chosenNormalAttack.damage}, Mana Requirement - {chosenNormalAttack.manaRequirement}, Element Type - {chosenNormalAttack.elementType} \nDescription: {chosenNormalAttack.description}");
                     };
 
-                    smoothPrinting.FastPrint("\n\nPirate's Special Attacks: ");
+                    smoothPrinting.CenterPrint("---------Chosen Special Attack----------\n"); // Display the users special attack skill
 
                     foreach (var chosenSpecialAttack in chosenSpecialAttacks) // Display all chosen special attacks moves of the user
                     {
