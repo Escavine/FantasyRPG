@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Numerics;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
@@ -880,7 +881,6 @@ namespace FantasyRPG
             {
                 case 1:
                     Console.Clear();
-                    Console.WriteLine("Your game session will now begin!");
                     ClassSelection selectClass = new ClassSelection(); // Create a new game session
                     selectClass.userClass(); // Proceed to let the user pick a character class
                     break;
@@ -946,7 +946,7 @@ namespace FantasyRPG
                         "Eucladian abilities are quite overpowered, if you find the opportunity to pursue it, then do so.",
                     "Having a strong romantical bond with someone, can potentially increase your abilities.", "There are many classes to choose from, all having unique features.",
                     "Avoid fighting overpowered foes early in-game (i.e. dragons), you'll probably get destroyed." };
-            smoothPrint.FastPrint("--------Help Section--------\n");
+            smoothPrint.CenterPrint("--------Help Section--------\n");
             Console.WriteLine();
             smoothPrint.FastPrint("What is FantasyRPG?\n");
 
@@ -955,7 +955,7 @@ namespace FantasyRPG
             smoothPrint.RapidPrint(" Embark on an epic journey through a vast and enchanting world, where hidden treasures await discovery at every turn.");
             smoothPrint.RapidPrint(" Prepare yourself for the challenges ahead, as you confront life-and-death situations, battle formidable foes, and overcome treacherous obstacles.\n");
             Console.WriteLine();
-            smoothPrint.RapidPrint("In Arcania, your choices shape your destiny. Navigate the immersive landscape, forge alliances with fellow travelers, and encounter mythical creatures that will test your courage and resolve.");
+            smoothPrint.RapidPrint("In Aeolus, your choices shape your destiny. Navigate the immersive landscape, forge alliances with fellow travelers, and encounter mythical creatures that will test your courage and resolve.");
             Console.WriteLine();
             smoothPrint.RapidPrint("\nBut beware, adventurer, for danger lurks in the shadows. Face cunning enemies, solve challenging puzzles, and unravel the mysteries that lie dormant in this magical land.");
             Console.WriteLine();
@@ -1043,16 +1043,20 @@ namespace FantasyRPG
         {
             SmoothConsole smoothPrinting = new SmoothConsole(); // initiate the smooth console class
 
+            // Storyline: Explain how the user came to the world
+            smoothPrinting.RapidPrint("In a quiet library on Earth, you find yourself inexplicably drawn to an alluring book that is basked within the circumference of the sun's rays. Intrigued by the mysterious markings, you reach out to the book. \r\n\r\nAs your fingers contact the book, a flash of light engulfs you, and you feel pulled into a vortex of energy. In an instant, you are whisked away from their familiar surroundings to a world unlike anything they've ever seen. \r\n\r\nConfused about how you ended up in this strange new realm, you soon learn that they've been summoned to Aeolus by powerful forces seeking help in a time of dire need, as you are the destined one, that isn’t contained by the limits of fate. It seems your unique abilities and knowledge are crucial for overcoming a looming threat that could destroy the entire world of Aeolus. \r\n\r\nWith no way to return, you must now navigate the unfamiliar landscapes and cultures of Aeolus, forging alliances and honing their skills as they strive to fulfill their newfound destiny and save this world from destruction. ");
+
+            smoothPrinting.RapidPrint("\n\nNaturally, you are not familiar with the system that is implemented in the world of Aeolus, therefore you are sent to a bleak white room, where you learn how to familiarize yourself with the world's customs. This includes the plethora of mana surrounding Aeolus and the world's rulings. You can now select a class type.");
+
             int userChoice; // Define the user choice
 
             // Defining the different classes and rarity of items
-            string[] fantasyClasses = { "Mage", "Knight", "Somali Pirate", "Shadowwrath", "Archer", "Return to menu" }; // Predefined array of roles
+            string[] fantasyClasses = { "Mage", "Knight (N/A)", "Pirate", "Shadowwrath (N/A)", "Archer (N/A)", "Return to menu" }; // Predefined array of roles
             string[] rarity = { "Common", "Uncommon", "Rare", "Unique", "Legendary" }; // Predefined values :3
             int num = 1;
 
-            smoothPrinting.RapidPrint("Welcome to the world of Arcania!\n");
-            Console.WriteLine("\nPick your class");
-            Console.WriteLine("-------------------\n"); // Neater
+            Console.WriteLine("\n");
+            smoothPrinting.CenterPrint("---------Class Selection----------\n");
 
             for (int i = 0; i < fantasyClasses.Length; i++)
             {
@@ -1151,20 +1155,7 @@ namespace FantasyRPG
 
                     Console.Clear(); // Cleaning purposes
                     Console.ForegroundColor = ConsoleColor.White;
-                    smoothPrinting.RapidPrint("Mage's Route\n\n");
-
-                    smoothPrinting.RapidPrint("\nAs a fledgling mage, you embark on a journey of discovery and growth, eager to unlock the secrets of the arcane.\n\n");
-
-                    smoothPrinting.RapidPrint("After years of dedicated study and rigorous training, you finally feel a spark of power awakening within you. The arcane energies, once elusive and mysterious, begin to take shape under your guidance.\n\n");
-
-                    smoothPrinting.RapidPrint("Your journey is filled with challenges and trials as you undergo intense mana training. Each spell cast and incantation spoken pushes you closer to mastering the arcane arts. You spend countless hours in solitude, practicing spells, weaving intricate magical patterns, and honing your control over the elemental forces.\n\n");
-
-                    smoothPrinting.RapidPrint("Through perseverance and determination, you overcome obstacles and setbacks, slowly but steadily progressing on your path. With each small victory, you gain confidence in your abilities and deepen your understanding of magic.\n\n");
-
-                    smoothPrinting.RapidPrint("And then, one day, it happens. In a moment of clarity and focus, you feel a surge of power rushing through you. The raw energy of the arcane flows effortlessly from your fingertips, illuminating the world around you with its brilliance.\n\n");
-
-                    smoothPrinting.RapidPrint("With newfound confidence and a hunger for knowledge, you step into a world of endless possibilities. As a novice mage, your journey has only just begun, and the mysteries of magic await your exploration.\n\n");
-
+                    smoothPrinting.CenterPrint("---------Mage Class----------\n");
 
                     Console.WriteLine("What is your name, adventurer?");
                     string mageName = Convert.ToString(Console.ReadLine());
@@ -1422,7 +1413,11 @@ namespace FantasyRPG
                     };
 
                     Console.WriteLine("\n"); // Neat structuring
-                    Console.WriteLine("\nWould you like to now embark on your journey in the world of Arcania? (Enter 1 for Yes, 2 to select a different class and 3 to be redirected back to the Menu)");
+                    Console.WriteLine("\n\nWould you like to embark on your journey in the world of Arcania?");
+                    Console.WriteLine("Enter the following value, to be directed\n");
+                    Console.WriteLine("1: Start your adventure");
+                    Console.WriteLine("2: Return to class selection");
+                    Console.WriteLine("3: Return to the Menu");
                     startMageJourneyInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
 
 
@@ -1481,11 +1476,11 @@ namespace FantasyRPG
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     int specialAtkRecharge = 0; // This remains fixed
 
-                    // Story output (this will be further expanded)
-                    smoothPrinting.FastPrint("You are a proud Somali Pirate, one who has explored the vast open seas for many years, and now you feel that your ready for a new adventure!\n");
+                    smoothPrinting.CenterPrint("---------Pirate Class----------\n");
+                    smoothPrinting.FastPrint("You are a proud Pirate, one who has explored the vast open seas for many years, and now you feel that your ready for a new adventure!\n");
 
                     // Take users name
-                    Console.WriteLine("Enter your name:");
+                    Console.WriteLine("Enter your name: ");
                     string pirateName = Convert.ToString(Console.ReadLine());
 
                     Dictionary<string, (int damage, string weaponType, string rarity, string weaponDescription)> pirateWeaponChoices = new Dictionary<string, (int, string, string, string)>()
@@ -1546,7 +1541,7 @@ namespace FantasyRPG
                     int chosenNormalAttackCount = 0;
 
 
-                    smoothPrinting.RapidPrint("\nNormal Attack Selection");
+                    smoothPrinting.CenterPrint("---------Normal Attack Selection----------\n");
 
                     // Display pirate's normal attack choices
                     foreach (var normalAttackChoice in pirateNormalAttackChoices)
@@ -1591,7 +1586,7 @@ namespace FantasyRPG
                     Console.Clear(); // Cleaning the console for neatness
 
                     // Display selected normal attacks with all details
-                    Console.WriteLine("Confirmed normal attack selected by user:");
+                    smoothPrinting.CenterPrint("---------Selected Normal Attacks----------\n");
                     foreach (var attack in chosenPirateNormalAttacks)
                     {
                         smoothPrinting.RapidPrint($"* {attack.attack}, Damage: {attack.damage}, Mana Requirement: {attack.manaRequirement}, Element Type: {attack.elementType}\nDescription: {attack.description}");
@@ -1603,7 +1598,7 @@ namespace FantasyRPG
 
                     Console.Clear(); // Neatness
 
-                    smoothPrinting.FastPrint("Special Attack Selection");
+                    smoothPrinting.CenterPrint("---------Special Attack Selection----------\n");
                     foreach (var specialAtkChoices in pirateSpecialAttackChoices) // Display the normal attack choices to the user with other associated values
                     {
                         smoothPrinting.RapidPrint($"\n{specialAttackChoiceCount + 1}. {specialAtkChoices.Key} - Damage: {specialAtkChoices.Value.Item1}, Mana Requirement for Activation: {specialAtkChoices.Value.Item2}, Element Type: {specialAtkChoices.Value.Item3} \nDescription: {specialAtkChoices.Value.Item4}\n");
@@ -1645,7 +1640,7 @@ namespace FantasyRPG
                     Console.Clear(); // Neatness
 
                     // Display selected special attacks with all details
-                    Console.WriteLine("Confirmed special attack selected by user:");
+                    smoothPrinting.CenterPrint("---------Selected Normal Attacks----------\n");
                     foreach (var attack in chosenSpecialAttacks)
                     {
                         smoothPrinting.RapidPrint($"* {attack.attack}, Damage: {attack.damage}, Mana Requirement: {attack.manaRequirement}, Element Type: {attack.elementType}\nDescription: {attack.description}");
@@ -1659,7 +1654,7 @@ namespace FantasyRPG
                     Console.Clear(); // Neatness
 
 
-                    smoothPrinting.FastPrint("Displaying starter weapons...");
+                    smoothPrinting.CenterPrint("---------Displaying Starter Weapons----------\n"); // Display the starter weapons to the user
 
                     foreach (var weapon in pirateWeaponChoices) // Display starter weapons
                     {
@@ -1670,7 +1665,7 @@ namespace FantasyRPG
                     Console.ReadKey();
                     Console.Clear(); // Clear the console to display the auras, since displaying both weapons and auras at once takes too much space
 
-                    smoothPrinting.FastPrint("Displaying auras..."); // Display weapon auras
+                    smoothPrinting.CenterPrint("---------Displaying Auras----------\n"); // Display the auras to the user
 
                     foreach (var weaponAura in pirateWeaponAuras)  
                     {
@@ -1740,7 +1735,12 @@ namespace FantasyRPG
                         smoothPrinting.RapidPrint($"\n* {chosenSpecialAttack.attack}: Damage - {chosenSpecialAttack.damage}, Mana Requirement - {chosenSpecialAttack.manaRequirement}, Element Type - {chosenSpecialAttack.elementType} \nDescription: {chosenSpecialAttack.description}");
                     };
 
-                    Console.WriteLine("\n\nWould you like to now embark on your journey in the world of Arcania? (1 for Yes, 2 to be directed back to class selection and 3 for the Menu)");
+                    Console.WriteLine("\n\nWould you like to embark on your journey in the world of Arcania?");
+                    Console.WriteLine("Enter the following value, to be directed\n");
+                    Console.WriteLine("1: Start your adventure");
+                    Console.WriteLine("2: Return to class selection");
+                    Console.WriteLine("3: Return to the Menu");
+
                     startPirateJourneyInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
 
                     // Future reference: For each class chosen, make a seperate method for them
