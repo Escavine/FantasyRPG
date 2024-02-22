@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Numerics;
@@ -844,8 +845,8 @@ namespace FantasyRPG
         static void Main(string[] args) // Future reference: With the implementation of the authentication system soon, this will be moved.
         {
             GameMenu menu = new GameMenu();
-            ClassSelection debugging = new ClassSelection();
-            debugging.userClass(); // Debugging purposes
+            FirstScenario firstScenario = new FirstScenario();
+            firstScenario.usersFirstJourney("Jahid");
             // menu.gameMenu(); // User is first directed to the game menu method
         }
 
@@ -1481,7 +1482,7 @@ namespace FantasyRPG
                     smoothPrinting.CenterPrint("---------Pirate Class----------\n");
 
                     // Take users name
-                    Console.WriteLine("What is your name, adventurer?");
+                    smoothPrinting.RapidPrint("\nWhat is your name, adventurer?");
                     string pirateName = Convert.ToString(Console.ReadLine());
 
                     Dictionary<string, (int damage, string weaponType, string rarity, string weaponDescription)> pirateWeaponChoices = new Dictionary<string, (int, string, string, string)>()
@@ -1831,19 +1832,29 @@ namespace FantasyRPG
     public class FirstScenario // Once the user selects a class, they'll proceed onto their journey
     {
         int fightChoice;
-        string[] customaryScenarios = { "You embark on a long journey, you find yourself lost midway throughout the journey. There appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?" };
+        
+        // Customary scenarios will be used to allow dynamicness to the game and make it less monotomous
+        // string[] customaryScenarios = { "You embark on a long journey, you find yourself lost midway throughout the journey. There appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?" };
 
-        // Non-static scenarios will be introduced later in the game if I can be asked
-        string fixedScenario = "\nYou embark on a long journey, you find yourself lost midway, your eyes are surrounded by vast levels of fog, mitigating your view of the perspective ahead. Closeby, there appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training.";
-
+        // User first encounters the dragon in the forest of mysteries.
+        string oneTimeFixedScenario = "\nYou spawn in the Forest of Mysteries, now with the understanding of the rulings within the world along with a primitive understanding of mana. As you keep exploring this vast forest, you eventually find yourself lost midway, your eyes surrounded by vast levels of fog, mitigating your view of the perspective ahead. Close by, there appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question whether you’ll survive or not. ";
+        bool completedFirstScenario = false; // This is a measure to see if the user has completed this scenario in the Forest of Mysteries, should this be the case, they'll no longer see this scenario when exploring the forest
         public void usersFirstJourney(string name)
         {
             SmoothConsole smoothPrinting = new SmoothConsole();
-            smoothPrinting.RapidPrint(fixedScenario + "\n");
-            Console.WriteLine("\nWhat do you do?");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("Forest of Mysteries");
+            smoothPrinting.PrintLine("--------------------------------------------------");
 
-            smoothPrinting.FastPrint("\n1. Fight back");
-            smoothPrinting.FastPrint("\n2. Escape\n");
+            smoothPrinting.RapidPrint(oneTimeFixedScenario + "\n");
+            Console.WriteLine("\n[Available Commands:]");
+
+            smoothPrinting.PrintLine("\n1. Look: Examine your surroundings in more detail.");
+            smoothPrinting.PrintLine("\n2. Fight: Confront the dragon");
+            smoothPrinting.PrintLine("\n3. North: Move northward along the path");
+            smoothPrinting.PrintLine("\n4. Inventory: View your current inventory of items");
+            smoothPrinting.PrintLine("\n5. Help: Display a list of available commands");
+
             fightChoice = Convert.ToInt32(Console.ReadLine());
 
             switch (fightChoice)
@@ -1938,6 +1949,11 @@ namespace FantasyRPG
                 Console.Write(c);
                 Thread.Sleep(50);
             }
+        }
+
+        public void PrintLine(string line) // Printing lines 
+        {
+            Console.WriteLine(line.PadLeft((Console.WindowWidth + line.Length) / 2));
         }
 
         public void FastPrint(string text) // Faster, smoother console output
