@@ -1491,8 +1491,10 @@ namespace FantasyRPG
                     smoothPrinting.CenterPrint("---------Pirate Class----------\n");
 
                     // Take users name
-                    smoothPrinting.RapidPrint("\nWhat is your name, adventurer?");
+                    smoothPrinting.RapidPrint("\nWhat is your name, adventurer? ");
+
                     string pirateName = Convert.ToString(Console.ReadLine());
+                    Console.Clear();
 
                     Dictionary<string, (int damage, string weaponType, string rarity, string weaponDescription)> pirateWeaponChoices = new Dictionary<string, (int, string, string, string)>()
                     {
@@ -1684,11 +1686,12 @@ namespace FantasyRPG
                     //     smoothPrinting.RapidPrint($"\n{weaponAura.Key} - Damage: {weaponAura.Value.damage}, Rarity: {weaponAura.Value.rarity}\nAura Description: {weaponAura.Value.auraDescription}\n");
                     // }
 
-                    smoothPrinting.FastPrint("\nWeapon will be randomly assigned...");
-                    smoothPrinting.FastPrint("\nAura will be randomly assigned...");
+                    smoothPrinting.PrintLine("---------Random Selection (Pirate Class)----------\n");
+                    smoothPrinting.FastPrint("Weapon will be randomly assigned...\n");
+                    smoothPrinting.FastPrint("Aura will be randomly assigned...");
 
                     Console.WriteLine("\n"); // Structuring
-                    smoothPrinting.FastPrint("\nWould you like to continue?");
+                    smoothPrinting.FastPrint("\nWould you like to continue? ");
                     Console.ReadKey(); // Allow user to read contents
 
                     arcaniaGoldCoins = 0; // Preset zero
@@ -1739,6 +1742,7 @@ namespace FantasyRPG
                     foreach (var chosenNormalAttack in chosenPirateNormalAttacks) // Display all chosen normal attacks moves of the user
                     {
                         smoothPrinting.RapidPrint($"\n* {chosenNormalAttack.attack}: Damage - {chosenNormalAttack.damage}, Mana Requirement - {chosenNormalAttack.manaRequirement}, Element Type - {chosenNormalAttack.elementType} \nDescription: {chosenNormalAttack.description}");
+                        Console.WriteLine(); // Neat structuring
                     };
 
                     Console.WriteLine(); // Seperate lines
@@ -1747,6 +1751,7 @@ namespace FantasyRPG
                     foreach (var chosenSpecialAttack in chosenSpecialAttacks) // Display all chosen special attacks moves of the user
                     {
                         smoothPrinting.RapidPrint($"\n* {chosenSpecialAttack.attack}: Damage - {chosenSpecialAttack.damage}, Mana Requirement - {chosenSpecialAttack.manaRequirement}, Element Type - {chosenSpecialAttack.elementType} \nDescription: {chosenSpecialAttack.description}");
+                        Console.WriteLine(); // Neat structuring
                     };
 
                     Console.WriteLine(); // Seperate lines
@@ -1842,7 +1847,6 @@ namespace FantasyRPG
 
     public class FirstScenario // Once the user selects a class, they'll proceed onto their journey
     {
-        int fightChoice;
         
         // Customary scenarios will be used to allow dynamicness to the game and make it less monotomous
         // string[] customaryScenarios = { "You embark on a long journey, you find yourself lost midway throughout the journey. There appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?" };
@@ -1850,6 +1854,7 @@ namespace FantasyRPG
         // User first encounters the dragon in the forest of mysteries.
         string oneTimeFixedScenario = "\nYou spawn in the Forest of Mysteries, now with the understanding of the rulings within the world along with a primitive understanding of mana. As you keep exploring this vast forest, you eventually find yourself lost midway, your eyes surrounded by vast levels of fog, mitigating your view of the perspective ahead. Close by, there appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question whether you’ll survive or not. ";
         bool completedFirstScenario = false; // This is a measure to see if the user has completed this scenario in the Forest of Mysteries, should this be the case, they'll no longer see this scenario when exploring the forest
+        int firstSelection;
         public void usersFirstJourney(string name)
         {
             SmoothConsole smoothPrinting = new SmoothConsole();
@@ -1860,33 +1865,33 @@ namespace FantasyRPG
             smoothPrinting.RapidPrint(oneTimeFixedScenario + "\n");
             Console.WriteLine("\n[Available Commands:]");
 
-            smoothPrinting.PrintLine("\n1. Look: Examine your surroundings in more detail.");
-            smoothPrinting.PrintLine("\n2. Fight: Confront the dragon");
-            smoothPrinting.PrintLine("\n3. North: Move northward along the path");
-            smoothPrinting.PrintLine("\n4. Inventory: View your current inventory of items");
-            smoothPrinting.PrintLine("\n5. Help: Display a list of available commands");
+            smoothPrinting.PrintLine("\n1. Fight: Confront the dragon (N/A)");
+            smoothPrinting.PrintLine("\n2. North: Move northward along the path");
+            smoothPrinting.PrintLine("\n3. Inventory: View your current inventory of items");
+            smoothPrinting.PrintLine("\n4. Help: Display a list of available commands");
 
-            fightChoice = Convert.ToInt32(Console.ReadLine());
+            firstSelection = Convert.ToInt32(Console.ReadLine());
 
-            switch (fightChoice)
+
+
+            switch (firstSelection)
             {
                 case 1:
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Your level is too low, the dragon proceeds to consume you whole in your defenseless state.");
+                    Console.Clear();
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("Forest of Mysteries");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
 
-                    Console.WriteLine("You died.");
+                    smoothPrinting.PrintLine("Fighting isn't available yet.");
+                    Console.Read(); // Terminate afterwards
+
                     break;
 
                 case 2:
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    smoothPrinting.FastPrint("Wise choice, you successfully escape with all your limbs intact.");
-                    smoothPrinting.FastPrint("TESTING MEASURE: YOU WILL NOW BE LEAD TO THE USER DASHBOARD");
-                    gameDashboard userDashboard = new gameDashboard();
-                    userDashboard.dashboard(name);
+
                     break;
                 default:
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Don't know why you did that, but you died LOL");
+                    Console.WriteLine("Invalid input, please try again");
                     break;
 
             }
