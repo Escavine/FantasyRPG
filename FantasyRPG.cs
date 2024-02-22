@@ -1183,7 +1183,7 @@ namespace FantasyRPG
                     // Console.Clear();
                   
                     Console.ForegroundColor = ConsoleColor.White; // Reset the console color output
-                    smoothPrinting.RapidPrint("\nYou will be randomly assigned a weapon...");
+                    smoothPrinting.RapidPrint("\nYou will be randomly assigned a starter weapon...");
 
 
                     List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> starterMageWeaponChoices = starterMageWeapons.Select(entry => (entry.Key, entry.Value.damage, entry.Value.rarity, entry.Value.weaponType, entry.Value.weaponDescription)).ToList();
@@ -1204,13 +1204,13 @@ namespace FantasyRPG
 
                     Console.ForegroundColor = ConsoleColor.Magenta;
                     var randomWeapon = mageStaff.First(); // Retrieve the only element added to mageStaff
-                    smoothPrinting.FastPrint($"Assigned weapon: {randomWeapon.weaponName}, Damage: {randomWeapon.damage}, Rarity: {randomWeapon.rarity}, Weapon Type: {randomWeapon.weaponType}, \nWeapon Description: {randomWeapon.weaponDescription}"); // Display the assigned weapon to the user
+                                                          // smoothPrinting.FastPrint($"Assigned weapon: {randomWeapon.weaponName}, Damage: {randomWeapon.damage}, Rarity: {randomWeapon.rarity}, Weapon Type: {randomWeapon.weaponType}, \nWeapon Description: {randomWeapon.weaponDescription}"); // Display the assigned weapon to the user
 
-                    Console.WriteLine("Affirmative? Press any key to continue.");
-                    Console.ReadKey();
-                    Console.Clear();
+                    // Console.WriteLine("Affirmative? Press any key to continue.");
+                    // Console.ReadKey();
+                    // Console.Clear();
 
-                    smoothPrinting.RapidPrint("\nChoose a magic specialties from the list: \n");
+                    smoothPrinting.PrintLine("---------Selecting a Magic Speciality----------\n"); // Display the magic speciality selection
 
                     List<string> magicSpecialties = new List<string>(); // Chosen magic specialities
                     List<(string magicSpell, int damage, int manaRequirement)> magicSpells = new List<(string magicSpell, int damage, int manaRequirement)>(); // Chosen magical spells
@@ -1221,7 +1221,6 @@ namespace FantasyRPG
                         smoothPrinting.FastPrint(choiceIncrementer + ". " + magicChoices[j] + "\n");
                         choiceIncrementer++;
                     }
-
 
 
                     // Allow the user to choose a single magic specialty
@@ -1243,6 +1242,7 @@ namespace FantasyRPG
                         magicSpecialties.Add(magicChoices[chosenSpecialtyIndex - 1]);
                     }
 
+                    Console.Clear(); // Neatness
 
                     int totalSpellsDisplayed = 0; // Keep track of the total spells displayed
 
@@ -1256,6 +1256,7 @@ namespace FantasyRPG
                         switch (magicSpecialties[z])
                         {
                             case "Fire-Magic":
+                                smoothPrinting.PrintLine("---------Fire-Magic Spells----------\n"); // Display the magic spells for the given speciality
                                 foreach (var spell in fireMagicSpells)
                                 {
                                     smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage}, Mana Requirement for Activation: {spell.Value.manaRequirement}");
@@ -1266,6 +1267,7 @@ namespace FantasyRPG
                                 break;
 
                             case "Water-Magic":
+                                smoothPrinting.PrintLine("---------Water-Magic Spells----------\n"); // Display the magic spells for the given speciality
                                 foreach (var spell in waterMagicSpells)
                                 {
                                     smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage}, Mana Requirement for Activation: {spell.Value.manaRequirement}");
@@ -1276,6 +1278,7 @@ namespace FantasyRPG
                                 break;
 
                             case "Lightning-Magic":
+                                smoothPrinting.PrintLine("---------Lightning-Magic Spells----------\n"); // Display the magic spells for the given speciality
                                 foreach (var spell in lightningMagicSpells)
                                 {
                                     smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage} , Mana Requirement for Activation:  {spell.Value.manaRequirement}");
@@ -1286,6 +1289,7 @@ namespace FantasyRPG
                                 break;
 
                             case "Ice-Magic":
+                                smoothPrinting.PrintLine("---------Ice-Magic Spells----------\n"); // Display the magic spells for the given speciality
                                 foreach (var spell in iceMagicSpells)
                                 {
                                     smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage} , Mana Requirement for Activation:  {spell.Value.manaRequirement}");
@@ -1296,6 +1300,7 @@ namespace FantasyRPG
                                 break;
 
                             case "Dark-Magic":
+                                smoothPrinting.PrintLine("---------Dark-Magic Spells----------\n"); // Display the magic spells for the given speciality
                                 foreach (var spell in darkMagicSpells)
                                 {
                                     smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage} , Mana Requirement for Activation:  {spell.Value.manaRequirement}");
@@ -1306,6 +1311,7 @@ namespace FantasyRPG
                                 break;
 
                             case "Light-Magic":
+                                smoothPrinting.PrintLine("---------Light-Magic Spells----------\n"); // Display the magic spells for the given speciality
                                 foreach (var spell in lightMagicSpells)
                                 {
                                     smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage} , Mana Requirement for Activation:  {spell.Value.manaRequirement}");
@@ -1316,6 +1322,7 @@ namespace FantasyRPG
                                 break;
 
                             case "Eucladian-Magic":
+                                smoothPrinting.PrintLine("---------Eucladian Spells----------\n"); // Display the magic spells for the given speciality
                                 foreach (var spell in eucladianMagicSpells)
                                 {
                                     smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage} , Mana Requirement for Activation:  {spell.Value.manaRequirement}");
@@ -1402,20 +1409,22 @@ namespace FantasyRPG
                     Mage newWizard = new Mage(mageName, mageStaff, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory.ToArray(), mageSpecialAtkRecharge);
 
                     smoothPrinting.PrintLine("---------Mage Status----------\n"); // Display the users status (i.e. their chosen attack types, weapon etc.)
-                    smoothPrinting.FastPrint($"Mage Name: {mageName} \nMage's Weapon Type: {randomWeapon.weaponType} \nMage's Weapon: {randomWeapon.weaponName}");
+                    smoothPrinting.FastPrint($"Mage Name: {mageName} \nMage's Weapon Type: {randomWeapon.weaponType} \nMage's Weapon: {randomWeapon.weaponName}, Damage: {randomWeapon.damage}, Rarity: {randomWeapon.rarity}");
                     smoothPrinting.FastPrint("\nMage's Magic Specialities: " + string.Join(", ", magicSpecialties));
+
+                    Console.WriteLine(); // Space the properties for neatness
 
                     // Display users chosen spells
                     smoothPrinting.FastPrint("\n---------Mage's Chosen Spells---------");
 
                     foreach (var chosenSpell in magicSpells)
                     {
-                        smoothPrinting.RapidPrint($"\n{chosenSpell.magicSpell}: Damage - {chosenSpell.damage}, Mana Requirement - {chosenSpell.manaRequirement}");
+                        smoothPrinting.RapidPrint($"\n * {chosenSpell.magicSpell}: Damage - {chosenSpell.damage}, Mana Requirement - {chosenSpell.manaRequirement}");
                     };
 
                     Console.WriteLine(); // Seperate lines
                     smoothPrinting.CenterPrint("\nWould you like to embark on your journey in the world of Arcania?");
-                    Console.WriteLine("Enter the following value, to be directed\n");
+                    smoothPrinting.FastPrint("Enter the following value, to be directed\n");
                     Console.WriteLine("1: Start your adventure");
                     Console.WriteLine("2: Return to class selection");
                     Console.WriteLine("3: Return to the Menu");
