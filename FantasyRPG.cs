@@ -844,7 +844,9 @@ namespace FantasyRPG
         static void Main(string[] args) // Future reference: With the implementation of the authentication system soon, this will be moved.
         {
             GameMenu menu = new GameMenu();
-            menu.gameMenu(); // User is first directed to the game menu method
+            ClassSelection debugging = new ClassSelection();
+            debugging.userClass(); // Debugging purposes
+            // menu.gameMenu(); // User is first directed to the game menu method
         }
 
 
@@ -1477,10 +1479,9 @@ namespace FantasyRPG
                     int specialAtkRecharge = 0; // This remains fixed
 
                     smoothPrinting.CenterPrint("---------Pirate Class----------\n");
-                    smoothPrinting.FastPrint("You are a proud Pirate, one who has explored the vast open seas for many years, and now you feel that your ready for a new adventure!\n");
 
                     // Take users name
-                    Console.WriteLine("Enter your name: ");
+                    Console.WriteLine("What is your name, adventurer?");
                     string pirateName = Convert.ToString(Console.ReadLine());
 
                     Dictionary<string, (int damage, string weaponType, string rarity, string weaponDescription)> pirateWeaponChoices = new Dictionary<string, (int, string, string, string)>()
@@ -1654,23 +1655,24 @@ namespace FantasyRPG
                     Console.Clear(); // Neatness
 
 
-                    smoothPrinting.CenterPrint("---------Displaying Starter Weapons----------\n"); // Display the starter weapons to the user
+                    // Future debugging
+                    // smoothPrinting.CenterPrint("---------Displaying Starter Weapons----------\n"); // Display the starter weapons to the user
 
-                    foreach (var weapon in pirateWeaponChoices) // Display starter weapons
-                    {
-                        smoothPrinting.RapidPrint($"\n{weapon.Key} - Damage: {weapon.Value.damage} - Weapon Type: {weapon.Value.weaponType}, Item Rarity: {weapon.Value.rarity}\nWeapon Description: {weapon.Value.weaponDescription}\n");
-                    }
+                    // foreach (var weapon in pirateWeaponChoices) // Display starter weapons
+                    // {
+                    //     smoothPrinting.RapidPrint($"\n{weapon.Key} - Damage: {weapon.Value.damage} - Weapon Type: {weapon.Value.weaponType}, Item Rarity: {weapon.Value.rarity}\nWeapon Description: {weapon.Value.weaponDescription}\n");
+                    // }
 
-                    smoothPrinting.FastPrint("\nIf everything is clear, press any key to continue to the auras.");
-                    Console.ReadKey();
-                    Console.Clear(); // Clear the console to display the auras, since displaying both weapons and auras at once takes too much space
+                    // smoothPrinting.FastPrint("\nIf everything is clear, press any key to continue to the auras.");
+                    // Console.ReadKey();
+                    // Console.Clear(); // Clear the console to display the auras, since displaying both weapons and auras at once takes too much space
 
-                    smoothPrinting.CenterPrint("---------Displaying Auras----------\n"); // Display the auras to the user
+                    // smoothPrinting.CenterPrint("---------Displaying Auras----------\n"); // Display the auras to the user
 
-                    foreach (var weaponAura in pirateWeaponAuras)  
-                    {
-                        smoothPrinting.RapidPrint($"\n{weaponAura.Key} - Damage: {weaponAura.Value.damage}, Rarity: {weaponAura.Value.rarity}\nAura Description: {weaponAura.Value.auraDescription}\n");
-                    }
+                    // foreach (var weaponAura in pirateWeaponAuras)  
+                    // {
+                    //     smoothPrinting.RapidPrint($"\n{weaponAura.Key} - Damage: {weaponAura.Value.damage}, Rarity: {weaponAura.Value.rarity}\nAura Description: {weaponAura.Value.auraDescription}\n");
+                    // }
 
                     smoothPrinting.FastPrint("\nWeapon will be randomly assigned...");
                     smoothPrinting.FastPrint("\nAura will be randomly assigned...");
@@ -1719,24 +1721,27 @@ namespace FantasyRPG
 
                     // Display information to the user
                     smoothPrinting.CenterPrint("---------Pirate Status----------\n"); // Display the users status (i.e. their chosen attack types, weapon etc.)
-                    smoothPrinting.FastPrint($"Pirate's Name: {pirateName} \nPirate's Weapon Type: {randomPirateWeapon.Value.weaponType} \nPirate's Weapon: {randomPirateWeapon.Key}, Damage: {randomPirateWeapon.Value.damage} \nPirate's Aura: {randomAura.Key}");
+                    smoothPrinting.FastPrint($"Pirate's Name: {pirateName} \nPirate's Weapon Type: {randomPirateWeapon.Value.weaponType} \nPirate's Weapon: {randomPirateWeapon.Key}, Damage: {randomPirateWeapon.Value.damage}, Rarity: {randomPirateWeapon.Value.rarity} \nPirate's Aura: {randomAura.Key}, Damage: {randomAura.Value.damage}, Rarity: {randomAura.Value.rarity}");
 
-                    smoothPrinting.CenterPrint("---------Chosen Normal Attacks----------\n"); // Display the users chosen normal attack skills
+                    Console.WriteLine(); // Seperate lines
+                    smoothPrinting.RapidPrint("\n---------Chosen Normal Attacks----------"); // Display the users chosen normal attack skills
 
                     foreach (var chosenNormalAttack in chosenPirateNormalAttacks) // Display all chosen normal attacks moves of the user
                     {
                         smoothPrinting.RapidPrint($"\n* {chosenNormalAttack.attack}: Damage - {chosenNormalAttack.damage}, Mana Requirement - {chosenNormalAttack.manaRequirement}, Element Type - {chosenNormalAttack.elementType} \nDescription: {chosenNormalAttack.description}");
                     };
 
-                    smoothPrinting.CenterPrint("---------Chosen Special Attack----------\n"); // Display the users special attack skill
+                    Console.WriteLine(); // Seperate lines
+                    smoothPrinting.RapidPrint("\n---------Chosen Special Attack----------"); // Display the users special attack skill
 
                     foreach (var chosenSpecialAttack in chosenSpecialAttacks) // Display all chosen special attacks moves of the user
                     {
                         smoothPrinting.RapidPrint($"\n* {chosenSpecialAttack.attack}: Damage - {chosenSpecialAttack.damage}, Mana Requirement - {chosenSpecialAttack.manaRequirement}, Element Type - {chosenSpecialAttack.elementType} \nDescription: {chosenSpecialAttack.description}");
                     };
 
-                    Console.WriteLine("\n\nWould you like to embark on your journey in the world of Arcania?");
-                    Console.WriteLine("Enter the following value, to be directed\n");
+                    Console.WriteLine(); // Seperate lines
+                    smoothPrinting.CenterPrint("\nWould you like to embark on your journey in the world of Arcania?");
+                    Console.WriteLine("\nEnter the following value, to be directed\n");
                     Console.WriteLine("1: Start your adventure");
                     Console.WriteLine("2: Return to class selection");
                     Console.WriteLine("3: Return to the Menu");
