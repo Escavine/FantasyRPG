@@ -854,7 +854,7 @@ namespace FantasyRPG
         public void gameMenu() // After user information is authenticated, they'll be lead here
         {
             SmoothConsole smoothOutput = new SmoothConsole(); // Initialize the smooth console
-
+            int userChances = 3; // Will be used for recursive measures to prevent brute force and idiotic input
             // Future reference: Implementing AI mobs and perhaps AI individuals
 
             int? userChoice; // Used for the start of the game
@@ -892,12 +892,12 @@ namespace FantasyRPG
                     selectClass.userClass(); // Proceed to let the user pick a character class
                     break;
                 case 2:
-                    loadingSaveData(); // Lead user to the method
+                    loadingSaveData(userChances); // Lead user to the method
                     break;
                 case 3:
                     Console.Clear(); // Neatness structuring
                     userChoice = null;
-                    helpSection(); // Lead user to the method
+                    helpSection(userChances); // Lead user to the method
                     break;
                 case 4:
                     makeGameSuggestion(); // Lead user to the method
@@ -914,55 +914,85 @@ namespace FantasyRPG
         }
 
 
-        void loadingSaveData()
+        void loadingSaveData(int userChances)
         {
-            SmoothConsole smoothConsole = new SmoothConsole();
-            bool loadingSaveData = true;
-            int loadingSaveDataInput = 0;
+            Console.Clear();
+            SmoothConsole smoothPrinting = new SmoothConsole();
+            int? loadingSaveDataInput;
 
-            while (loadingSaveData == true)
+            // Should the user be logged in, they'll be able to access their save data
+            smoothPrinting.CenterPrint("---------FantasyRPG: Loading Save Data----------\n");
+
+            // Display the user's remaining input attempts, if they input an incorrect value
+            if (userChances <= 3)
             {
-                // Should the user be logged in, they'll be able to access their save data
-                Console.WriteLine("This feature isn't avaliable yet, would you like to go back" +
-                    "to the menu? (1 for yes and 2 for no)");
+                Console.WriteLine($"Remaining input chances: {userChances}"); // Display the number of remaining attempts
 
-                if (loadingSaveDataInput == 1)
+                if (userChances == 0)
                 {
-                    loadingSaveData = false;
-                    smoothConsole.FastPrint("You will be lead back to the menu\n");
-                    gameMenu();
-                }
-                else if (loadingSaveDataInput == 2)
-                {
-                    loadingSaveData = false;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    smoothPrinting.RapidPrint("\nToo many incorrect attempts, FantasyRPG will now terminate."); // Terminate users session, should they have no remaining chances 
+                    Console.ReadKey();
                     Environment.Exit(0);
                 }
-                else
-                {
-                    smoothConsole.FastPrint("Invalid input"); // Keep recursing till conditions have been met
-                }
+            }
 
+            smoothPrinting.PrintLine("\nLoading current save progress isn't available yet.");
+            smoothPrinting.RapidPrint("\nOptions");
+            smoothPrinting.RapidPrint("\n1. Return to Menu\n");
+            smoothPrinting.RapidPrint("\nEnter a value: ");
+
+            loadingSaveDataInput = Convert.ToInt32((Console.ReadLine())); // Porcess user input.
+            
+            if (loadingSaveDataInput == 1)
+            {
+                smoothPrinting.FastPrint("\nYou will be lead back to the Menu.\n");
+                Console.Clear();
+                gameMenu();
+            }
+            else
+            {
+                smoothPrinting.FastPrint("\nInvalid input, please try again."); // Inform the user about the invalid input
+                Console.Clear(); // Neatness
+                loadingSaveDataInput = null; // Clear the variable to allow reinput
+                loadingSaveData(userChances - 1); // Recursively call the method with reduced chances
 
             }
 
         }
 
-        public void helpSection()
+        public void helpSection(int userChances)
         {
-            SmoothConsole smoothPrint = new SmoothConsole();
+            Console.Clear(); // Neatness
+            SmoothConsole smoothPrinting = new SmoothConsole();
 
-            int userInput;
+            // Display the user's remaining input attempts, if they input an incorrect value
+            if (userChances <= 3)
+            {
+                Console.WriteLine($"Remaining input chances: {userChances}"); // Display the number of remaining attempts
+
+                if (userChances == 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    smoothPrinting.CenterPrint("---------FantasyRPG: Help Section----------\n");
+                    smoothPrinting.RapidPrint("\nToo many incorrect attempts, FantasyRPG will now terminate."); // Terminate users session, should they have no remaining chances 
+                    Console.ReadKey();
+                    Environment.Exit(0);
+                }
+            }
+
+            int? userInput;
             string[] gameAdvice = { "You might die at any point within the game unknowingly.",
                         "Eucladian abilities are quite overpowered, if you find the opportunity to pursue it, then do so.",
                     "Having a strong romantical bond with someone, can potentially increase your abilities.", "There are many classes to choose from, all having unique features.",
                     "Avoid fighting overpowered foes early in-game (i.e. dragons), you'll probably get destroyed." };
-            smoothPrint.CenterPrint("--------Help Section--------\n");
+            smoothPrinting.CenterPrint("---------FantasyRPG: Help Section----------\n");
 
             Console.WriteLine("Input the following options: ");
-            smoothPrint.RapidPrint("\n1. What is FantasyRPG?\n");
-            smoothPrint.RapidPrint("\n2. Arcania's Magic Council\n");
-            smoothPrint.RapidPrint("\n3. Game advice from the developers\n");
-            smoothPrint.RapidPrint("\nEnter a value: ");
+            smoothPrinting.RapidPrint("\n1. What is FantasyRPG?\n");
+            smoothPrinting.RapidPrint("\n2. Arcania's Magic Council\n");
+            smoothPrinting.RapidPrint("\n3. Game advice from the developers\n");
+            smoothPrinting.RapidPrint("\nEnter a value: ");
 
             // Ask if the user wants to see any game advice in the help section
             userInput = Convert.ToInt32(Console.ReadLine());
@@ -971,57 +1001,62 @@ namespace FantasyRPG
             {
                 case 1:
                     Console.Clear();
-                    smoothPrint.FastPrint("What is FantasyRPG?\n");
+                    smoothPrinting.FastPrint("What is FantasyRPG?\n");
                     // Introduction to Arcania, the world of FantasyRPG
-                    smoothPrint.RapidPrint("\nWelcome to FantasyRPG, a text-based adventure that transports you to the mystical realm of Aeolus!");
-                    smoothPrint.RapidPrint(" Embark on an epic journey through a vast and enchanting world, where hidden treasures await discovery at every turn.");
-                    smoothPrint.RapidPrint(" Prepare yourself for the challenges ahead, as you confront life-and-death situations, battle formidable foes, and overcome treacherous obstacles.\n");
+                    smoothPrinting.RapidPrint("\nWelcome to FantasyRPG, a text-based adventure that transports you to the mystical realm of Aeolus! Embark on an epic journey through a vast and enchanting world, where hidden treasures await discovery at every turn. Prepare yourself for the challenges ahead, as you confront life-and-death situations, battle formidable foes, and overcome treacherous obstacles.\n");
                     Console.WriteLine();
-                    smoothPrint.RapidPrint("In Aeolus, your choices shape your destiny. Navigate the immersive landscape, forge alliances with fellow travelers, and encounter mythical creatures that will test your courage and resolve.");
+                    smoothPrinting.RapidPrint("In Aeolus, your choices shape your destiny. Navigate the immersive landscape, forge alliances with fellow travelers, and encounter mythical creatures that will test your courage and resolve. But beware, adventurer, for danger lurks in the shadows. Face cunning enemies, solve challenging puzzles, and unravel the mysteries that lie dormant in this magical land.\n");
                     Console.WriteLine();
-                    smoothPrint.RapidPrint("\nBut beware, adventurer, for danger lurks in the shadows. Face cunning enemies, solve challenging puzzles, and unravel the mysteries that lie dormant in this magical land.");
+                    smoothPrinting.RapidPrint("Amidst the chaos, there is also the promise of something more. As you progress, open your heart to the possibility of romantic connections, adding depth to your personal story.\n");
                     Console.WriteLine();
-                    smoothPrint.RapidPrint("\nAmidst the chaos, there is also the promise of something more. As you progress, open your heart to the possibility of romantic connections, adding depth to your personal story.\n");
-                    Console.WriteLine();
-                    smoothPrint.FastPrint("Are you ready to embark on a journey into the heart of Arcania, where every decision shapes your fate? Your adventure begins now!\n");
-                    smoothPrint.FastPrint("Game Advice:\n");
-
-
+                    smoothPrinting.FastPrint("Are you ready to embark on a journey into the heart of Aeolus, where every decision shapes your fate? Your adventure begins now!\n");
+                    smoothPrinting.RapidPrint("\nAffirmative? If so, click anywhere to be redirected back to the Menu. ");
                     Console.ReadKey();
                     Console.Clear();
                     gameMenu(); // Redirect user back to the menu...
                     break;
                 case 2:
                     Console.Clear();
-                    smoothPrint.CenterPrint("--------Arcania's Magic Council--------\n");
+                    Console.ForegroundColor = ConsoleColor.Yellow; // Yellow output for the description
+                    smoothPrinting.CenterPrint("--------FantasyRPG: Arcania's Magic Council--------\n");
                     Console.WriteLine(); // Neatness
-                    smoothPrint.RapidPrint("The Magic Council consists of the 10 strongest individuals from the world of Arcania, ranging from 1 being the strongest to 10 being the weakest. Each member holds immense power and knowledge in their respective fields of magic, making them formidable forces within the realm. \r\n\r\nRoles and Responsibilities: \r\n\r\nThe council members oversee and regulate magical affairs across Arcania, ensuring balance and order in the realm. They adjudicate disputes among magical practitioners, enforce magical laws, and protect the realm from magical threats. Additionally, they serve as advisors to the ruling powers of Arcania, providing counsel on matters relating to magic and arcane knowledge. \r\n\r\nChallenging for a Seat: \r\n\r\nShould you possess the strength and develop a certain level of reputation, you’ll be able to challenge one of their members for a seat within the council. However, this is no easy feat, as the cost for losing is death, resulting in the game being reset. Yet, if you emerge victorious, you can rightfully claim their seat as your own and slowly rise in the ranks. \r\n\r\nBenefits of Council Membership: \r\n\r\nBeing a member of the Magic Council grants numerous benefits, including access to rare magical artifacts, exclusive knowledge of ancient spells, and influence over magical institutions and organizations. Council members also enjoy protection and prestige within Arcania, as well as opportunities for further personal and magical growth. ");
+                    smoothPrinting.RapidPrint("The Magic Council consists of the 10 strongest individuals from the city of Arcania, ranging from 1 being the strongest to 10 being the weakest. Each member holds immense power and knowledge in their respective fields of magic, making them formidable forces within the realm. \r\n\r\nRoles and Responsibilities: \r\n\r\nThe council members oversee and regulate magical affairs across Arcania, ensuring balance and order in the city and other regions. They adjudicate disputes among magical practitioners, enforce magical laws, and protect the lands from magical threats. Additionally, they serve as advisors to the ruling powers of Arcania, providing counsel on matters relating to magic and arcane knowledge. \r\n\r\nChallenging for a Seat: \r\n\r\nShould you possess the strength and develop a certain level of reputation, you’ll be able to challenge one of their members for a seat within the council. However, this is no easy feat, as the cost for losing is death, resulting in the game being reset. Yet, if you emerge victorious, you can rightfully claim their seat as your own and slowly rise in the ranks. \r\n\r\nBenefits of Council Membership: \r\n\r\nBeing a member of the Magic Council grants numerous benefits, including access to rare magical artifacts, exclusive knowledge of ancient spells, and influence over magical institutions and organizations. Council members also enjoy protection and prestige within Arcania, as well as opportunities for further personal and magical growth. ");
                     // Display the Arcania's Magic Council members
                     Console.WriteLine(); // Neatness
-                    smoothPrint.RapidPrint("\nAffirmative? If so, click any key to see the current rankers within the Magic Council. ");
+                    smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to see the current rankers within the Magic Council. ");
                     Console.ReadKey();
                     Console.Clear(); // Neatness
-                    smoothPrint.CenterPrint("--------Arcania's Magic Council (Rankings)--------\n");
+                    Console.ForegroundColor = ConsoleColor.Yellow; // Yellow output for the rankings
+                    smoothPrinting.CenterPrint("--------FantasyRPG: Arcania's Magic Council (Rankings)--------\n");
                     Console.WriteLine(); // Neatness
-                    smoothPrint.RapidPrint("Rank 1: ??? - Rank: S** (Class: ???, Race: ???) \r\n\r\nRank 2: ??? - Rank: S* (Class: ???, Race: ???) \r\n\r\nRank 3: ??? - Rank: S (Class: ???, Race: ???) \r\n\r\nRank 4: Lister Everbright - Rank: A* (Class: Knight, Race: Elf) \r\n\r\nRank 5: Aurelia Eucladian-Nine - Rank: S- (Class: Mage, Race: Human) \r\n\r\nRank 6: Kaelen Stormer - Rank: S* (Class: Assassin, Race: Dark Elf) \r\n\r\nRank 7: Lyra Leywin - Rank: S- (Class: Necromancer, Race: Demon) \r\n\r\nRank 8: Windsom - Rank: A* (Class: Guardian, Race: Dragon) \r\n\r\nRank 9: Selene - Rank: A (Class: Succubus, Race: Demon) \r\n\r\nRank 10: Evelyn Everbright - Rank: S- (Class: High-Elf Warrior, Race: Elf) ");
+
+                    // Future reference: Display the rankings using a dictionary, so that way when an individual defeats a user of the top 10, they can manually append their details to the rankings
+                    smoothPrinting.RapidPrint("Rank 1: ??? - Rank: S** (Class: ???, Race: ???) \r\n\r\nRank 2: ??? - Rank: S* (Class: ???, Race: ???) \r\n\r\nRank 3: ??? - Rank: S (Class: ???, Race: ???) \r\n\r\nRank 4: Lister Everbright - Rank: A* (Class: Knight, Race: Elf) \r\n\r\nRank 5: Aurelia Eucladian-Nine - Rank: S- (Class: Mage, Race: Human) \r\n\r\nRank 6: Kaelen Stormer - Rank: S* (Class: Assassin, Race: Dark Elf) \r\n\r\nRank 7: Lyra Leywin - Rank: S- (Class: Necromancer, Race: Demon) \r\n\r\nRank 8: Windsom - Rank: A* (Class: Guardian, Race: Dragon) \r\n\r\nRank 9: Selene - Rank: A (Class: Succubus, Race: Demon) \r\n\r\nRank 10: Evelyn Everbright - Rank: S- (Class: High-Elf Warrior, Race: Elf) ");
                     Console.WriteLine(); // Neatness
-                    smoothPrint.RapidPrint("\nAffirmative? If so, click anywhere to be redirected back to the Menu. ");
+                    smoothPrinting.RapidPrint("\nAffirmative? If so, click anywhere to be redirected back to the Menu. ");
                     Console.ReadKey();
                     Console.Clear(); // Neatness
+                    Console.ForegroundColor = ConsoleColor.Gray; // Reset console color
                     gameMenu(); // Redirect user back to the menu...
                     break;
 
                 case 3:
                     Console.Clear();
+                    smoothPrinting.CenterPrint("--------FantasyRPG: Game Advice--------\n");
+                    Console.WriteLine();
                     foreach (string s in gameAdvice) // Display game advice
                     {
-                        smoothPrint.FastPrint("* " + s + "\n");
+                        smoothPrinting.FastPrint("* " + s + "\n");
+                        Console.WriteLine(); // Neatness
                     }
-
+                    smoothPrinting.RapidPrint("\nAffirmative? If so, click anywhere to be redirected back to the Menu. ");
+                    Console.ReadKey();
+                    Console.Clear();
                     gameMenu(); // Redirect user back to the menu...
                     break;
                 default:
-                    Console.WriteLine("Invalid input, please try again.");
+                    smoothPrinting.FastPrint("\nInvalid input, please try again."); // Inform the user about the invalid input
+                    helpSection(userChances - 1); // Recursively call the method with reduced chances
                     break;
             }
 
@@ -1032,8 +1067,12 @@ namespace FantasyRPG
         public void makeGameSuggestion() // Game suggestions
         {
             Console.Clear();
-            SmoothConsole smooth = new SmoothConsole();
-            smooth.FastPrint("Send a message to kmescavine@gmail.com in order to send your ideas!"); // Future reference: Use an SMTP feature to allow the user to input their email and send their suggestion
+            SmoothConsole smoothPrinting = new SmoothConsole();
+            smoothPrinting.CenterPrint("--------Game Suggestions--------\n");
+            Console.WriteLine();
+            smoothPrinting.FastPrint("Send a message to kmescavine@gmail.com in order to send your ideas!"); // Future reference: Use an SMTP feature to allow the user to input their email and send their suggestion
+            Console.WriteLine();
+            smoothPrinting.RapidPrint("\nAffirmative? If so, click anywhere to be redirected back to the Menu. ");
             Console.ReadKey();
             Console.Clear();
             gameMenu(); // Redirect user back to the menu...
@@ -1042,20 +1081,20 @@ namespace FantasyRPG
         public void futurePlans() // Future plans for the game development
         {
             Console.Clear();
-            SmoothConsole smoothOutput = new SmoothConsole();
+            SmoothConsole smoothPrinting = new SmoothConsole();
 
-            int count = 1;
             string[] futurePlans = { "Adding new classes", "Potential romance feature", "Harem feature (not likely)", "A chance of randomly dying", "Illnesses and cures", "Game difficulty (easy, normal, hard, impossible)" };
-            smoothOutput.FastPrint("Future plans for FantasyRPG include:\n");
-
+            smoothPrinting.CenterPrint("--------Future Endeavors--------\n");
+            Console.WriteLine();
             foreach (string plan in futurePlans)
             {
-                smoothOutput.FastPrint("Plan " + count + ": " + plan + "\n");
-                count++;
+                smoothPrinting.FastPrint("* " + plan + "\n");
+                Console.WriteLine();
             }
-
+            smoothPrinting.RapidPrint("\nAffirmative? If so, click anywhere to be redirected back to the Menu. ");
             Console.ReadKey();
             Console.Clear();
+
             gameMenu(); // Redirect user back to the menu...
 
 
