@@ -875,12 +875,12 @@ namespace FantasyRPG
             smoothOutput.PrintLine("Game Menu");
             smoothOutput.PrintLine("=======================\n");
 
-            smoothOutput.FastPrint("\n1. Get started\n");
-            smoothOutput.FastPrint("\n2. Load save game (N/A)\n");
-            smoothOutput.FastPrint("\n3. Help\n");
-            smoothOutput.FastPrint("\n4. Make a suggestion\n");
-            smoothOutput.FastPrint("\n5. Future plans\n");
-            smoothOutput.RapidPrint("\nEnter a value: ");
+            smoothOutput.FastPrint("\n1 - Get started\n");
+            smoothOutput.FastPrint("\n2 - Load save game (N/A)\n");
+            smoothOutput.FastPrint("\n3 - Help\n");
+            smoothOutput.FastPrint("\n4 - Make a suggestion\n");
+            smoothOutput.FastPrint("\n5 - Future plans\n");
+            smoothOutput.RapidPrint("\nEnter a corresponding value: ");
             // Register user input
             userChoice = Convert.ToInt32(Console.ReadLine());
 
@@ -940,7 +940,7 @@ namespace FantasyRPG
             smoothPrinting.PrintLine("\nLoading current save progress isn't available yet.");
             smoothPrinting.RapidPrint("\nOptions");
             smoothPrinting.RapidPrint("\n1. Return to Menu\n");
-            smoothPrinting.RapidPrint("\nEnter a value: ");
+            smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
 
             loadingSaveDataInput = Convert.ToInt32((Console.ReadLine())); // Porcess user input.
             
@@ -992,7 +992,7 @@ namespace FantasyRPG
             smoothPrinting.RapidPrint("\n1. What is FantasyRPG?\n");
             smoothPrinting.RapidPrint("\n2. Arcania's Magic Council\n");
             smoothPrinting.RapidPrint("\n3. Game advice from the developers\n");
-            smoothPrinting.RapidPrint("\nEnter a value: ");
+            smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
 
             // Ask if the user wants to see any game advice in the help section
             userInput = Convert.ToInt32(Console.ReadLine());
@@ -1112,6 +1112,7 @@ namespace FantasyRPG
             SmoothConsole smoothPrinting = new SmoothConsole(); // initiate the smooth console class
 
             // Storyline: Explain how the user came to the world
+            smoothPrinting.CenterPrint("---------Summoned by Destiny: The Journey to Aeolus----------\n");
             smoothPrinting.RapidPrint("In a quiet library on Earth, you find yourself inexplicably drawn to an alluring book that is basked within the circumference of the sun's rays. Intrigued by the mysterious markings, you reach out to the book. \r\n\r\nAs your fingers contact the book, a flash of light engulfs you, and you feel pulled into a vortex of energy. In an instant, you are whisked away from their familiar surroundings to a world unlike anything they've ever seen. \r\n\r\nConfused about how you ended up in this strange new realm, you soon learn that they've been summoned to Aeolus by powerful forces seeking help in a time of dire need, as you are the destined one, that isn’t contained by the limits of fate. It seems your unique abilities and knowledge are crucial for overcoming a looming threat that could destroy the entire world of Aeolus. \r\n\r\nWith no way to return, you must now navigate the unfamiliar landscapes and cultures of Aeolus, forging alliances and honing their skills as they strive to fulfill their newfound destiny and save this world from destruction. ");
 
             smoothPrinting.RapidPrint("\n\nNaturally, you are not familiar with the system that is implemented in the world of Aeolus, therefore you are sent to a bleak white room, where you learn how to familiarize yourself with the world's customs. This includes the plethora of mana surrounding Aeolus and the world's rulings. You can now select a class type.");
@@ -1119,7 +1120,7 @@ namespace FantasyRPG
             int userChoice; // Define the user choice
 
             // Defining the different classes and rarity of items
-            string[] fantasyClasses = { "Mage", "Knight (N/A)", "Pirate", "Shadowwrath (N/A)", "Archer (N/A)", "Return to menu" }; // Predefined array of roles
+            string[] fantasyClasses = { "Mage", "Knight (N/A)", "Pirate", "Shadowwrath (N/A)", "Archer (N/A)", "Return to Menu" }; // Predefined array of roles
             string[] rarity = { "Common", "Uncommon", "Rare", "Unique", "Legendary" }; // Predefined values :3
             int num = 1;
 
@@ -1129,11 +1130,11 @@ namespace FantasyRPG
             for (int i = 0; i < fantasyClasses.Length; i++)
             {
 
-                smoothPrinting.FastPrint(num + ". " + fantasyClasses[i] + "\n");
+                smoothPrinting.FastPrint("\n" + num + " - " + fantasyClasses[i] + "\n");
                 num++;
             }
 
-            smoothPrinting.RapidPrint("\nEnter a value: ");
+            smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
             userChoice = Convert.ToInt32(Console.ReadLine());
 
             switch (userChoice) // Future reference: Rather than have a userchoice fixed to a single method, add multiple methods for different classes (i.e. a mage class if a user chooses the mage role etc, that way you can implement recursion if the user wants to reset their details)
@@ -1268,7 +1269,6 @@ namespace FantasyRPG
                     Console.ReadKey();
                     Console.Clear();
 
-                    Console.ForegroundColor = ConsoleColor.Magenta;
                     var randomWeapon = mageStaff.First(); // Retrieve the only element added to mageStaff
                                                           // smoothPrinting.FastPrint($"Assigned weapon: {randomWeapon.weaponName}, Damage: {randomWeapon.damage}, Rarity: {randomWeapon.rarity}, Weapon Type: {randomWeapon.weaponType}, \nWeapon Description: {randomWeapon.weaponDescription}"); // Display the assigned weapon to the user
 
@@ -1284,7 +1284,7 @@ namespace FantasyRPG
                     // Display all the magic choices to the user
                     for (int j = 0; j < magicChoices.Length; j++)
                     {
-                        smoothPrinting.FastPrint($"   {choiceIncrementer}. {magicChoices[j]}\n");
+                        smoothPrinting.FastPrint($"\n{choiceIncrementer} - {magicChoices[j]}\n");
                         choiceIncrementer++;
                     }
 
@@ -1317,12 +1317,11 @@ namespace FantasyRPG
 
                     for (int z = 0; z < magicSpecialties.Count; z++)
                     {
-                        Console.WriteLine("\n" + magicSpecialties[z] + " Spells:");
-
+                        smoothPrinting.PrintLine($"---------{magicSpecialties[z]} Spells---------\n");
                         switch (magicSpecialties[z])
                         {
                             case "Fire-Magic":
-                                smoothPrinting.PrintLine("---------Fire-Magic Spells----------\n"); // Display the magic spells for the given speciality
+                                Console.ForegroundColor = ConsoleColor.Red; // Red for fire
                                 foreach (var spell in fireMagicSpells)
                                 {
                                     smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage}, Mana Requirement for Activation: {spell.Value.manaRequirement}");
@@ -1333,7 +1332,7 @@ namespace FantasyRPG
                                 break;
 
                             case "Water-Magic":
-                                smoothPrinting.PrintLine("---------Water-Magic Spells----------\n"); // Display the magic spells for the given speciality
+                                Console.ForegroundColor = ConsoleColor.DarkBlue; // Dark-blue for water
                                 foreach (var spell in waterMagicSpells)
                                 {
                                     smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage}, Mana Requirement for Activation: {spell.Value.manaRequirement}");
@@ -1344,7 +1343,7 @@ namespace FantasyRPG
                                 break;
 
                             case "Lightning-Magic":
-                                smoothPrinting.PrintLine("---------Lightning-Magic Spells----------\n"); // Display the magic spells for the given speciality
+                                Console.ForegroundColor = ConsoleColor.Yellow; // Yellow for lightning
                                 foreach (var spell in lightningMagicSpells)
                                 {
                                     smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage} , Mana Requirement for Activation:  {spell.Value.manaRequirement}");
@@ -1355,7 +1354,7 @@ namespace FantasyRPG
                                 break;
 
                             case "Ice-Magic":
-                                smoothPrinting.PrintLine("---------Ice-Magic Spells----------\n"); // Display the magic spells for the given speciality
+                                Console.ForegroundColor = ConsoleColor.Blue; // Blue for ice
                                 foreach (var spell in iceMagicSpells)
                                 {
                                     smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage} , Mana Requirement for Activation:  {spell.Value.manaRequirement}");
@@ -1366,7 +1365,7 @@ namespace FantasyRPG
                                 break;
 
                             case "Dark-Magic":
-                                smoothPrinting.PrintLine("---------Dark-Magic Spells----------\n"); // Display the magic spells for the given speciality
+                                Console.ForegroundColor = ConsoleColor.DarkGray; // Dark gray for dark magic
                                 foreach (var spell in darkMagicSpells)
                                 {
                                     smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage} , Mana Requirement for Activation:  {spell.Value.manaRequirement}");
@@ -1377,7 +1376,7 @@ namespace FantasyRPG
                                 break;
 
                             case "Light-Magic":
-                                smoothPrinting.PrintLine("---------Light-Magic Spells----------\n"); // Display the magic spells for the given speciality
+                                Console.ForegroundColor = ConsoleColor.White; // White for light magic
                                 foreach (var spell in lightMagicSpells)
                                 {
                                     smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage} , Mana Requirement for Activation:  {spell.Value.manaRequirement}");
@@ -1388,7 +1387,7 @@ namespace FantasyRPG
                                 break;
 
                             case "Eucladian-Magic":
-                                smoothPrinting.PrintLine("---------Eucladian Spells----------\n"); // Display the magic spells for the given speciality
+                                Console.ForegroundColor = ConsoleColor.DarkCyan; // Dark red for Eucladian Magic
                                 foreach (var spell in eucladianMagicSpells)
                                 {
                                     smoothPrinting.FastPrint($"{(totalSpellsDisplayed + 1)}. {spell.Key} - Damage: {spell.Value.damage} , Mana Requirement for Activation:  {spell.Value.manaRequirement}");
@@ -1415,7 +1414,7 @@ namespace FantasyRPG
 
                     for (int specialityIndex = 0; specialityIndex < magicSpecialties.Count; specialityIndex++)
                     {
-                        Console.WriteLine($"Select 2 magic spells for {magicSpecialties[specialityIndex]} by entering the corresponding numbers. (1-4 for each element)");
+                        Console.WriteLine($"Select 2 magic spells for {magicSpecialties[specialityIndex]} by entering the corresponding numbers (1-4 for each element): ");
 
                         List<(string magicSpell, int damage, int manaRequirement)> currentMagicSpells = new List<(string magicSpell, int damage, int manaRequirement)>();
 
@@ -1469,6 +1468,7 @@ namespace FantasyRPG
                     }
 
                     Console.Clear(); // Neatness
+                    Console.ForegroundColor = ConsoleColor.White; // Reset the console color
 
                     int mageSpecialAtkRecharge = 0; // Preset
 
@@ -1490,10 +1490,13 @@ namespace FantasyRPG
 
                     Console.WriteLine(); // Seperate lines
                     smoothPrinting.CenterPrint("\nWould you like to embark on your journey in the world of Arcania?");
-                    smoothPrinting.FastPrint("Enter the following value, to be directed\n");
-                    Console.WriteLine("1: Start your adventure");
-                    Console.WriteLine("2: Return to class selection");
-                    Console.WriteLine("3: Return to the Menu");
+                    smoothPrinting.RapidPrint("\nEnter the following value, to be directed");
+                    Console.WriteLine(); // Seperate lines
+                    smoothPrinting.RapidPrint("1 - Start your adventure");
+                    smoothPrinting.RapidPrint("\n2 - Return to class selection");
+                    smoothPrinting.RapidPrint("\n3 - Return to the Menu");
+                    Console.WriteLine(); // Seperate lines
+                    smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
                     startMageJourneyInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
 
 
@@ -1551,7 +1554,7 @@ namespace FantasyRPG
                 case 3:
                     int startPirateJourneyInput;
                     Console.Clear();
-                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
                     int specialAtkRecharge = 0; // This remains fixed
 
                     smoothPrinting.CenterPrint("---------Pirate Class----------\n");
@@ -1936,7 +1939,7 @@ namespace FantasyRPG
             smoothPrinting.PrintLine("\n2. North: Move northward along the path");
             smoothPrinting.PrintLine("\n3. Inventory: View your current inventory of items");
             smoothPrinting.PrintLine("\n4. Help: Display a list of available commands");
-
+            smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
             firstSelection = Convert.ToInt32(Console.ReadLine());
 
 
