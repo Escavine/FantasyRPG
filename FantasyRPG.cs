@@ -870,13 +870,16 @@ namespace FantasyRPG
             int ran_num = ran.Next(0, 5);
             Console.WriteLine("\nGame Tip: " + gameTips[ran_num] + "\n"); // Display a random game tip in the menu
 
-            Console.WriteLine("\nGame Menu\n");
-            smoothOutput.FastPrint("1. Get started\n");
-            smoothOutput.FastPrint("2. Load save game\n"); // Feature doesn't work yet
-            smoothOutput.FastPrint("3. Help\n");
-            smoothOutput.FastPrint("4. Make a suggestion\n"); // Feature doesn't work yet
-            smoothOutput.FastPrint("5. Future plans\n");
+            Console.WriteLine("\n=======================");
+            Console.WriteLine("        Game Menu");
+            Console.WriteLine("=======================\n");
 
+            smoothOutput.FastPrint("1. Get started\n");
+            smoothOutput.FastPrint("2. Load save game (N/A)\n");
+            smoothOutput.FastPrint("3. Help\n");
+            smoothOutput.FastPrint("4. Make a suggestion\n");
+            smoothOutput.FastPrint("5. Future plans\n");
+            smoothOutput.RapidPrint("\nEnter a value: ");
             // Register user input
             userChoice = Convert.ToInt32(Console.ReadLine());
 
@@ -903,6 +906,8 @@ namespace FantasyRPG
                     break;
                 default:
                     Console.WriteLine("Invalid option, please try again!");
+                    Console.Clear();
+                    gameMenu(); // Recuse to ensure that the user picks the correct option, and to prevent the program from breaking so easily
                     break;
             }
         }
