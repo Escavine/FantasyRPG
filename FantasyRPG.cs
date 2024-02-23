@@ -865,20 +865,21 @@ namespace FantasyRPG
 
             // Initiation of the console game
             smoothOutput.CenterPrint("---------FantasyRPG----------\n");
-            Console.WriteLine("\nGame advice: When inputting values, input a corresponding value to the action (e.g. enter the value 1 in order to start the game\n"); // Display game advice
+            Console.WriteLine("\nGame advice: When inputting values, input a corresponding value to the action (e.g. enter the value 1 in order to start the game"); // Display game advice
+            Console.WriteLine("\nIt is highly recommended to play this game in full screen, to allow all the text to fit in order to get the best experience");
             Random ran = new Random();
             int ran_num = ran.Next(0, 5);
             Console.WriteLine("\nGame Tip: " + gameTips[ran_num] + "\n"); // Display a random game tip in the menu
 
-            Console.WriteLine("\n=======================");
-            Console.WriteLine("        Game Menu");
-            Console.WriteLine("=======================\n");
+            smoothOutput.PrintLine("=======================");
+            smoothOutput.PrintLine("Game Menu");
+            smoothOutput.PrintLine("=======================\n");
 
-            smoothOutput.FastPrint("1. Get started\n");
-            smoothOutput.FastPrint("2. Load save game (N/A)\n");
-            smoothOutput.FastPrint("3. Help\n");
-            smoothOutput.FastPrint("4. Make a suggestion\n");
-            smoothOutput.FastPrint("5. Future plans\n");
+            smoothOutput.FastPrint("\n1. Get started\n");
+            smoothOutput.FastPrint("\n2. Load save game (N/A)\n");
+            smoothOutput.FastPrint("\n3. Help\n");
+            smoothOutput.FastPrint("\n4. Make a suggestion\n");
+            smoothOutput.FastPrint("\n5. Future plans\n");
             smoothOutput.RapidPrint("\nEnter a value: ");
             // Register user input
             userChoice = Convert.ToInt32(Console.ReadLine());
@@ -961,9 +962,9 @@ namespace FantasyRPG
             smoothPrint.RapidPrint("\n1. What is FantasyRPG?\n");
             smoothPrint.RapidPrint("\n2. Arcania's Magic Council\n");
             smoothPrint.RapidPrint("\n3. Game advice from the developers\n");
+            smoothPrint.RapidPrint("\nEnter a value: ");
 
             // Ask if the user wants to see any game advice in the help section
-            Console.WriteLine();
             userInput = Convert.ToInt32(Console.ReadLine());
 
             switch (userInput)
@@ -1093,6 +1094,7 @@ namespace FantasyRPG
                 num++;
             }
 
+            smoothPrinting.RapidPrint("\nEnter a value: ");
             userChoice = Convert.ToInt32(Console.ReadLine());
 
             switch (userChoice) // Future reference: Rather than have a userchoice fixed to a single method, add multiple methods for different classes (i.e. a mage class if a user chooses the mage role etc, that way you can implement recursion if the user wants to reset their details)
@@ -1243,7 +1245,7 @@ namespace FantasyRPG
                     // Display all the magic choices to the user
                     for (int j = 0; j < magicChoices.Length; j++)
                     {
-                        smoothPrinting.FastPrint(choiceIncrementer + ". " + magicChoices[j] + "\n");
+                        smoothPrinting.FastPrint($"   {choiceIncrementer}. {magicChoices[j]}\n");
                         choiceIncrementer++;
                     }
 
@@ -1254,7 +1256,7 @@ namespace FantasyRPG
                         int chosenSpecialtyIndex;
 
                         // Prompt the user to choose a magic specialty
-                        smoothPrinting.FastPrint("\nChoose a magic specialty by entering the corresponding number:\n");
+                        smoothPrinting.FastPrint("\nChoose a magic specialty by entering the corresponding number: ");
 
                         // Keep prompting until a valid choice is made
                         while (!int.TryParse(Console.ReadLine(), out chosenSpecialtyIndex) || chosenSpecialtyIndex < 1 || chosenSpecialtyIndex > magicChoices.Length)
@@ -1859,8 +1861,9 @@ namespace FantasyRPG
 
                 default:
                     Console.ForegroundColor = ConsoleColor.Red; // devious colour hahahaha
-                    Console.WriteLine("Please pick a sensible choice and understand if you do that again you'll be punished hahaha");
-
+                    Console.WriteLine("Invalid input, please try again!");
+                    Console.Clear(); // Clear the console
+                    userClass(); // Recurse and load the story + selection of classes
                     break;
             }
 
