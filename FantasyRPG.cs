@@ -1117,7 +1117,7 @@ namespace FantasyRPG
 
             smoothPrinting.RapidPrint("\n\nNaturally, you are not familiar with the system that is implemented in the world of Aeolus, therefore you are sent to a bleak white room, where you learn how to familiarize yourself with the world's customs. This includes the plethora of mana surrounding Aeolus and the world's rulings. You can now select a class type.");
 
-            int userChoice; // Define the user choice
+            int? userChoice; // Define the user choice
 
             // Defining the different classes and rarity of items
             string[] fantasyClasses = { "Mage", "Knight (N/A)", "Pirate", "Shadowwrath (N/A)", "Archer (N/A)", "Return to Menu" }; // Predefined array of roles
@@ -1512,6 +1512,7 @@ namespace FantasyRPG
                             wizardJourney.usersFirstJourney(mageName);
                             break;
                         case 2:
+                            userChoice = null;
                             mageName = null;
                             mageStaff = null;
                             magicSpecialties = null;
@@ -1523,6 +1524,7 @@ namespace FantasyRPG
                             userClass(); // Redirect user to select a different class...
                             break;
                         case 3:
+                            userChoice = null;
                             mageName = null;
                             mageStaff = null;
                             magicSpecialties = null;
@@ -1844,6 +1846,7 @@ namespace FantasyRPG
                             pirateJourney.usersFirstJourney(pirateName);
                             break;
                         case 2:
+                            userChoice = null;
                             pirateName = null;
                             pirateWeapon = null;
                             pirateWeaponAura = null;
@@ -1855,6 +1858,7 @@ namespace FantasyRPG
                             userClass(); // Redirect user back to class selection
                             break;
                         case 3:
+                            userChoice = null;
                             pirateName = null;
                             pirateWeapon = null;
                             pirateWeaponAura = null;
