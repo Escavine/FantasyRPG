@@ -2,15 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 
 // FantasyRPG: A console based RPG game, which sole purpose is to improve on my current programming skills (mainly OOP as that is my weakness).
 
 namespace FantasyRPG
-{ 
+{
     class CharacterDefault // fixed preset for all classes
     {
         // Generic character attributes
@@ -219,7 +221,7 @@ namespace FantasyRPG
                     dropItem(mobHealth); // Should the random number be zero, then the mob will drop an item
                 }
 
-                exp+=5; // User gets experience from the drop
+                exp += 5; // User gets experience from the drop
                 smoothPrinting.SlowPrint("User has gained " + exp + " experience points!");
 
             }
@@ -347,7 +349,7 @@ namespace FantasyRPG
 
         }
     }
-      
+
 
     class Knight : CharacterDefault // Knight class properties and methods
     {
@@ -459,7 +461,7 @@ namespace FantasyRPG
 
 
             // Arrays containing the variety of different magic choices, spells and weapons.
-            string[] magicChoices = { "Fire-Magic", "Water-Magic", "Lightning-Magic", "Ice-Magic", "Dark-Magic", "Light-Magic", "Eucladian-Magic"}; // Future reference: add 'level' as an argument to make other magic specialities exclusive
+            string[] magicChoices = { "Fire-Magic", "Water-Magic", "Lightning-Magic", "Ice-Magic", "Dark-Magic", "Light-Magic", "Eucladian-Magic" }; // Future reference: add 'level' as an argument to make other magic specialities exclusive
 
             smoothPrinting.SlowPrint("Mage's Prestiege, congrats!\n");
             smoothPrinting.RapidPrint("\n" + name + "'s" + " current known magic specialities:" + "\n");
@@ -770,7 +772,7 @@ namespace FantasyRPG
     class SomaliPirate : CharacterDefault
     {
 
-        public List<(string attack, int damage, int manaRequirement, string elementType, string description)> pirateNormalAtks; 
+        public List<(string attack, int damage, int manaRequirement, string elementType, string description)> pirateNormalAtks;
         public List<(string attack, int damage, int manaRequirement, string elementType, string description)> pirateSpecialAtks; // Normal and special attack lists, containing all relevant information
         public List<(string auraName, int damage, string rarity, string description)> weaponAura; // Weapon aura
 
@@ -844,10 +846,13 @@ namespace FantasyRPG
     {
         static void Main(string[] args) // Future reference: With the implementation of the authentication system soon, this will be moved.
         {
-            GameMenu menu = new GameMenu();
+            // GameMenu menu = new GameMenu();
+            MagicCouncil encounter = new MagicCouncil(); // Debugging
+            encounter.firstMeeting();
             // FirstScenario firstScenario = new FirstScenario();
             // firstScenario.usersFirstJourney("Jahid");
-            menu.gameMenu(); // User is first directed to the game menu method
+
+            // menu.gameMenu(); // User is first directed to the game menu method
         }
 
 
@@ -943,7 +948,7 @@ namespace FantasyRPG
             smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
 
             loadingSaveDataInput = Convert.ToInt32((Console.ReadLine())); // Porcess user input.
-            
+
             if (loadingSaveDataInput == 1)
             {
                 smoothPrinting.FastPrint("\nYou will be lead back to the Menu.\n");
@@ -1236,7 +1241,7 @@ namespace FantasyRPG
                     // Console.WriteLine("\n"); // Neat stucturing
 
                     // foreach (var starterWeapon in starterMageWeapons) {
-                 
+
                     // smoothPrinting.RapidPrint($"\n* {starterWeapon.Key}, Damage: {starterWeapon.Value.damage}, Rarity: {starterWeapon.Value.rarity}");
                     // }
 
@@ -1248,7 +1253,7 @@ namespace FantasyRPG
                     // smoothPrinting.RapidPrint("Did you seriously think you had a choice as to what you get to pick? You don't."); // User isn't given a choice :3
                     // Console.ReadKey();
                     // Console.Clear();
-                  
+
                     Console.ForegroundColor = ConsoleColor.White; // Reset the console color output
                     smoothPrinting.RapidPrint("\nYou will be randomly assigned a starter weapon...");
 
@@ -1531,7 +1536,7 @@ namespace FantasyRPG
                             magicSpells = null; // Clear all parameters from their initial values
                             mageInventory = null;
                             GameMenu menu = new GameMenu();
-                            smoothPrinting.FastPrint("\nYou will now be directed to the game menu..."); 
+                            smoothPrinting.FastPrint("\nYou will now be directed to the game menu...");
                             Console.ForegroundColor = ConsoleColor.White; // Reset console color
                             Console.Clear(); // Clear the console to prevent confusion + cleaner look
                             menu.gameMenu(); // Redirect user back to the the game menu
@@ -1921,7 +1926,7 @@ namespace FantasyRPG
 
     public class FirstScenario // Once the user selects a class, they'll proceed onto their journey
     {
-        
+
         // Customary scenarios will be used to allow dynamicness to the game and make it less monotomous
         // string[] customaryScenarios = { "You embark on a long journey, you find yourself lost midway throughout the journey. There appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question your fighting prowess despite your training. What do you do?" };
 
@@ -1994,6 +1999,66 @@ namespace FantasyRPG
         }
     }
 
+    public class MagicCouncil
+    {
+        public void firstMeeting() // This will be the first meeting between the MC and the other council members (not all of them are present at that given moment)
+        {
+            Console.Clear(); // Clear the console for neatness
+            SmoothConsole smoothPrinting = new SmoothConsole();
+            Console.ForegroundColor = ConsoleColor.White;
+
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+
+            // Explanation of Arcania's Magic Council being aware of the current situation at hand
+            smoothPrinting.RapidPrint("\nThe Magic Council are naturally aware of the ongoing situation, with tension rising within Paralax (Dragon City), between the Draconith and Vesperon family and due to the growing conflict, an emergency meeting is held with all council members. Evelyn invites you as a representative along with Eurelian Frostweaver to the meeting, other council members also invite their fellow representatives. For safety purposes, all representatives are to wear a mask to conceal their identities. ");
+
+            smoothPrinting.RapidPrint("\n\nAffirmative? Press any key to continue...");
+            Console.ReadKey(); // Read the users input, before generating more output.
+            Console.Clear(); // Clear the console for neatness
+
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+
+            smoothPrinting.RapidPrint("\nAs you make your way towards the Magic Council Hall alongside Evelyn, you can't help but marvel at the hyper-detailed infrastructures that tower over you. Their imposing presence commands attention, and you find yourself drawn to their intricate designs. Curious, you turn to Evelyn and inquire about the significance of these structures. With a knowing smile, she explains that they are different idols of the previous 1st rankers and generations back. Each idol holds a different weapon, symbolizing the unique specialties of its respective ranker. The idols vary in posture and exude a sense of power and mastery over their chosen disciplines. ");
+            Console.WriteLine();
+            smoothPrinting.RapidPrint("\nAffirmative? Press any key to continue...");
+            Console.ReadKey(); // Read the users input, before generating more output.
+            Console.Clear(); // Clear the console for neatness
+
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+
+            smoothPrinting.RapidPrint("As you continue walking, you can't help but feel a sense of reverence for those who came before, their legacies immortalized in stone and metal. It's a reminder of the long history and tradition that surrounds the Magic Council, and you can't help but feel honored to be a part of it. Before proceeding inside the Hall, Evelyn stumbles upon her brother, who she hasn’t met for a long time due to her duties as a Guildmaster, they end up meeting each other and talking for some time, there she introduces you, the ‘MC’ and he greets you with a heartwarming smile, just like Evelyn, you can clearly tell that they are siblings. ");
+            smoothPrinting.RapidPrint("\n\nAffirmative? Press any key to continue...");
+            Console.ReadKey(); // Read the users input, before generating more output.
+            Console.Clear(); // Clear the console for neatness
+
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+
+            smoothPrinting.RapidPrint("Lister's overwhelming aura exudes strength and confidence, casting a palpable sense of authority and prowess. It surrounds him like an invisible shield, commanding respect and attention from those around him. The intensity of his presence is undeniable, leaving an indelible impression on all who encounter him. It's a combination of his unwavering determination, honed skill, and unwavering commitment to his craft that contribute to the formidable aura he emits. In the presence of Lister, one can't help but feel a sense of reverence and admiration for his formidable abilities and commanding demeanor. ");
+            smoothPrinting.RapidPrint("\n\nAffirmative? Press any key to continue...");
+            Console.ReadKey(); // Read the users input, before generating more output.
+            Console.Clear(); // Clear the console for neatness
+
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+
+            // Lazy output, fix this when you get the time so it is structurered properly
+            smoothPrinting.RapidPrint("\nEvelyn: “Hey Lister, it’s been a long time since we last met. How are you doing?” \r\n\r\nLister: “Oh Evelyn, it really has been a while. You seem even more capable and stronger now. I’m doing great. By the way, who is that with you? I don’t think I’ve seen him before.” \r\n\r\nEvelyn: “He's a recent addition to my guild.” \r\n\r\nLister: “Is that so? Well, I'm usually good at reading people, but I can’t seem to read him. Guess you picked out someone interesting.” \r\n\r\nEvelyn: “I am always good at this sort of thing.” \r\n\r\nLister: “Guess I shouldn’t be surprised, ha-ha. Your guild has become quite the powerhouse as well.” \r\n\r\nEvelyn: “It’s been some time since I last saw your representative. He seems to have toughened up a lot. Your training regimen must’ve really bolstered him, ha-ha-ha.” \r\n\r\nLister: “Well, our Everbright techniques will make anyone stronger.” \r\n\r\nEvelyn: “Brother, have you been training lately? I can tell that you have grown a lot stronger. Care to give your sister some advice?” *she says with a soft voice* \r\n\r\nLister: “Just make sure you are working hard, and especially utilizing your mana effectively and training with it very frequently. That’s how I recently broke through to Arcane Savant (Awakening 7).” \r\n\r\nMC Inner thoughts: Awakening level 7? How strong are the magic council members? I wonder if I’ll ever reach their ranks... \r\n\r\nEvelyn: “Okay bro, thanks for the advice. I’ll make sure to work really hard so that way when there’s another meeting, I'll be stronger than before!” \r\n\r\nLister: “Yeah, I hope that's the case as well sis! Now let’s meet with the other members. They are surely taking their time, huh?” \r\n\r\nMC Inner thoughts: I can't believe I'm in the presence of such powerful beings. But I won't let that intimidate me. I'll work hard and prove myself worthy of standing among them. ");
+            smoothPrinting.RapidPrint("\n\nAffirmative? Press any key to continue...");
+            Console.ReadKey(); // Read the users input, before generating more output.
+            Console.Clear(); // Clear the console for neatness
+
+        }
+    }
+
 
     public class gameDashboard
     {
@@ -2056,3 +2121,4 @@ namespace FantasyRPG
     }
 
 } // Namespace coverage: DO NOT REMOVE THIS
+
