@@ -2148,7 +2148,7 @@ namespace FantasyRPG
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Gray;
             smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine(name + "dashboard");
+            smoothPrinting.PrintLine("FantasyRPG: " + name + "'s " + "Dashboard");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
             smoothPrinting.RapidPrint("1. Main storyline (N/A)\n");
