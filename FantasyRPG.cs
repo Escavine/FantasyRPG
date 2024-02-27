@@ -7,6 +7,7 @@ using System.Numerics;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Xml.Linq;
 
 
 // FantasyRPG: A console based RPG game, which sole purpose is to improve on my current programming skills (mainly OOP as that is my weakness).
@@ -848,7 +849,8 @@ namespace FantasyRPG
         {
             // GameMenu menu = new GameMenu();
             MagicCouncil encounter = new MagicCouncil(); // Debugging
-            encounter.firstMeeting();
+            string name = "Khalid"; // Debugging
+            encounter.firstEncounter(name); // Debugging
             // FirstScenario firstScenario = new FirstScenario();
             // firstScenario.usersFirstJourney("Jahid");
 
@@ -2001,11 +2003,12 @@ namespace FantasyRPG
 
     public class MagicCouncil
     {
-        public void firstMeeting() // This will be the first meeting between the MC and the other council members (not all of them are present at that given moment)
+        public void firstEncounter(string name) // This will be the first meeting between the MC and the other council members (not all of them are present at that given moment)
         {
             Console.Clear(); // Clear the console for neatness
             SmoothConsole smoothPrinting = new SmoothConsole();
             Console.ForegroundColor = ConsoleColor.White;
+            int firstChoice, secondChoice, thirdChoice; // NPC interaction choices
 
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
@@ -2051,7 +2054,52 @@ namespace FantasyRPG
             smoothPrinting.PrintLine("--------------------------------------------------");
 
             // Lazy output, fix this when you get the time so it is structurered properly
-            smoothPrinting.RapidPrint("\nEvelyn: “Hey Lister, it’s been a long time since we last met. How are you doing?” \r\n\r\nLister: “Oh Evelyn, it really has been a while. You seem even more capable and stronger now. I’m doing great. By the way, who is that with you? I don’t think I’ve seen him before.” \r\n\r\nEvelyn: “He's a recent addition to my guild.” \r\n\r\nLister: “Is that so? Well, I'm usually good at reading people, but I can’t seem to read him. Guess you picked out someone interesting.” \r\n\r\nEvelyn: “I am always good at this sort of thing.” \r\n\r\nLister: “Guess I shouldn’t be surprised, ha-ha. Your guild has become quite the powerhouse as well.” \r\n\r\nEvelyn: “It’s been some time since I last saw your representative. He seems to have toughened up a lot. Your training regimen must’ve really bolstered him, ha-ha-ha.” \r\n\r\nLister: “Well, our Everbright techniques will make anyone stronger.” \r\n\r\nEvelyn: “Brother, have you been training lately? I can tell that you have grown a lot stronger. Care to give your sister some advice?” *she says with a soft voice* \r\n\r\nLister: “Just make sure you are working hard, and especially utilizing your mana effectively and training with it very frequently. That’s how I recently broke through to Arcane Savant (Awakening 7).” \r\n\r\nMC Inner thoughts: Awakening level 7? How strong are the magic council members? I wonder if I’ll ever reach their ranks... \r\n\r\nEvelyn: “Okay bro, thanks for the advice. I’ll make sure to work really hard so that way when there’s another meeting, I'll be stronger than before!” \r\n\r\nLister: “Yeah, I hope that's the case as well sis! Now let’s meet with the other members. They are surely taking their time, huh?” \r\n\r\nMC Inner thoughts: I can't believe I'm in the presence of such powerful beings. But I won't let that intimidate me. I'll work hard and prove myself worthy of standing among them. ");
+            smoothPrinting.RapidPrint("\nEvelyn: “Hey Lister, it’s been a long time since we last met. How are you doing?” \r\n\r\nLister: “Oh Evelyn, it really has been a while. You seem even more capable and stronger now. I’m doing great. By the way, who is that with you? I don’t think I’ve seen him before.” \r\n\r\nEvelyn: “He's a recent addition to my guild.” \r\n\r\nLister: “Is that so? Well, I'm usually good at reading people, but I can’t seem to read him. Guess you picked out someone interesting.” ");
+            smoothPrinting.RapidPrint("\n\nAffirmative? Press any key to continue...");
+            Console.ReadKey(); // Read the users input, before generating more output.
+            Console.Clear(); // Clear the console for neatness
+
+            firstEncounterDialogue1(); // Function call to enable dialogue
+
+            void firstEncounterDialogue1()
+            {
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
+                smoothPrinting.PrintLine("--------------------------------------------------");
+
+                smoothPrinting.RapidPrint("\nLister: Hello there, what's your name brave one?");
+
+                smoothPrinting.RapidPrint("\nInteraction Choice");
+
+                smoothPrinting.RapidPrint($"\n1. My name is {name}, it is an honor to meet you.");
+                smoothPrinting.RapidPrint($"\n2. My identity remains a secret, that I shall not tell.");
+                smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
+
+                firstChoice = Convert.ToInt32(Console.ReadLine()); // Prompt user with output choices
+
+                switch (firstChoice)
+                {
+                    case 1:
+                        smoothPrinting.RapidPrint($"\nLister: Nice to meet you {name}, you seem quite capable, and can potentially see you replacing our predacessors at some point in the ranks ha-ha-ha?");
+                        // Future reference: Add a impression increase for Lister NPC
+                        break;
+
+
+                    case 2:
+                        smoothPrinting.RapidPrint("\nLister: He's really interesting, though I feel we won't get along...");
+                        // Future reference: Add a impression drop for Lister NPC
+
+                        break;
+
+                    default:
+                        smoothPrinting.RapidPrint("Invalid input, please try again");
+                        Console.Clear(); // Clears the console
+                        firstEncounterDialogue1(); // Recurse again to ensure user enters correct input
+                        break;
+                }
+            }
+
+            smoothPrinting.RapidPrint("\r\n\r\nEvelyn: “I am always good at this sort of thing.” \r\n\r\nLister: “Guess I shouldn’t be surprised, ha-ha. Your guild has become quite the powerhouse as well.” \r\n\r\nEvelyn: “It’s been some time since I last saw your representative. He seems to have toughened up a lot. Your training regimen must’ve really bolstered him, ha-ha-ha.” \r\n\r\nLister: “Well, our Everbright techniques will make anyone stronger.” \r\n\r\nEvelyn: “Brother, have you been training lately? I can tell that you have grown a lot stronger. Care to give your sister some advice?” *she says with a soft voice* \r\n\r\nLister: “Just make sure you are working hard, and especially utilizing your mana effectively and training with it very frequently. That’s how I recently broke through to Arcane Savant (Awakening 7).” \r\n\r\nMC Inner thoughts: Arcane Savant? How strong are the magic council members? I wonder if I’ll ever reach their ranks... \r\n\r\nEvelyn: “Okay bro, thanks for the advice. I’ll make sure to work really hard so that way when there’s another meeting, I'll be stronger than before!” \r\n\r\nLister: “Yeah, I hope that's the case as well sis! Now let’s meet with the other members. They are surely taking their time, huh?” \r\n\r\nMC Inner thoughts: I can't believe I'm in the presence of such powerful beings. But I won't let that intimidate me. I'll work hard and prove myself worthy of standing among them.");
             smoothPrinting.RapidPrint("\n\nAffirmative? Press any key to continue...");
             Console.ReadKey(); // Read the users input, before generating more output.
             Console.Clear(); // Clear the console for neatness
