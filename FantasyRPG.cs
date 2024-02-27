@@ -2035,6 +2035,27 @@ namespace FantasyRPG
             smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
+            smoothPrinting.RapidPrint("\nWhile walking with Evelyn, you see a bulletin that contains a bunch of names, associted with a ranking and extra details and enquire to her what it exactly entails. She briefly explains that it is the ranking board for the current Arcania's Magic Council members, and lets you see from up-close\n");
+            smoothPrinting.RapidPrint("\nAffirmative? Press any key to continue...");
+            Console.ReadKey(); // Read the users input, before generating more output.
+            Console.Clear(); // Clear the console for neatness
+
+            Console.ForegroundColor = ConsoleColor.Yellow; // Display the rankings in a yellow color
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("Arcania's Magic Council - Current Rankings");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.RapidPrint("Rank 1: ??? - Rank: S** (Class: ???, Race: ???) \r\n\r\nRank 2: ??? - Rank: S* (Class: ???, Race: ???) \r\n\r\nRank 3: ??? - Rank: S (Class: ???, Race: ???) \r\n\r\nRank 4: Lister Everbright - Rank: A* (Class: Knight, Race: Elf) \r\n\r\nRank 5: Aurelia Eucladian-Nine - Rank: S- (Class: Mage, Race: Human) \r\n\r\nRank 6: Kaelen Stormer - Rank: S* (Class: Assassin, Race: Dark Elf) \r\n\r\nRank 7: Lyra Leywin - Rank: S- (Class: Necromancer, Race: Demon) \r\n\r\nRank 8: Windsom - Rank: A* (Class: Guardian, Race: Dragon) \r\n\r\nRank 9: Selene - Rank: A (Class: Succubus, Race: Demon) \r\n\r\nRank 10: Evelyn Everbright - Rank: S- (Class: High-Elf Warrior, Race: Elf) ");
+            Console.ForegroundColor = ConsoleColor.White; // Revert to original color for terminal
+            Console.WriteLine();
+            smoothPrinting.RapidPrint("\nMC's Inner Thoughts: The top 3 aren't even known? I seriously wonder how powerful they are, perhaps they have a clue as to how I got summoned into this world...\n");
+            smoothPrinting.RapidPrint("\nAffirmative? Press any key to continue...");
+            Console.ReadKey(); // Read the users input, before generating more output.
+            Console.Clear(); // Clear the console for neatness
+
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+
             smoothPrinting.RapidPrint("As you continue walking, you can't help but feel a sense of reverence for those who came before, their legacies immortalized in stone and metal. It's a reminder of the long history and tradition that surrounds the Magic Council, and you can't help but feel honored to be a part of it. Before proceeding inside the Hall, Evelyn stumbles upon her brother, who she hasn’t met for a long time due to her duties as a Guildmaster, they end up meeting each other and talking for some time, there she introduces you, the ‘MC’ and he greets you with a heartwarming smile, just like Evelyn, you can clearly tell that they are siblings. ");
             smoothPrinting.RapidPrint("\n\nAffirmative? Press any key to continue...");
             Console.ReadKey(); // Read the users input, before generating more output.
@@ -2067,12 +2088,12 @@ namespace FantasyRPG
                 smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
                 smoothPrinting.PrintLine("--------------------------------------------------");
 
-                smoothPrinting.RapidPrint("\nLister: Hello there, what's your name brave one?");
+                smoothPrinting.RapidPrint("\nLister: “Hello there, what's your name brave one?”\n");
 
-                smoothPrinting.RapidPrint("\nInteraction Choice");
+                smoothPrinting.RapidPrint("Interaction Choice\n");
 
-                smoothPrinting.RapidPrint($"\n1. My name is {name}, it is an honor to meet you.");
-                smoothPrinting.RapidPrint($"\n2. My identity remains a secret, that I shall not tell.");
+                smoothPrinting.RapidPrint($"\n1. “My name is {name}, it is an honor to meet you.”");
+                smoothPrinting.RapidPrint($"\n2. “My identity remains a secret, that I shall not reveal.”\n");
                 smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
 
                 firstChoice = Convert.ToInt32(Console.ReadLine()); // Prompt user with output choices
@@ -2080,19 +2101,20 @@ namespace FantasyRPG
                 switch (firstChoice)
                 {
                     case 1:
-                        smoothPrinting.RapidPrint($"\nLister: Nice to meet you {name}, you seem quite capable, and can potentially see you replacing our predacessors at some point in the ranks ha-ha-ha?");
+                        smoothPrinting.RapidPrint($"\nLister: “Nice to meet you {name}, you seem quite capable, and can potentially see you replacing our predacessors at some point in the ranks ha-ha-ha?”");
                         // Future reference: Add a impression increase for Lister NPC
                         break;
 
 
                     case 2:
-                        smoothPrinting.RapidPrint("\nLister: He's really interesting, though I feel we won't get along...");
+                        smoothPrinting.RapidPrint("\nLister: “He's really interesting, though I feel we won't get along...”");
                         // Future reference: Add a impression drop for Lister NPC
 
                         break;
 
                     default:
                         smoothPrinting.RapidPrint("Invalid input, please try again");
+                        Console.ReadKey(); // Let user know that their input is invalid
                         Console.Clear(); // Clears the console
                         firstEncounterDialogue1(); // Recurse again to ensure user enters correct input
                         break;
@@ -2116,11 +2138,18 @@ namespace FantasyRPG
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Gray;
             smoothPrinting.RapidPrint(name + "'s " + "dashboard\n");
-            smoothPrinting.RapidPrint("1. Main storyline (NOT WORKING YET)\n");
-            smoothPrinting.RapidPrint("2. Infinite dungeon (NOT WORKING YET)\n");
-            smoothPrinting.RapidPrint("3. Guild reputation(NOT WORKING YET)\n");
-            smoothPrinting.RapidPrint("4. Shop (NOT WORKING YET)\n");
+            smoothPrinting.RapidPrint("1. Main storyline (N/A)\n");
+            smoothPrinting.RapidPrint("2. Infinite dungeon (N/A)\n");
+            smoothPrinting.RapidPrint("3. Guild reputation (N/A)\n");
+            smoothPrinting.RapidPrint("4. Shop (N/A)\n");
+            smoothPrinting.RapidPrint("5. NPC's encountered (N/A)");
             Console.ReadKey(); // No functionality for now
+
+            void NPCEncounters()
+            {
+                // Future reference: Create a list elsewhere during the class setup, and reference that as an argument that'll output the NPC's that the users has encountered.
+
+            }
 
         }
     }
