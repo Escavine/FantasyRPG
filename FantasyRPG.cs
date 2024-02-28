@@ -849,28 +849,26 @@ namespace FantasyRPG
     {
         static void Main(string[] args) // Future reference: With the implementation of the authentication system soon, this will be moved.
         {
-            // GameMenu menu = new GameMenu();
+            GameMenu menu = new GameMenu();
             // MagicCouncil encounter = new MagicCouncil(); // Debugging
-            // string name = "Khalid"; // Debugging
+            // string name = "Silver"; // Debugging
             // encounter.firstEncounter(name); // Debugging
             // FirstScenario firstScenario = new FirstScenario();
-            // firstScenario.usersFirstJourney("Jahid");
+            // firstScenario.usersFirstJourney("Tristian");
 
-            // menu.gameMenu(); // User is first directed to the game menu method
+            menu.gameMenu(); // User is first directed to the game menu method
 
-
-            string name = "Silvern"; // Debugging
-            List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered = new List<(string npcName, string npcDescription, string npcAffiliation)>() // Debugging: populating data
-            {
-                ("Kaelen Stormer", "Rank 6 of Arcania's Magic Council, known for being one of the most formiddable Dark Elves conquering his enemies with meticulous assasination capabilities.", "Arcania's Magic Council"),
-                ("Silver Eucladian-Nine", "The real identity of Cloud, Rank 1 in Arcania's Magic Council.", "Arcania's Magic Council/Eucladian Lineage"),
-                ("Evelyn Everbright", "Rank 10 of Arcania's Magic Council, known for her gracious beauty that graces wherever she goes.", "Arcania's Magic Council/Arcane Sentinels"),
-                ("Mo Blade", "Rank 3 of Arcania's Magic Council, known to be one of the most vicious pirates around!", "Arcania's Magic Council/Red Sea")
-            };
+            // List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered = new List<(string npcName, string npcDescription, string npcAffiliation)>() // Debugging: populating data
+            // {
+               //  ("Kaelen Stormer", "Rank 6 of Arcania's Magic Council, known for being one of the most formiddable Dark Elves conquering his enemies with meticulous assasination capabilities.", "Arcania's Magic Council"),
+                // ("Silver Eucladian-Nine", "The real identity of Cloud, Rank 1 in Arcania's Magic Council.", "Arcania's Magic Council/Eucladian Lineage"),
+                // ("Evelyn Everbright", "Rank 10 of Arcania's Magic Council, known for her gracious beauty that graces wherever she goes.", "Arcania's Magic Council/Arcane Sentinels"),
+                // ("Mo Blade", "Rank 3 of Arcania's Magic Council, known to be one of the most vicious pirates around!", "Arcania's Magic Council/Red Sea")
+            // };
 
 
-            gameDashboard dash = new gameDashboard();
-            dash.dashboard(name, npcsEncountered);
+            // gameDashboard dash = new gameDashboard();
+            // dash.dashboard(name, npcsEncountered);
 
         }
 
@@ -889,22 +887,25 @@ namespace FantasyRPG
             }; // Array containing necessary game tips, more will be added in the future.
 
             // Initiation of the console game
-            smoothOutput.CenterPrint("---------FantasyRPG----------\n");
+            smoothOutput.PrintLine("--------------------------------------------------");
+            smoothOutput.PrintLine("FantasyRPG");
+            smoothOutput.PrintLine("--------------------------------------------------");
+
             Console.WriteLine("\nGame advice: When inputting values, input a corresponding value to the action (e.g. enter the value 1 in order to start the game"); // Display game advice
             Console.WriteLine("\nIt is highly recommended to play this game in full screen, to allow all the text to fit in order to get the best experience");
             Random ran = new Random();
-            int ran_num = ran.Next(0, 6);
+            int ran_num = ran.Next(0, 5);
             Console.WriteLine("\nGame Tip: " + gameTips[ran_num] + "\n"); // Display a random game tip in the menu
 
             smoothOutput.PrintLine("=======================");
             smoothOutput.PrintLine("Game Menu");
             smoothOutput.PrintLine("=======================\n");
 
-            smoothOutput.FastPrint("\n1 - Get started\n");
-            smoothOutput.FastPrint("\n2 - Load save game (N/A)\n");
-            smoothOutput.FastPrint("\n3 - Help\n");
-            smoothOutput.FastPrint("\n4 - Make a suggestion\n");
-            smoothOutput.FastPrint("\n5 - Future plans\n");
+            smoothOutput.RapidPrint("\n1 - Get started\n");
+            smoothOutput.RapidPrint("\n2 - Load save game (N/A)\n");
+            smoothOutput.RapidPrint("\n3 - Help\n");
+            smoothOutput.RapidPrint("\n4 - Make a suggestion\n");
+            smoothOutput.RapidPrint("\n5 - Future plans\n");
             smoothOutput.RapidPrint("\nEnter a corresponding value: ");
             // Register user input
             userChoice = Convert.ToInt32(Console.ReadLine());
@@ -946,7 +947,9 @@ namespace FantasyRPG
             int? loadingSaveDataInput;
 
             // Should the user be logged in, they'll be able to access their save data
-            smoothPrinting.CenterPrint("---------FantasyRPG: Loading Save Data----------\n");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("FantasyRPG: " + "Loading Save Data");
+            smoothPrinting.PrintLine("--------------------------------------------------");
 
             // Display the user's remaining input attempts, if they input an incorrect value
             if (userChances <= 3)
@@ -999,7 +1002,9 @@ namespace FantasyRPG
                 if (userChances == 0)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    smoothPrinting.CenterPrint("---------FantasyRPG: Help Section----------\n");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("FantasyRPG: " + "Help Section");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
                     smoothPrinting.RapidPrint("\nToo many incorrect attempts, FantasyRPG will now terminate."); // Terminate users session, should they have no remaining chances 
                     Console.ReadKey();
                     Environment.Exit(0);
@@ -1011,7 +1016,9 @@ namespace FantasyRPG
                         "Eucladian abilities are quite overpowered, if you find the opportunity to pursue it, then do so.",
                     "Having a strong romantical bond with someone, can potentially increase your abilities.", "There are many classes to choose from, all having unique features.",
                     "Avoid fighting overpowered foes early in-game (i.e. dragons), you'll probably get destroyed." };
-            smoothPrinting.CenterPrint("---------FantasyRPG: Help Section----------\n");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("FantasyRPG: " + "Help Section");
+            smoothPrinting.PrintLine("--------------------------------------------------");
 
             Console.WriteLine("Input the following options: ");
             smoothPrinting.RapidPrint("\n1. What is FantasyRPG?\n");
@@ -1043,7 +1050,9 @@ namespace FantasyRPG
                 case 2:
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Yellow; // Yellow output for the description
-                    smoothPrinting.CenterPrint("--------FantasyRPG: Arcania's Magic Council--------\n");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("FantasyRPG: " + "Arcania's Magic Council");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
                     Console.WriteLine(); // Neatness
                     smoothPrinting.RapidPrint("The Magic Council consists of the 10 strongest individuals from the city of Arcania, ranging from 1 being the strongest to 10 being the weakest. Each member holds immense power and knowledge in their respective fields of magic, making them formidable forces within the realm. \r\n\r\nRoles and Responsibilities: \r\n\r\nThe council members oversee and regulate magical affairs across Arcania, ensuring balance and order in the city and other regions. They adjudicate disputes among magical practitioners, enforce magical laws, and protect the lands from magical threats. Additionally, they serve as advisors to the ruling powers of Arcania, providing counsel on matters relating to magic and arcane knowledge. \r\n\r\nChallenging for a Seat: \r\n\r\nShould you possess the strength and develop a certain level of reputation, you’ll be able to challenge one of their members for a seat within the council. However, this is no easy feat, as the cost for losing is death, resulting in the game being reset. Yet, if you emerge victorious, you can rightfully claim their seat as your own and slowly rise in the ranks. \r\n\r\nBenefits of Council Membership: \r\n\r\nBeing a member of the Magic Council grants numerous benefits, including access to rare magical artifacts, exclusive knowledge of ancient spells, and influence over magical institutions and organizations. Council members also enjoy protection and prestige within Arcania, as well as opportunities for further personal and magical growth. ");
                     // Display the Arcania's Magic Council members
@@ -1052,7 +1061,9 @@ namespace FantasyRPG
                     Console.ReadKey();
                     Console.Clear(); // Neatness
                     Console.ForegroundColor = ConsoleColor.Yellow; // Yellow output for the rankings
-                    smoothPrinting.CenterPrint("--------FantasyRPG: Arcania's Magic Council (Rankings)--------\n");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("FantasyRPG: " + "Arcania's Magic Council (Current Rankings)");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
                     Console.WriteLine(); // Neatness
 
                     // Future reference: Display the rankings using a dictionary, so that way when an individual defeats a user of the top 10, they can manually append their details to the rankings
@@ -1067,7 +1078,9 @@ namespace FantasyRPG
 
                 case 3:
                     Console.Clear();
-                    smoothPrinting.CenterPrint("--------FantasyRPG: Game Advice--------\n");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("FantasyRPG: " + "Game Advice");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
                     Console.WriteLine();
                     foreach (string s in gameAdvice) // Display game advice
                     {
@@ -1093,7 +1106,9 @@ namespace FantasyRPG
         {
             Console.Clear();
             SmoothConsole smoothPrinting = new SmoothConsole();
-            smoothPrinting.CenterPrint("--------Game Suggestions--------\n");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("FantasyRPG: " + "Game Suggestions");
+            smoothPrinting.PrintLine("--------------------------------------------------");
             Console.WriteLine();
             smoothPrinting.FastPrint("Send a message to kmescavine@gmail.com in order to send your ideas!"); // Future reference: Use an SMTP feature to allow the user to input their email and send their suggestion
             Console.WriteLine();
@@ -1108,14 +1123,17 @@ namespace FantasyRPG
             Console.Clear();
             SmoothConsole smoothPrinting = new SmoothConsole();
 
-            string[] futurePlans = { "Adding new classes", "Potential romance feature", "Harem feature (not likely)", "A chance of randomly dying", "Illnesses and cures", "Game difficulty (easy, normal, hard, impossible)" };
-            smoothPrinting.CenterPrint("--------Future Endeavors--------\n");
+            string[] futurePlans = { "Adding new classes", "Potential romance feature", "Illnesses that can lead to unexpected deaths, and cures", "Game difficulty (easy, normal, hard, impossible)" };
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("FantasyRPG: " + "Future Endeavours");
+            smoothPrinting.PrintLine("--------------------------------------------------");
             Console.WriteLine();
             foreach (string plan in futurePlans)
             {
-                smoothPrinting.FastPrint("* " + plan + "\n");
+                smoothPrinting.RapidPrint("* " + plan + "\n");
                 Console.WriteLine();
             }
+            smoothPrinting.RapidPrint("\nAny other suggestions can be sent to kmescavine@gmail.com for review.\n");
             smoothPrinting.RapidPrint("\nAffirmative? If so, click anywhere to be redirected back to the Menu. ");
             Console.ReadKey();
             Console.Clear();
@@ -1138,7 +1156,7 @@ namespace FantasyRPG
 
             // Storyline: Explain how the user came to the world
             smoothPrinting.CenterPrint("---------Summoned by Destiny: The Journey to Aeolus----------\n");
-            smoothPrinting.RapidPrint("In a quiet library on Earth, you find yourself inexplicably drawn to an alluring book that is basked within the circumference of the sun's rays. Intrigued by the mysterious markings, you reach out to the book. \r\n\r\nAs your fingers contact the book, a flash of light engulfs you, and you feel pulled into a vortex of energy. In an instant, you are whisked away from their familiar surroundings to a world unlike anything they've ever seen. \r\n\r\nConfused about how you ended up in this strange new realm, you soon learn that they've been summoned to Aeolus by powerful forces seeking help in a time of dire need, as you are the destined one, that isn’t contained by the limits of fate. It seems your unique abilities and knowledge are crucial for overcoming a looming threat that could destroy the entire world of Aeolus. \r\n\r\nWith no way to return, you must now navigate the unfamiliar landscapes and cultures of Aeolus, forging alliances and honing their skills as they strive to fulfill their newfound destiny and save this world from destruction. ");
+            smoothPrinting.RapidPrint("\nIn a quiet library on Earth, you find yourself inexplicably drawn to an alluring book that is basked within the circumference of the sun's rays. Intrigued by the mysterious markings, you reach out to the book. \r\n\r\nAs your fingers contact the book, a flash of light engulfs you, and you feel pulled into a vortex of energy. In an instant, you are whisked away from their familiar surroundings to a world unlike anything they've ever seen. \r\n\r\nConfused about how you ended up in this strange new realm, you soon learn that they've been summoned to Aeolus by powerful forces seeking help in a time of dire need, as you are the destined one, that isn’t contained by the limits of fate. It seems your unique abilities and knowledge are crucial for overcoming a looming threat that could destroy the entire world of Aeolus. \r\n\r\nWith no way to return, you must now navigate the unfamiliar landscapes and cultures of Aeolus, forging alliances and honing their skills as they strive to fulfill their newfound destiny and save this world from destruction. ");
 
             smoothPrinting.RapidPrint("\n\nNaturally, you are not familiar with the system that is implemented in the world of Aeolus, therefore you are sent to a bleak white room, where you learn how to familiarize yourself with the world's customs. This includes the plethora of mana surrounding Aeolus and the world's rulings. You can now select a class type.");
 
@@ -1150,7 +1168,9 @@ namespace FantasyRPG
             int num = 1;
 
             Console.WriteLine("\n");
-            smoothPrinting.CenterPrint("---------Class Selection----------\n");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("FantasyRPG: " + "Class Selection");
+            smoothPrinting.PrintLine("--------------------------------------------------\n");
 
             for (int i = 0; i < fantasyClasses.Length; i++)
             {
@@ -1251,7 +1271,9 @@ namespace FantasyRPG
 
                     Console.Clear(); // Cleaning purposes
                     Console.ForegroundColor = ConsoleColor.White;
-                    smoothPrinting.PrintLine("---------Mage Class----------\n");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("FantasyRPG: " + "Mage Class");
+                    smoothPrinting.PrintLine("--------------------------------------------------\n");
 
                     smoothPrinting.RapidPrint("What is your name, adventurer? ");
                     string mageName = Convert.ToString(Console.ReadLine());
@@ -1586,8 +1608,9 @@ namespace FantasyRPG
                     int specialAtkRecharge = 0; // This remains fixed
                     List<(string npcName, string npcDescription, string npcAffiliation)> pirateClassNpcsEncountered = null; // During this stage of the game, the MC will have not encountered any NPC's therefore this value remains null
 
-                    smoothPrinting.CenterPrint("---------Pirate Class----------\n");
-
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("FantasyRPG: " + "Pirate Class");
+                    smoothPrinting.PrintLine("--------------------------------------------------\n");
                     // Take users name
                     smoothPrinting.RapidPrint("\nWhat is your name, adventurer? ");
 
