@@ -2181,15 +2181,45 @@ namespace FantasyRPG
 
                     break;
                 case "2":
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("FantasyRPG: " + "Infinite Dungeon");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+
+                    smoothPrinting.RapidPrint("\nInfinite Dungeon is not available yet.");
+                    Console.ReadKey();
+                    Console.Clear(); // Clear the console.
+                    dashboard(name, npcsEncountered); // Due to lack of functionality, return user back to the dashboard
                     break;
                 case "3":
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("FantasyRPG: " + "Infinite Dungeon");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+
+                    smoothPrinting.RapidPrint("\nGuild Reputation is not available yet.");
+                    Console.ReadKey();
+                    Console.Clear(); // Clear the console.
+                    dashboard(name, npcsEncountered); // Due to lack of functionality, return user back to the dashboard
                     break;
                 case "4":
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("FantasyRPG: " + "Infinite Dungeon");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+
+                    smoothPrinting.RapidPrint("\nShop is not available yet.");
+                    Console.ReadKey();
+                    Console.Clear(); // Clear the console.
+                    dashboard(name, npcsEncountered); // Due to lack of functionality, return user back to the dashboard
                     break;
                 case "5":
                     NPCEncounters(npcsEncountered);
                     break;
                 default:
+                    while (string.IsNullOrEmpty(userInput))
+                    {
+                        smoothPrinting.RapidPrint("Invalid input, please try again.");
+                        Console.ReadKey(); // Allow user to see error message
+                        dashboard(name, npcsEncountered); // Due to lack of functionality, return user back to the dashboard to ensure that they put in the correct input
+                    }
                     break;
 
 
