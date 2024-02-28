@@ -427,13 +427,44 @@ namespace FantasyRPG
         }
 
 
-        // Methods for a mage
-        public void SpellCast() // Spell casting for enemies
+        // All methods for the Mage Class
+
+        // public void SpellCast() Spell casting for enemies
+        // {
+            // smoothPrinting.RapidPrint($"{name} has casted:");
+            // spellUsage--;
+            // mana = mana - 30;
+            // exp += 0.3f;
+        // }
+
+        public void MageSpellAttack() // Will load the Mage Combat System for fighting situations
         {
-            Console.WriteLine(name + " has casted " + spellUsage);
-            spellUsage--;
-            mana = mana - 30;
-            exp += 0.3f;
+            List<(string magicSpell, int damage, int manaRequirement)> chosenSpellForAttack; // Will be used to append the chosen spell to attack, and will be cleared through each iteration
+            int spellCount = 1; // Likewise with the chosen spell, this will also be cleared through each iteration to keep track of number of user spells
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("FantasyRPG: Mage Combat System");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+
+
+            for (int z = 0; z = magicSpecialties.Count; z++)
+            {
+                switch (magicSpecialties[z])
+                {
+                    case "Fire":
+                        break;
+                }
+
+            }
+
+
+            foreach (var spell in magicSpells) // Display all spells currently avaliable to the Mage
+            {
+                smoothPrinting.RapidPrint($"\n{spellCount}. {spell.magicSpell}: Damage: {spell.damage}, \nMana Requirement: {spell.manaRequirement}");
+            }
+
+            smoothPrinting.RapidPrint("\nSelect a spell to attack: ");
+            chosenSpellForAttack.Add(magicSpells.);
+
 
         }
 
@@ -443,12 +474,12 @@ namespace FantasyRPG
             smoothPrinting.RapidPrint($"\n{name} has gained 1 spell in the inventory");
         }
 
-        public void MageHealthStatus()
+        public void MageHealthStatus() // Combat purposes
         {
             smoothPrinting.RapidPrint($"\n{name} Health: {health}"); // Display Mage's health
         }
 
-        public void MageTraining()
+        public void MageTraining() // Might remove.
         {
             // Generate a random value for exp
             Random rd = new Random();
@@ -475,9 +506,10 @@ namespace FantasyRPG
             // Arrays containing the variety of different magic choices, spells and weapons.
             string[] magicChoices = { "Fire-Magic", "Water-Magic", "Lightning-Magic", "Ice-Magic", "Dark-Magic", "Light-Magic", "Eucladian-Magic" }; // Future reference: add 'level' as an argument to make other magic specialities exclusive
 
-            smoothPrinting.SlowPrint("Mage's Prestiege, congrats!\n");
-            smoothPrinting.RapidPrint("\n" + name + "'s" + " current known magic specialities:" + "\n");
-
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("FantasyRPG: Mage's Prestiege");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.RapidPrint($"\n {name}'s current known magic specialities: ");
 
             for (int j = 0; j < magicSpecialties.Length; j++) // Display the user's current magic specialties
             {
