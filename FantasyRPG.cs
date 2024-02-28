@@ -26,7 +26,7 @@ namespace FantasyRPG
         public string[] currentInventory; // Will contain the users potions and other weapons.
         public int arcaniaGoldCoins; // Currency for the city of Arcanith
         public int specialAtkRecharge;// Percentage value, going upto 100%
-        public List<(string npcName, string npcDescription)> npcsEncountered;
+        public List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered;
         // public int atk;
         // public int def;
 
@@ -36,7 +36,7 @@ namespace FantasyRPG
         private int experienceRequiredForNextLevel;
         // public int randomDyingChance;
 
-        public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins, int specialAtkRecharge, List<(string npcName, string npcDescription)> _npcsEncountered) // Default preset for all classes during the start of the game :3
+        public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins, int specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) // Default preset for all classes during the start of the game :3
         {
             name = _name;
             weapon = _weapon; // WIll store the details of the given weapon (i.e. weapon name, type, damage, etc.)
@@ -361,7 +361,7 @@ namespace FantasyRPG
         public int specialAtkDmg;
         public int normalAtkDmg;
 
-        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
+        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
         {
             name = _name;
             weapon = _weapon;
@@ -412,7 +412,7 @@ namespace FantasyRPG
         string[] magicSpecialties; // User can have multiple magic specialties
         public int spellUsage; // Spell usage to keep spells in control
 
-        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, string[] _currentInventory, int _specialAtkRecharge, List<(string npcName, string npcDescription)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
+        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, string[] _currentInventory, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
         {
             name = _name;
             weapon = _weapon;
@@ -779,7 +779,7 @@ namespace FantasyRPG
         public List<(string attack, int damage, int manaRequirement, string elementType, string description)> pirateSpecialAtks; // Normal and special attack lists, containing all relevant information
         public List<(string auraName, int damage, string rarity, string description)> weaponAura; // Weapon aura
 
-        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string auraName, int damage, string rarity, string description)> _weaponAura, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateNormalAtks, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateSpecialAtks, string[] _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
+        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string auraName, int damage, string rarity, string description)> _weaponAura, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateNormalAtks, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateSpecialAtks, string[] _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
         {
             name = _name;
             weapon = _weapon;
@@ -850,13 +850,28 @@ namespace FantasyRPG
         static void Main(string[] args) // Future reference: With the implementation of the authentication system soon, this will be moved.
         {
             // GameMenu menu = new GameMenu();
-            MagicCouncil encounter = new MagicCouncil(); // Debugging
-            string name = "Khalid"; // Debugging
-            encounter.firstEncounter(name); // Debugging
+            // MagicCouncil encounter = new MagicCouncil(); // Debugging
+            // string name = "Khalid"; // Debugging
+            // encounter.firstEncounter(name); // Debugging
             // FirstScenario firstScenario = new FirstScenario();
             // firstScenario.usersFirstJourney("Jahid");
 
             // menu.gameMenu(); // User is first directed to the game menu method
+
+
+            string name = "Silvern"; // Debugging
+            List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered = new List<(string npcName, string npcDescription, string npcAffiliation)>() // Debugging: populating data
+            {
+                ("Kaelen Stormer", "Rank 6 of Arcania's Magic Council, known for being one of the most formiddable Dark Elves conquering his enemies with meticulous assasination capabilities.", "Arcania's Magic Council"),
+                ("Silver Eucladian-Nine", "The real identity of Cloud, Rank 1 in Arcania's Magic Council.", "Arcania's Magic Council/Eucladian Lineage"),
+                ("Evelyn Everbright", "Rank 10 of Arcania's Magic Council, known for her gracious beauty that graces wherever she goes.", "Arcania's Magic Council/Arcane Sentinels"),
+                ("Mo Blade", "Rank 3 of Arcania's Magic Council, known to be one of the most vicious pirates around!", "Arcania's Magic Council/Red Sea")
+            };
+
+
+            gameDashboard dash = new gameDashboard();
+            dash.dashboard(name, npcsEncountered);
+
         }
 
 
@@ -869,15 +884,16 @@ namespace FantasyRPG
             int? userChoice; // Used for the start of the game
             string[] gameTips = {"Did you know that every 10 levels, you can get an extra ability/speciality?",
                 "This game is still in development, so if there's an issue please contact me through my GitHub (Escavine) and send a pull request which I'll review.",
+                "Just to be clear, Eucladian is a magical type ability, not to be confused with the mathematical term Euclidean.",
             "Eucladian abilities are very overpowered, but in turn they'll cost you some health.", "This game have a sneaky RNG factor, you'll see later as you play :3",
-            "For you down bad individuals, I MIGHT introduce a harem feature, perhaps implement it with AI, imagine how insane that'll be? LOL" }; // Array containing necessary game tips, more will be added in the future.
+            }; // Array containing necessary game tips, more will be added in the future.
 
             // Initiation of the console game
             smoothOutput.CenterPrint("---------FantasyRPG----------\n");
             Console.WriteLine("\nGame advice: When inputting values, input a corresponding value to the action (e.g. enter the value 1 in order to start the game"); // Display game advice
             Console.WriteLine("\nIt is highly recommended to play this game in full screen, to allow all the text to fit in order to get the best experience");
             Random ran = new Random();
-            int ran_num = ran.Next(0, 5);
+            int ran_num = ran.Next(0, 6);
             Console.WriteLine("\nGame Tip: " + gameTips[ran_num] + "\n"); // Display a random game tip in the menu
 
             smoothOutput.PrintLine("=======================");
@@ -1152,7 +1168,7 @@ namespace FantasyRPG
                 case 1:
                     int choiceIncrementer = 1; // Used to increment the user choice when picking magic types
                     int startMageJourneyInput;
-                    List<(string npcName, string npcDescription)> mageClassNpcsEncountered = null; // During class selection, individual will have not met any NPCs, therefore this value will be remained null.
+                    List<(string npcName, string npcDescription, string npcAffiliation)> mageClassNpcsEncountered = null; // During class selection, individual will have not met any NPCs, therefore this value will be remained null.
 
                     // Arrays containing the variety of different magic choices, spells and weapons.
                     string[] magicChoices = { "Fire-Magic", "Water-Magic", "Ice-Magic", "Lightning-Magic", "Dark-Magic", "Light-Magic", "Eucladian-Magic" };
@@ -1568,7 +1584,7 @@ namespace FantasyRPG
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     int specialAtkRecharge = 0; // This remains fixed
-                    List<(string npcName, string npcDescription)> pirateClassNpcsEncountered = null; // During this stage of the game, the MC will have not encountered any NPC's therefore this value remains null
+                    List<(string npcName, string npcDescription, string npcAffiliation)> pirateClassNpcsEncountered = null; // During this stage of the game, the MC will have not encountered any NPC's therefore this value remains null
 
                     smoothPrinting.CenterPrint("---------Pirate Class----------\n");
 
@@ -2008,7 +2024,7 @@ namespace FantasyRPG
     public class MagicCouncil
     {
         // One-time executable function: Will not happen again.
-        public void firstEncounter(string name, List<(string npcName, string npcDescription)> npcsEncountered) // This will be the first meeting between the MC and the other council members (not all of them are present at that given moment)
+        public void firstEncounter(string name, List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered) // This will be the first meeting between the MC and the other council members (not all of them are present at that given moment)
         {
             Console.Clear(); // Clear the console for neatness
             SmoothConsole smoothPrinting = new SmoothConsole();
@@ -2148,7 +2164,7 @@ namespace FantasyRPG
 
     public class gameDashboard
     {
-        public void dashboard(string name, List<(string npcName, string npcDescription)> npcsEncountered) // Will display the user dashboard for the game
+        public void dashboard(string name, List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered) // Will display the user dashboard for the game
         {
             string userInput;
             SmoothConsole smoothPrinting = new SmoothConsole();
@@ -2158,18 +2174,19 @@ namespace FantasyRPG
             smoothPrinting.PrintLine("FantasyRPG: " + name + "'s " + "Dashboard");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
-            smoothPrinting.RapidPrint("1. Main Storyline (N/A)\n");
-            smoothPrinting.RapidPrint("2. Infinite Dungeon (N/A)\n");
-            smoothPrinting.RapidPrint("3. Guild Reputation (N/A)\n");
-            smoothPrinting.RapidPrint("4. Shop (N/A)\n");
-            smoothPrinting.RapidPrint("5. NPC's Encountered (N/A)\n");
-            smoothPrinting.RapidPrint("Enter a corresponding value: ");
+            smoothPrinting.RapidPrint("\n1. Main Storyline (N/A)\n");
+            smoothPrinting.RapidPrint("\n2. Infinite Dungeon (N/A)\n");
+            smoothPrinting.RapidPrint("\n3. Guild Reputation (N/A)\n");
+            smoothPrinting.RapidPrint("\n4. Shop (N/A)\n");
+            smoothPrinting.RapidPrint("\n5. NPC's Encountered (N/A)\n");
+            smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
 
             userInput = Convert.ToString(Console.ReadLine()); // Register user input
 
             switch (userInput)
             {
                 case "1":
+                    Console.Clear(); // Clear the console
                     smoothPrinting.PrintLine("--------------------------------------------------");
                     smoothPrinting.PrintLine("FantasyRPG: " + "Storyline Missions");
                     smoothPrinting.PrintLine("--------------------------------------------------");
@@ -2181,6 +2198,7 @@ namespace FantasyRPG
 
                     break;
                 case "2":
+                    Console.Clear(); // Clear the console
                     smoothPrinting.PrintLine("--------------------------------------------------");
                     smoothPrinting.PrintLine("FantasyRPG: " + "Infinite Dungeon");
                     smoothPrinting.PrintLine("--------------------------------------------------");
@@ -2191,8 +2209,9 @@ namespace FantasyRPG
                     dashboard(name, npcsEncountered); // Due to lack of functionality, return user back to the dashboard
                     break;
                 case "3":
+                    Console.Clear(); // Clear the console
                     smoothPrinting.PrintLine("--------------------------------------------------");
-                    smoothPrinting.PrintLine("FantasyRPG: " + "Infinite Dungeon");
+                    smoothPrinting.PrintLine("FantasyRPG: " + "Guild Reputation");
                     smoothPrinting.PrintLine("--------------------------------------------------");
 
                     smoothPrinting.RapidPrint("\nGuild Reputation is not available yet.");
@@ -2201,8 +2220,9 @@ namespace FantasyRPG
                     dashboard(name, npcsEncountered); // Due to lack of functionality, return user back to the dashboard
                     break;
                 case "4":
+                    Console.Clear(); // Clear the console
                     smoothPrinting.PrintLine("--------------------------------------------------");
-                    smoothPrinting.PrintLine("FantasyRPG: " + "Infinite Dungeon");
+                    smoothPrinting.PrintLine("FantasyRPG: " + "Shop");
                     smoothPrinting.PrintLine("--------------------------------------------------");
 
                     smoothPrinting.RapidPrint("\nShop is not available yet.");
@@ -2225,19 +2245,20 @@ namespace FantasyRPG
 
             }
 
-            void NPCEncounters(List<(string npcName, string npcDescription)> npcsEncountered) // This function will display all the npcs that the user has encountered during their time playing the game
+            void NPCEncounters(List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered) // This function will display all the npcs that the user has encountered during their time playing the game
             {
                 Console.Clear(); // Clear the console 
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine("FantasyRPG: " + "NPC's Encountered");
                 smoothPrinting.PrintLine("--------------------------------------------------");
+                Console.WriteLine(); // Spacing
 
                 foreach (var npc in npcsEncountered)
                 {
-                    smoothPrinting.RapidPrint($"{npc.npcName}\n{npc.npcDescription}");
+                    smoothPrinting.RapidPrint($"\nName: {npc.npcName}\nDescription: {npc.npcDescription}\nAffiliation: {npc.npcAffiliation}\n");
                 }
 
-                smoothPrinting.RapidPrint("\n\nAffirmative? Press any key to continue...");
+                smoothPrinting.RapidPrint("\nAffirmative? Press any key to continue...");
                 Console.ReadKey(); // Read the users input before going back to the dashboard.
                 Console.Clear(); // Clear the console for neatness
                 dashboard(name, npcsEncountered); // Return user back to the dashboard
