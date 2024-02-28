@@ -3,8 +3,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -445,16 +447,17 @@ namespace FantasyRPG
             smoothPrinting.PrintLine("FantasyRPG: Mage Combat System");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
+            // magicSpecialties.ToList();
 
-            for (int z = 0; z = magicSpecialties.Count; z++)
-            {
-                switch (magicSpecialties[z])
-                {
-                    case "Fire":
-                        break;
-                }
+            // for (int z = 0; z = magicSpecialties.Length; z++)
+            // {
+                // switch (magicSpecialties[z])
+                //{
+                    // case "Fire":
+                        // break;
+                // }
 
-            }
+            // }
 
 
             foreach (var spell in magicSpells) // Display all spells currently avaliable to the Mage
@@ -463,7 +466,9 @@ namespace FantasyRPG
             }
 
             smoothPrinting.RapidPrint("\nSelect a spell to attack: ");
-            chosenSpellForAttack.Add(magicSpells.);
+            Console.ReadKey(); // Testing
+            
+            // chosenSpellForAttack.Add(magicSpells.); // Append the chosen spell to another variable
 
 
         }
@@ -897,19 +902,42 @@ namespace FantasyRPG
             // FirstScenario firstScenario = new FirstScenario();
             // firstScenario.usersFirstJourney("Tristian");
 
-            FirstScenario scenario = new FirstScenario();
-            string name = "Eurelian";
-            int remainingAttempts = 3;
-            scenario.usersFirstJourney(name, remainingAttempts);
+            // Define values for debugging mage
+            string mageName = "Zephyr Heartblade";
+            List<(string, int, string, string, string)> mageWeapon = new List<(string, int, string, string, string)> {
+                ("Heartblade's Vesper", 50, "Legendary", "Staff", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right. I took it, the developer himself :3")
+            };
 
-           // menu.gameMenu(); // User is first directed to the game menu method
+            string[] mageSpecialties = new string[] { "Fire", "Lightning" };
+            int arcaniaGoldCoins = 100;
+
+            List<(string, int, int)> magicSpells = new List<(string, int, int)> {
+                ("Eucladian-Eye", 80, 45),
+                ("Developer's Wrath", 1000, 20)
+            };
+
+            string[] currentInventory = new string[] { "Health Potion", "Mana Potion" };
+            int specialAtkRecharge = 50;
+
+            List<(string, string, string)> npcsEncountered = new List<(string, string, string)> {
+                ("Merchant", "Sells magical items", "Friendly")
+            };
+
+            // Create a new Mage object with the specified arguments
+            Mage debuggingMage = new Mage(mageName, mageWeapon, mageSpecialties, arcaniaGoldCoins, magicSpells, currentInventory, specialAtkRecharge, npcsEncountered); // Debugging Mage
+            ForestOfMysteries scenario = new ForestOfMysteries();
+            int remainingAttempts = 3;
+            scenario.forestOfMysteries(debuggingMage, remainingAttempts); // Call the forestOfMysteries method with the Mage object and remaining attempts
+
+
+            // menu.gameMenu(); // User is first directed to the game menu method
 
             // List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered = new List<(string npcName, string npcDescription, string npcAffiliation)>() // Debugging: populating data
             // {
-               //  ("Kaelen Stormer", "Rank 6 of Arcania's Magic Council, known for being one of the most formiddable Dark Elves conquering his enemies with meticulous assasination capabilities.", "Arcania's Magic Council"),
-                // ("Silver Eucladian-Nine", "The real identity of Cloud, Rank 1 in Arcania's Magic Council.", "Arcania's Magic Council/Eucladian Lineage"),
-                // ("Evelyn Everbright", "Rank 10 of Arcania's Magic Council, known for her gracious beauty that graces wherever she goes.", "Arcania's Magic Council/Arcane Sentinels"),
-                // ("Mo Blade", "Rank 3 of Arcania's Magic Council, known to be one of the most vicious pirates around!", "Arcania's Magic Council/Red Sea")
+            //  ("Kaelen Stormer", "Rank 6 of Arcania's Magic Council, known for being one of the most formiddable Dark Elves conquering his enemies with meticulous assasination capabilities.", "Arcania's Magic Council"),
+            // ("Silver Eucladian-Nine", "The real identity of Cloud, Rank 1 in Arcania's Magic Council.", "Arcania's Magic Council/Eucladian Lineage"),
+            // ("Evelyn Everbright", "Rank 10 of Arcania's Magic Council, known for her gracious beauty that graces wherever she goes.", "Arcania's Magic Council/Arcane Sentinels"),
+            // ("Mo Blade", "Rank 3 of Arcania's Magic Council, known to be one of the most vicious pirates around!", "Arcania's Magic Council/Red Sea")
             // };
 
 
@@ -1567,7 +1595,7 @@ namespace FantasyRPG
 
                     int mageSpecialAtkRecharge = 0; // Preset
 
-                    Mage newWizard = new Mage(mageName, mageStaff, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory.ToArray(), mageSpecialAtkRecharge, mageClassNpcsEncountered);
+                    Mage mage = new Mage(mageName, mageStaff, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory.ToArray(), mageSpecialAtkRecharge, mageClassNpcsEncountered);
 
                     smoothPrinting.PrintLine("---------Mage Status----------\n"); // Display the users status (i.e. their chosen attack types, weapon etc.)
                     smoothPrinting.FastPrint($"Mage Name: {mageName} \nMage's Weapon Type: {randomWeapon.weaponType} \nMage's Weapon: {randomWeapon.weaponName}, Damage: {randomWeapon.damage}, Rarity: {randomWeapon.rarity}");
@@ -1603,8 +1631,8 @@ namespace FantasyRPG
                             Console.WriteLine("You will now be sent to the world of Arcania, make sure to not die.");
                             Console.Clear(); // Neatness
                             Console.ForegroundColor = ConsoleColor.White; // Reset the console colour
-                            FirstScenario wizardJourney = new FirstScenario(); // Journey start!
-                            wizardJourney.usersFirstJourney(mageName);
+                            ForestOfMysteries mageJourney = new ForestOfMysteries(); // Journey start!
+                            mageJourney.forestOfMysteries(mage);
                             break;
                         case 2:
                             userChoice = null;
@@ -1939,8 +1967,8 @@ namespace FantasyRPG
                             Console.WriteLine("You will now be sent to the world of Arcania, make sure to not die.");
                             Console.ForegroundColor = ConsoleColor.White; // Reset the console colour
                             Console.Clear(); // Neatness
-                            FirstScenario pirateJourney = new FirstScenario(); // Journey start!
-                            pirateJourney.usersFirstJourney(pirateName);
+                            ForestOfMysteries pirateJourney = new ForestOfMysteries(); // Journey start!
+                            pirateJourney.forestOfMysteries(pirateName);
                             break;
                         case 2:
                             userChoice = null;
@@ -2016,7 +2044,7 @@ namespace FantasyRPG
 
 
 
-    public class FirstScenario // Once the user selects a class, they'll proceed onto their journey
+    public class ForestOfMysteries // Once the user selects a class, they'll be directed to the Forest of Mysteries, located within Arcania, the most well known forest in the continent of Tenebris.
     {
 
         // Customary scenarios will be used to allow dynamicness to the game and make it less monotomous
@@ -2027,7 +2055,7 @@ namespace FantasyRPG
         bool completedFirstScenario = false; // This is a measure to see if the user has completed this scenario in the Forest of Mysteries, should this be the case, they'll no longer see this scenario when exploring the forest
         string? firstSelection;
 
-        public void usersFirstJourney(string name, int remainingAttempts = 3) // User gets 3 attempts to ensure that they put the correct input, should they fail all 3, the game terminates.
+        public void forestOfMysteries(Mage mage, int remainingAttempts = 3) // User gets 3 attempts to ensure that they put the correct input, should they fail all 3, the game terminates.
         {
             SmoothConsole smoothPrinting = new SmoothConsole();
             smoothPrinting.PrintLine("--------------------------------------------------");
@@ -2070,11 +2098,11 @@ namespace FantasyRPG
                     Console.WriteLine("\nInvalid input, please try again");
                     Console.ReadKey(); // Let the user know, before clearing the console
                     Console.Clear();
-                    usersFirstJourney(name, remainingAttempts - 1); // Recurse and reduce remaining attempts by 1
+                    forestOfMysteries(mage, remainingAttempts - 1); // Recurse and reduce remaining attempts by 1
                     break;
             }
 
-            void confrontingTheDragon() // Incomplete
+            void mageConfrontation() // Incomplete
             {
                 Console.Clear(); // Clear the console, before proceeding to this section of the plot.
                 smoothPrinting.PrintLine("--------------------------------------------------");
@@ -2084,8 +2112,11 @@ namespace FantasyRPG
                 smoothPrinting.RapidPrint("You decide that you want to confront the dragon, rather than cower in fear. Inside you are conflicted, as to whether you've made a brave or incredibly stupid decision" +
                     ", anyhow you slowly make your way and in the process start taunting the Dragon");
 
-                smoothPrinting.RapidPrint($"\n{name}: Stop flying away, and face me at once!");
+                smoothPrinting.RapidPrint($"\n{mage.name}: Stop flying away, and face me at once!");
                 smoothPrinting.RapidPrint("\nDragon: This insignificant mortal really wants to face me? The Guardian of Dragons? Then so be it, you have courted death! *the Dragon exclaims*");
+                smoothPrinting.RapidPrint("znThe dragon proceeds to block your perimiter of escape, you are now forced to fight!");
+                Combat combat = new Combat();
+                combat.mageCombat(mage);
                 Console.ReadKey(); // Limit functionality for now (testing)
             }
 
@@ -2097,14 +2128,13 @@ namespace FantasyRPG
     public class Combat // Will be used to initialize the combat system
     {
         // Combat panels for all the current classes availiable in the game
-        public void mageCombat(string mageName, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> mageWeapon, string[] mageSpecialities, int arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> magicSpells, string[] currentInventory, int specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered) 
+        public void mageCombat(Mage mage) 
         {
+
             
-
-
         }
 
-        public void pirateCombat(string pirateName, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> pirateWeapon, List<(string auraName, int damage, string rarity, string description)> pirateWeaponAura, List<(string attack, int damage, int manaRequirement, string elementType, string description)> chosenPirateNormalAttacks, List<(string attack, int damage, int manaRequirement, string elementType, string Description)> chosenSpecialAttacks, List<string> pirateInventory, int arcaniaGoldCoins, int specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> pirateClassNpcsEncountered) 
+        public void pirateCombat() 
         {
 
 
@@ -2248,6 +2278,7 @@ namespace FantasyRPG
             smoothPrinting.RapidPrint("\n\nAffirmative? Press any key to continue...");
 
             // This section will be removed when this mission comes to become an integral part of the game, right now this is all for debugging purposes
+
             Console.ReadKey(); // Read the users input, before generating more output.
             Console.Clear(); // Clear the console for neatness
             gameDashboard dash = new gameDashboard();
