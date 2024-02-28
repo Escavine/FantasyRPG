@@ -2170,6 +2170,15 @@ namespace FantasyRPG
             switch (userInput)
             {
                 case "1":
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("FantasyRPG: " + "Storyline Missions");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+
+                    smoothPrinting.RapidPrint("\nMissions are not available yet.");
+                    Console.ReadKey(); 
+                    Console.Clear(); // Clear the console.
+                    dashboard(name, npcsEncountered); // Due to lack of functionality, return user back to the dashboard
+
                     break;
                 case "2":
                     break;
@@ -2186,9 +2195,7 @@ namespace FantasyRPG
 
             }
 
-
-
-            void NPCEncounters(List<(string npcName, string npcDescription)> npcsEncountered)
+            void NPCEncounters(List<(string npcName, string npcDescription)> npcsEncountered) // This function will display all the npcs that the user has encountered during their time playing the game
             {
                 Console.Clear(); // Clear the console 
                 smoothPrinting.PrintLine("--------------------------------------------------");
