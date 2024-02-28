@@ -18,7 +18,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace FantasyRPG
 {
-    class CharacterDefault // fixed preset for all classes
+    public class CharacterDefault // fixed preset for all classes
     {
         // Generic character attributes
         public string name;
@@ -903,9 +903,9 @@ namespace FantasyRPG
             // firstScenario.usersFirstJourney("Tristian");
 
             // Define values for debugging mage
-            string mageName = "Zephyr Heartblade";
-            List<(string, int, string, string, string)> mageWeapon = new List<(string, int, string, string, string)> {
-                ("Heartblade's Vesper", 50, "Legendary", "Staff", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right. I took it, the developer himself :3")
+            string mageName = "Zephyr";
+            List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> mageWeapon = new List<(string, int, string, string, string)> {
+               ("Heartblade's Vesper", 150, "Legendary", "Staff", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right. I took it, the developer himself :3")
             };
 
             string[] mageSpecialties = new string[] { "Fire", "Lightning" };
@@ -917,16 +917,19 @@ namespace FantasyRPG
             };
 
             string[] currentInventory = new string[] { "Health Potion", "Mana Potion" };
-            int specialAtkRecharge = 50;
+            int specialAtkRecharge = 100;
 
-            List<(string, string, string)> npcsEncountered = new List<(string, string, string)> {
-                ("Merchant", "Sells magical items", "Friendly")
+            List<(string npcName, string npcInformation, string npcAffiliation)> npcsEncountered = new List<(string, string, string)> {
+                ("Veridian Pendragon", "False ranker and solo assassin, very capable and someone not to underestimate.", "Heartblade Association"),
+                ("Evelyn Everbright", "Rank 10 of the Arcania's Magic Council and Guildmaster of Arcania's Magic Council.", "Arcania's Magic Council/Arcane Sentinels")
+
             };
 
             // Create a new Mage object with the specified arguments
             Mage debuggingMage = new Mage(mageName, mageWeapon, mageSpecialties, arcaniaGoldCoins, magicSpells, currentInventory, specialAtkRecharge, npcsEncountered); // Debugging Mage
             ForestOfMysteries scenario = new ForestOfMysteries();
             int remainingAttempts = 3;
+
             scenario.forestOfMysteries(debuggingMage, remainingAttempts); // Call the forestOfMysteries method with the Mage object and remaining attempts
 
 
@@ -1255,6 +1258,8 @@ namespace FantasyRPG
             }
 
             smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
+
+            // Future reference: INPUT VALIDATION
             userChoice = Convert.ToInt32(Console.ReadLine());
 
             switch (userChoice) // Future reference: Rather than have a userchoice fixed to a single method, add multiple methods for different classes (i.e. a mage class if a user chooses the mage role etc, that way you can implement recursion if the user wants to reset their details)
@@ -1923,7 +1928,7 @@ namespace FantasyRPG
                     pirateWeaponAura.Add((randomAura.Key, randomAura.Value.damage, randomAura.Value.rarity, randomAura.Value.auraDescription));
 
 
-                    SomaliPirate newPirate = new SomaliPirate(pirateName, pirateWeapon, pirateWeaponAura, chosenPirateNormalAttacks, chosenSpecialAttacks, pirateInventory.ToArray(), arcaniaGoldCoins, specialAtkRecharge, pirateClassNpcsEncountered); // Generate the pirate details
+                    SomaliPirate myPirate = new SomaliPirate(pirateName, pirateWeapon, pirateWeaponAura, chosenPirateNormalAttacks, chosenSpecialAttacks, pirateInventory.ToArray(), arcaniaGoldCoins, specialAtkRecharge, pirateClassNpcsEncountered); // Generate the pirate details
 
                     Console.Clear(); // Neater
 
@@ -1967,8 +1972,8 @@ namespace FantasyRPG
                             Console.WriteLine("You will now be sent to the world of Arcania, make sure to not die.");
                             Console.ForegroundColor = ConsoleColor.White; // Reset the console colour
                             Console.Clear(); // Neatness
-                            ForestOfMysteries pirateJourney = new ForestOfMysteries(); // Journey start!
-                            pirateJourney.forestOfMysteries(pirateName);
+                            ForestOfMysteries pirateJourney = new ForestOfMysteries();
+                            pirateJourney.forestOfMysteries(myPirate);
                             break;
                         case 2:
                             userChoice = null;
@@ -2055,7 +2060,7 @@ namespace FantasyRPG
         bool completedFirstScenario = false; // This is a measure to see if the user has completed this scenario in the Forest of Mysteries, should this be the case, they'll no longer see this scenario when exploring the forest
         string? firstSelection;
 
-        public void forestOfMysteries(Mage mage, int remainingAttempts = 3) // User gets 3 attempts to ensure that they put the correct input, should they fail all 3, the game terminates.
+        public void forestOfMysteries(CharacterDefault character, int remainingAttempts = 3)
         {
             SmoothConsole smoothPrinting = new SmoothConsole();
             smoothPrinting.PrintLine("--------------------------------------------------");
@@ -2064,63 +2069,62 @@ namespace FantasyRPG
 
             if (remainingAttempts == 3)
             {
-                smoothPrinting.RapidPrint(oneTimeFixedScenario + "\n"); 
+                smoothPrinting.RapidPrint(oneTimeFixedScenario + "\n");
             }
             else
             {
-                Console.WriteLine(oneTimeFixedScenario + "\n"); // This is all an indirect skip functionality, as it is quite complicated to manually implement one, saves users time and is convenient
-
+                Console.WriteLine(oneTimeFixedScenario + "\n");
             }
+
             Console.WriteLine("\n[Available Commands:]");
             smoothPrinting.PrintLine("\n1. Fight: Confront the dragon (N/A)");
             smoothPrinting.PrintLine("\n2. North: Move northward along the path (N/A)");
             smoothPrinting.PrintLine("\n3. Inventory: View your current inventory of items (N/A)");
             smoothPrinting.PrintLine("\n4. Help: Display a list of available commands (N/A)");
             smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
-            firstSelection = Convert.ToString(Console.ReadLine());
-
+            string firstSelection = Convert.ToString(Console.ReadLine());
 
             switch (firstSelection)
             {
                 case "1":
-                    confrontingTheDragon(); // Function call to enable combat functionality against the dragon
+                    if (character is Mage)
+                    {
+                        MageConfrontation((Mage)character);
+                    }
+                    else if (character is SomaliPirate)
+                    {
+                        SomaliPirateConfrontation((SomaliPirate)character);
+                    }
                     break;
                 case "2":
-                    smoothPrinting.PrintLine("--------------------------------------------------");
-                    smoothPrinting.PrintLine("Forest of Mysteries");
-                    smoothPrinting.PrintLine("--------------------------------------------------");
-
-                    // Add a random chance of a mob encounter (i.e. a boar, wolf, overgrown hornet)
-
-                    smoothPrinting.RapidPrint("\nYou proceed to head to the Northen direction of the forest, far away from the direction that the Dragon has taken.");
+                    // Move northward
                     break;
                 default:
                     Console.WriteLine("\nInvalid input, please try again");
-                    Console.ReadKey(); // Let the user know, before clearing the console
+                    Console.ReadKey();
                     Console.Clear();
-                    forestOfMysteries(mage, remainingAttempts - 1); // Recurse and reduce remaining attempts by 1
+                    forestOfMysteries(character, remainingAttempts - 1);
                     break;
             }
+        }
 
-            void mageConfrontation() // Incomplete
-            {
-                Console.Clear(); // Clear the console, before proceeding to this section of the plot.
-                smoothPrinting.PrintLine("--------------------------------------------------");
-                smoothPrinting.PrintLine("Forest of Mysteries");
-                smoothPrinting.PrintLine("--------------------------------------------------");
+        private void MageConfrontation(Mage mage)
+        {
+            SmoothConsole smoothPrinting = new SmoothConsole();
+            Console.Clear();
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("Forest of Mysteries");
+            smoothPrinting.PrintLine("--------------------------------------------------");
 
-                smoothPrinting.RapidPrint("You decide that you want to confront the dragon, rather than cower in fear. Inside you are conflicted, as to whether you've made a brave or incredibly stupid decision" +
-                    ", anyhow you slowly make your way and in the process start taunting the Dragon");
+            smoothPrinting.RapidPrint("You decide that you want to confront the dragon, rather than cower in fear.");
 
-                smoothPrinting.RapidPrint($"\n{mage.name}: Stop flying away, and face me at once!");
-                smoothPrinting.RapidPrint("\nDragon: This insignificant mortal really wants to face me? The Guardian of Dragons? Then so be it, you have courted death! *the Dragon exclaims*");
-                smoothPrinting.RapidPrint("znThe dragon proceeds to block your perimiter of escape, you are now forced to fight!");
-                Combat combat = new Combat();
-                combat.mageCombat(mage);
-                Console.ReadKey(); // Limit functionality for now (testing)
-            }
+            smoothPrinting.RapidPrint($"\n{mage.name}: Stop flying away, and face me at once!");
+            // Other mage-specific actions
+        }
 
-
+        private void SomaliPirateConfrontation(SomaliPirate pirate)
+        {
+            // Handle confrontation logic for Somali Pirate
         }
 
     }
@@ -2128,7 +2132,7 @@ namespace FantasyRPG
     public class Combat // Will be used to initialize the combat system
     {
         // Combat panels for all the current classes availiable in the game
-        public void mageCombat(Mage mage) 
+        public void mageCombat() 
         {
 
             
@@ -2305,6 +2309,7 @@ namespace FantasyRPG
             smoothPrinting.RapidPrint("\n3. Arcane Sentinels (N/A)\n");
             smoothPrinting.RapidPrint("\n4. Shop (N/A)\n");
             smoothPrinting.RapidPrint("\n5. NPC's Encountered (N/A)\n");
+            smoothPrinting.RapidPrint("\n6. Character Status (N/A)\n");
             smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
 
             userInput = Convert.ToString(Console.ReadLine()); // Register user input
@@ -2359,6 +2364,9 @@ namespace FantasyRPG
                 case "5":
                     NPCEncounters(npcsEncountered);
                     break;
+                case "6":
+
+                    break;
                 default:
                     while (string.IsNullOrEmpty(userInput))
                     {
@@ -2389,6 +2397,11 @@ namespace FantasyRPG
                 Console.ReadKey(); // Read the users input before going back to the dashboard.
                 Console.Clear(); // Clear the console for neatness
                 dashboard(name, npcsEncountered); // Return user back to the dashboard
+            }
+
+            void mageDisplayPlayerStatus(Mage mage)
+            {
+                smoothPrinting.RapidPrint($"Name: {mage.name}\n Weapon: {mage.weapon}\n, Currency (Arcania's Golden Coins): {mage.arcaniaGoldCoins}\n, Magic Spells: {mage.magicSpells}\n, Remaining Spell Usages: {mage.spellUsage}, Magic Specialities:");
             }
 
             // void guild()
