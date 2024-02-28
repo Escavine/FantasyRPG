@@ -849,14 +849,19 @@ namespace FantasyRPG
     {
         static void Main(string[] args) // Future reference: With the implementation of the authentication system soon, this will be moved.
         {
-            GameMenu menu = new GameMenu();
+            // GameMenu menu = new GameMenu();
             // MagicCouncil encounter = new MagicCouncil(); // Debugging
             // string name = "Silver"; // Debugging
             // encounter.firstEncounter(name); // Debugging
             // FirstScenario firstScenario = new FirstScenario();
             // firstScenario.usersFirstJourney("Tristian");
 
-            menu.gameMenu(); // User is first directed to the game menu method
+            FirstScenario scenario = new FirstScenario();
+            string name = "Eurelian";
+            int remainingAttempts = 3;
+            scenario.usersFirstJourney(name, remainingAttempts);
+
+           // menu.gameMenu(); // User is first directed to the game menu method
 
             // List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered = new List<(string npcName, string npcDescription, string npcAffiliation)>() // Debugging: populating data
             // {
@@ -1990,26 +1995,7 @@ namespace FantasyRPG
 
             if (remainingAttempts == 3)
             {
-                smoothPrinting.RapidPrint(oneTimeFixedScenario + "\n"); // This is all an indirect skip functionality, as it is quite complicated to manually implement one, saves users time and is convienient
-            }
-            else 
-            {
-                if (remainingAttempts == 0)
-                {
-                    Console.Clear(); // Clear console
-                    smoothPrinting.PrintLine("--------------------------------------------------");
-                    smoothPrinting.PrintLine("You are an idiot");
-                    smoothPrinting.PrintLine("--------------------------------------------------");
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    smoothPrinting.RapidPrint("Console will now terminate, why do you keep putting in the wrong input... :3");
-                    Console.ReadKey(); // Read user input before terminating
-                }
-                else
-                {
-                    Console.WriteLine($"Remaining Attempts: {remainingAttempts}\n"); // Display users remaining input attempts
-                    Console.WriteLine(oneTimeFixedScenario + "\n");
-                }
-
+                smoothPrinting.RapidPrint(oneTimeFixedScenario + "\n"); // This is all an indirect skip functionality, as it is quite complicated to manually implement one, saves users time and is convenient
             }
 
             Console.WriteLine("\n[Available Commands:]");
@@ -2020,26 +2006,23 @@ namespace FantasyRPG
             smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
             firstSelection = Convert.ToString(Console.ReadLine());
 
+
             switch (firstSelection)
             {
                 case "1":
-                    Console.Clear();
                     confrontingTheDragon(); // Function call to enable combat functionality against the dragon
                     break;
                 default:
-
-                    while (string.IsNullOrEmpty(firstSelection))
-                    {
-                        Console.WriteLine("Invalid input, please try again");
-                        Console.ReadKey(); // Let the user know, before clearing the console
-                        Console.Clear();
-                        usersFirstJourney(name); // Recurse
-                    }
+                    Console.WriteLine("\nInvalid input, please try again");
+                    Console.ReadKey(); // Let the user know, before clearing the console
+                    Console.Clear();
+                    usersFirstJourney(name, remainingAttempts - 1); // Recurse and reduce remaining attempts by 1
                     break;
             }
 
             void confrontingTheDragon() // Incomplete
             {
+                Console.Clear(); // Clear the console, before proceeding to this section of the plot.
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine("Forest of Mysteries");
                 smoothPrinting.PrintLine("--------------------------------------------------");
