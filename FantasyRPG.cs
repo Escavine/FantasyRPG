@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Xml.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 
 // FantasyRPG: A console based RPG game, which sole purpose is to improve on my current programming skills (mainly OOP as that is my weakness).
@@ -407,6 +409,8 @@ namespace FantasyRPG
 
     class Mage : CharacterDefault // Wizard class properties + methods
     {
+        SmoothConsole smoothPrinting = new SmoothConsole(); 
+
         // Properties for common wizard attributes
         public List<(string magicSpell, int damage, int manaRequirement)> magicSpells = new List<(string magicSpell, int damage, int manaRequirement)>();
         string[] magicSpecialties; // User can have multiple magic specialties
@@ -419,7 +423,7 @@ namespace FantasyRPG
             magicSpecialties = _magicSpecialties;
             currentInventory = _currentInventory;
             magicSpells = _magicSpells; // Predefined variables for every new wizard in the game
-            spellUsage = 5;
+            spellUsage = 10;
         }
 
 
@@ -435,8 +439,13 @@ namespace FantasyRPG
 
         public void IncreaseSpellInInventory()
         {
-            spellUsage++;
-            Console.WriteLine(name + " has gained 1 spell in the inventory");
+            spellUsage++; // Increase number of spells by 1
+            smoothPrinting.RapidPrint($"\n{name} has gained 1 spell in the inventory");
+        }
+
+        public void MageHealthStatus()
+        {
+            smoothPrinting.RapidPrint($"\n{name} Health: {health}"); // Display Mage's health
         }
 
         public void MageTraining()
@@ -1995,9 +2004,13 @@ namespace FantasyRPG
 
             if (remainingAttempts == 3)
             {
-                smoothPrinting.RapidPrint(oneTimeFixedScenario + "\n"); // This is all an indirect skip functionality, as it is quite complicated to manually implement one, saves users time and is convenient
+                smoothPrinting.RapidPrint(oneTimeFixedScenario + "\n"); 
             }
+            else
+            {
+                Console.WriteLine(oneTimeFixedScenario + "\n"); // This is all an indirect skip functionality, as it is quite complicated to manually implement one, saves users time and is convenient
 
+            }
             Console.WriteLine("\n[Available Commands:]");
             smoothPrinting.PrintLine("\n1. Fight: Confront the dragon (N/A)");
             smoothPrinting.PrintLine("\n2. North: Move northward along the path (N/A)");
@@ -2011,6 +2024,15 @@ namespace FantasyRPG
             {
                 case "1":
                     confrontingTheDragon(); // Function call to enable combat functionality against the dragon
+                    break;
+                case "2":
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("Forest of Mysteries");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+
+                    // Add a random chance of a mob encounter (i.e. a boar, wolf, overgrown hornet)
+
+                    smoothPrinting.RapidPrint("\nYou proceed to head to the Northen direction of the forest, far away from the direction that the Dragon has taken.");
                     break;
                 default:
                     Console.WriteLine("\nInvalid input, please try again");
@@ -2028,7 +2050,11 @@ namespace FantasyRPG
                 smoothPrinting.PrintLine("--------------------------------------------------");
 
                 smoothPrinting.RapidPrint("You decide that you want to confront the dragon, rather than cower in fear. Inside you are conflicted, as to whether you've made a brave or incredibly stupid decision" +
-                    ", anyhow you slowly make your way across");
+                    ", anyhow you slowly make your way and in the process start taunting the Dragon");
+
+                smoothPrinting.RapidPrint($"\n{name}: Stop flying away, and face me at once!");
+                smoothPrinting.RapidPrint("\nDragon: This insignificant mortal really wants to face me? The Guardian of Dragons? Then so be it, you have courted death! *the Dragon exclaims*");
+                Console.ReadKey(); // Limit functionality for now (testing)
             }
 
 
@@ -2038,7 +2064,15 @@ namespace FantasyRPG
 
     public class Combat // Will be used to initialize the combat system
     {
-        public void Fighting()
+        // Combat panels for all the current classes availiable in the game
+        public void mageCombat(string mageName, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> mageWeapon, string[] mageSpecialities, int arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> magicSpells, string[] currentInventory, int specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered) 
+        {
+            
+
+
+        }
+
+        public void pirateCombat(string pirateName, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> pirateWeapon, List<(string auraName, int damage, string rarity, string description)> pirateWeaponAura, List<(string attack, int damage, int manaRequirement, string elementType, string description)> chosenPirateNormalAttacks, List<(string attack, int damage, int manaRequirement, string elementType, string Description)> chosenSpecialAttacks, List<string> pirateInventory, int arcaniaGoldCoins, int specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> pirateClassNpcsEncountered) 
         {
 
 
@@ -2047,12 +2081,10 @@ namespace FantasyRPG
 
 
     }
-
     public class InfiniteDungeon
     {
         public void dungeon()
         {
-
         }
     }
 
@@ -2161,15 +2193,11 @@ namespace FantasyRPG
                         smoothPrinting.RapidPrint($"\nLister: “Nice to meet you {name}, you seem quite capable, and can potentially see you replacing our predacessors at some point in the ranks ha-ha-ha?”");
                         // Future reference: Add a impression increase for Lister NPC
                         break;
-
-
                     case "2":
-                        smoothPrinting.RapidPrint($"\n{name}: “My identity remains a secret, that I shall not reveal”");
-                        smoothPrinting.RapidPrint("\nLister: “He's really interesting, though I feel we won't get along...”");
+                        smoothPrinting.RapidPrint($"\n{name}: “My identity remains a secret, that I shall not reveal”\n");
+                        smoothPrinting.RapidPrint("\nLister: “You are quite interesting, Evelyn's recent representative, though I feel we won't get along...”");
                         // Future reference: Add a impression drop for Lister NPC
-
                         break;
-
                     default:
                         if (string.IsNullOrEmpty(choice1))
                         {
@@ -2287,11 +2315,12 @@ namespace FantasyRPG
                 smoothPrinting.PrintLine("FantasyRPG: " + "NPC's Encountered");
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 Console.WriteLine(); // Spacing
-
+                
                 foreach (var npc in npcsEncountered)
                 {
                     smoothPrinting.RapidPrint($"\nName: {npc.npcName}\nDescription: {npc.npcDescription}\nAffiliation: {npc.npcAffiliation}\n");
                 }
+
 
                 smoothPrinting.RapidPrint("\nAffirmative? Press any key to continue...");
                 Console.ReadKey(); // Read the users input before going back to the dashboard.
@@ -2319,7 +2348,6 @@ namespace FantasyRPG
 
     public class SmoothConsole // This will be used to ensure output from the console is smooth and aesthetic looking
     {
-        private bool skipRequested = false; // Flag to indicate if skip is requested
         public void CenterPrint(string text) // Will center user output
         {
             int width = Console.WindowWidth;
