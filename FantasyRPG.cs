@@ -893,6 +893,7 @@ namespace FantasyRPG
 
             Console.WriteLine("\nGame advice: When inputting values, input a corresponding value to the action (e.g. enter the value 1 in order to start the game"); // Display game advice
             Console.WriteLine("\nIt is highly recommended to play this game in full screen, to allow all the text to fit in order to get the best experience");
+
             Random ran = new Random();
             int ran_num = ran.Next(0, 5);
             Console.WriteLine("\nGame Tip: " + gameTips[ran_num] + "\n"); // Display a random game tip in the menu
@@ -1197,66 +1198,66 @@ namespace FantasyRPG
                     // Tuple dictionary for each Fire magic spell, which is associated with a damage value and a mana requirement 
                     Dictionary<string, (int damage, int manaRequirement)> fireMagicSpells = new Dictionary<string, (int damage, int manaRequirement)>()
                     {
-                        { "Infrared", (3, 15) },
-                        { "Blazing Rage", (5, 20) },
-                        { "Flamestrike", (7, 25) },
-                        { "Pyroburst", (9, 30) },
-                        { "Phoenix Fury", (12, 35) }
+                        { "Infrared", (3,15) },
+                        { "Blazing Rage", (5,20) },
+                        { "Flamestrike", (7,25) },
+                        { "Pyroburst", (9,30) },
+                        { "Phoenix Fury", (12,35) }
                     };
 
                     // Tuple dictionary for each Water magic spell, which is associated with a damage value and a mana requirement 
                     Dictionary<string, (int damage, int manaRequirement)> waterMagicSpells = new Dictionary<string, (int damage, int manaRequirement)>()
                     {
-                        { "Aqua Torrent", (2, 10) },
-                        { "Hydroburst", (4, 15) },
-                        { "Lunar Tide", (6, 20) },
-                        { "Ripple Cascade", (8, 25) }
+                        { "Aqua Torrent", (2,10) },
+                        { "Hydroburst", (4,15) },
+                        { "Lunar Tide", (6,20) },
+                        { "Ripple Cascade", (8,25) }
                     };
 
                     // Tuple dictionary for each Ice magic spell, which is associated with a damage value a mana requirement
                     Dictionary<string, (int damage, int manaRequirement)> iceMagicSpells = new Dictionary<string, (int damage, int manaRequirement)>()
                     {
-                        { "Frostbite", (5, 20) },
-                        { "Ice Lance", (9, 30) },
-                        { "Blizzard Tundra", (15, 50) },
-                        { "Frozen Fury", (7, 25) }
+                        { "Frostbite", (5,20) },
+                        { "Ice Lance", (9,30) },
+                        { "Blizzard Tundra", (15,50) },
+                        { "Frozen Fury", (7,25) }
                     };
 
                     // Tuple dictionary for each Lightning magic spell, which is associated with a damage value and a mana requirement 
                     Dictionary<string, (int damage, int manaRequirement)> lightningMagicSpells = new Dictionary<string, (int damage, int manaRequirement)>()
                     {
-                        { "Thunderstrike", (4, 15) },
-                        { "Striking Surge", (6, 20) },
-                        { "Volt Surge", (8, 25) },
-                        { "Arcane Thunder", (10, 30) }
+                        { "Thunderstrike", (4,15) },
+                        { "Striking Surge", (6,20) },
+                        { "Volt Surge", (8,25) },
+                        { "Arcane Thunder", (10,30) }
                     };
 
                     // Tuple dictionary for each Dark magic spell, which is associated with a damage value and a mana requirement 
                     Dictionary<string, (int damage, int manaRequirement)> darkMagicSpells = new Dictionary<string, (int damage, int manaRequirement)>()
                     {
-                        { "Shadow Veil", (3, 15) },
-                        { "Umbral Surge", (5, 20) },
-                        { "Wraith's Curse", (7, 25) },
-                        { "Eclipised Oblivion", (9, 30) }
+                        { "Shadow Veil", (3,15) },
+                        { "Umbral Surge", (5,20) },
+                        { "Wraith's Curse", (7,25) },
+                        { "Eclipised Oblivion", (9,30) }
                     };
 
                     // Tuple dictionary for each Light magic spell, which is associated with a damage value and a mana requirement 
                     Dictionary<string, (int damage, int manaRequirement)> lightMagicSpells = new Dictionary<string, (int damage, int manaRequirement)>()
                     {
-                        { "Luminous Beam", (3, 15) },
-                        { "Solar Flare", (5, 20) },
-                        { "Etherial Halo", (7, 25) },
-                        { "Aurora's Illumination", (9, 30) },
-                        { "Divine Judgement", (12, 35) }
+                        { "Luminous Beam", (3,15) },
+                        { "Solar Flare", (5,20) },
+                        { "Etherial Halo", (7,25) },
+                        { "Aurora's Illumination", (9,30) },
+                        { "Divine Judgement", (12,35) }
                     };
 
                     // Tuple dictionary for each Eucladian magic spell, which is associated with a damage value and a mana requirement 
                     Dictionary<string, (int damage, int manaRequirement)> eucladianMagicSpells = new Dictionary<string, (int damage, int manaRequirement)>()
                     {
-                        { "Esoteric Paradigm", (3, 15) },
-                        { "Fractural Fissure", (5, 20) },
-                        { "Quantum Flux", (7, 25) },
-                        { "Etherial Nexus", (9, 30) }
+                        { "Esoteric Paradigm", (3,15) },
+                        { "Fractural Fissure", (5,20) },
+                        { "Quantum Flux", (7,25) },
+                        { "Etherial Nexus", (9,30) }
                     };
 
                     // Tuple dictionary for the starter weapons, which is associated with a damage value and a rarity type
@@ -1978,45 +1979,73 @@ namespace FantasyRPG
         // User first encounters the dragon in the forest of mysteries.
         string oneTimeFixedScenario = "\nYou spawn in the Forest of Mysteries, now with the understanding of the rulings within the world along with a primitive understanding of mana. As you keep exploring this vast forest, you eventually find yourself lost midway, your eyes surrounded by vast levels of fog, mitigating your view of the perspective ahead. Close by, there appears a dragon, with fangs as sharp as blades and a gaze so intense that you begin to question whether you’ll survive or not. ";
         bool completedFirstScenario = false; // This is a measure to see if the user has completed this scenario in the Forest of Mysteries, should this be the case, they'll no longer see this scenario when exploring the forest
-        int firstSelection;
-        public void usersFirstJourney(string name)
+        string? firstSelection;
+
+        public void usersFirstJourney(string name, int remainingAttempts = 3) // User gets 3 attempts to ensure that they put the correct input, should they fail all 3, the game terminates.
         {
             SmoothConsole smoothPrinting = new SmoothConsole();
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine("Forest of Mysteries");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
-            smoothPrinting.RapidPrint(oneTimeFixedScenario + "\n");
+            if (remainingAttempts == 3)
+            {
+                smoothPrinting.RapidPrint(oneTimeFixedScenario + "\n"); // This is all an indirect skip functionality, as it is quite complicated to manually implement one, saves users time and is convienient
+            }
+            else 
+            {
+                if (remainingAttempts == 0)
+                {
+                    Console.Clear(); // Clear console
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("You are an idiot");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    smoothPrinting.RapidPrint("Console will now terminate, why do you keep putting in the wrong input... :3");
+                    Console.ReadKey(); // Read user input before terminating
+                }
+                else
+                {
+                    Console.WriteLine($"Remaining Attempts: {remainingAttempts}\n"); // Display users remaining input attempts
+                    Console.WriteLine(oneTimeFixedScenario + "\n");
+                }
+
+            }
+
             Console.WriteLine("\n[Available Commands:]");
-
             smoothPrinting.PrintLine("\n1. Fight: Confront the dragon (N/A)");
-            smoothPrinting.PrintLine("\n2. North: Move northward along the path");
-            smoothPrinting.PrintLine("\n3. Inventory: View your current inventory of items");
-            smoothPrinting.PrintLine("\n4. Help: Display a list of available commands");
+            smoothPrinting.PrintLine("\n2. North: Move northward along the path (N/A)");
+            smoothPrinting.PrintLine("\n3. Inventory: View your current inventory of items (N/A)");
+            smoothPrinting.PrintLine("\n4. Help: Display a list of available commands (N/A)");
             smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
-            firstSelection = Convert.ToInt32(Console.ReadLine());
-
-
+            firstSelection = Convert.ToString(Console.ReadLine());
 
             switch (firstSelection)
             {
-                case 1:
+                case "1":
                     Console.Clear();
-                    smoothPrinting.PrintLine("--------------------------------------------------");
-                    smoothPrinting.PrintLine("Forest of Mysteries");
-                    smoothPrinting.PrintLine("--------------------------------------------------");
-
-                    smoothPrinting.PrintLine("Fighting isn't available yet.");
-                    Console.Read(); // Terminate afterwards
-                    break;
-
-                case 2:
-
+                    confrontingTheDragon(); // Function call to enable combat functionality against the dragon
                     break;
                 default:
-                    Console.WriteLine("Invalid input, please try again");
-                    break;
 
+                    while (string.IsNullOrEmpty(firstSelection))
+                    {
+                        Console.WriteLine("Invalid input, please try again");
+                        Console.ReadKey(); // Let the user know, before clearing the console
+                        Console.Clear();
+                        usersFirstJourney(name); // Recurse
+                    }
+                    break;
+            }
+
+            void confrontingTheDragon() // Incomplete
+            {
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.PrintLine("Forest of Mysteries");
+                smoothPrinting.PrintLine("--------------------------------------------------");
+
+                smoothPrinting.RapidPrint("You decide that you want to confront the dragon, rather than cower in fear. Inside you are conflicted, as to whether you've made a brave or incredibly stupid decision" +
+                    ", anyhow you slowly make your way across");
             }
 
 
@@ -2199,7 +2228,7 @@ namespace FantasyRPG
 
             smoothPrinting.RapidPrint("\n1. Main Storyline (N/A)\n");
             smoothPrinting.RapidPrint("\n2. Infinite Dungeon (N/A)\n");
-            smoothPrinting.RapidPrint("\n3. Guild Reputation (N/A)\n");
+            smoothPrinting.RapidPrint("\n3. Arcane Sentinels (N/A)\n");
             smoothPrinting.RapidPrint("\n4. Shop (N/A)\n");
             smoothPrinting.RapidPrint("\n5. NPC's Encountered (N/A)\n");
             smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
@@ -2287,12 +2316,27 @@ namespace FantasyRPG
                 dashboard(name, npcsEncountered); // Return user back to the dashboard
             }
 
+            // void guild()
+            // {
+            // This will contain information such as guild members, speaking with guild members such as asking them questions etc, which I'll try make dynamic and also being able to see ones current reputation
+            // }
+
+            // void infiniteDungeon()
+            // {
+            // This will be a recursive dungeon that will allow players to be able to obtain loot and level up, in turn enabling them to become stronger
+            // }
+
+            // void shop()
+            // {
+            // Items will be sold within the shop, that the user can purchase, along with weapons etc.
+            // }
+
         }
     }
 
     public class SmoothConsole // This will be used to ensure output from the console is smooth and aesthetic looking
     {
-
+        private bool skipRequested = false; // Flag to indicate if skip is requested
         public void CenterPrint(string text) // Will center user output
         {
             int width = Console.WindowWidth;
@@ -2313,9 +2357,12 @@ namespace FantasyRPG
         {
             foreach (char c in text)
             {
+
                 Console.Write(c);
                 Thread.Sleep(50);
+
             }
+
         }
 
         public void PrintLine(string line) // Printing lines 
@@ -2327,10 +2374,13 @@ namespace FantasyRPG
         {
             foreach (char c in text)
             {
+
                 Console.Write(c);
                 Thread.Sleep(20);
+
             }
         }
+
     }
 
 } // Namespace coverage: DO NOT REMOVE THIS
