@@ -136,7 +136,6 @@ namespace FantasyRPG
 
             if (level < 5)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
                 experienceRequiredForNextLevel = 10 * level;
 
                 double percentage = exp / experienceRequiredForNextLevel; // Find the mid value, to engage progress bar
@@ -153,7 +152,6 @@ namespace FantasyRPG
             }
             else if (level > 10)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
                 experienceRequiredForNextLevel = 100 * level;
                 double percentage = exp / experienceRequiredForNextLevel; // Find the mid value, to engage progress bar
 
@@ -169,7 +167,6 @@ namespace FantasyRPG
 
 
             smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
-            Console.ResetColor(); // Reset console colour before leaving
             Console.ReadKey(); // Register user input
             Console.Clear(); // Clear the console to avoid overlapping
             gameDashboard dash = new gameDashboard();
@@ -2331,6 +2328,7 @@ namespace FantasyRPG
         // One-time executable function: Will not happen again.
         public void firstEncounter(string name, List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered) // This will be the first meeting between the MC and the other council members (not all of them are present at that given moment)
         {
+            UIManager UI = new UIManager(); // UI manager class
             Console.Clear(); // Clear the console for neatness
             SmoothConsole smoothPrinting = new SmoothConsole();
             Console.ForegroundColor = ConsoleColor.White;
@@ -2346,9 +2344,7 @@ namespace FantasyRPG
             // Explanation of Arcania's Magic Council being aware of the current situation at hand
             smoothPrinting.RapidPrint("\nThe Magic Council are naturally aware of the ongoing situation, with tension rising within Paralax (Dragon City), between the Draconith and Vesperon family and due to the growing conflict, an emergency meeting is held with all council members. Evelyn invites you as a representative along with Eurelian Frostweaver to the meeting, other council members also invite their fellow representatives. For safety purposes, all representatives are to wear a mask to conceal their identities. ");
 
-            smoothPrinting.RapidPrint("\n\nAffirmative? Press any key to continue...");
-            Console.ReadKey(); // Read the users input, before generating more output.
-            Console.Clear(); // Clear the console for neatness
+            UI.PromptUserToContinue();
 
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
@@ -2356,18 +2352,16 @@ namespace FantasyRPG
 
             smoothPrinting.RapidPrint("\nAs you make your way towards the Magic Council Hall alongside Evelyn, you can't help but marvel at the hyper-detailed infrastructures that tower over you. Their imposing presence commands attention, and you find yourself drawn to their intricate designs. Curious, you turn to Evelyn and inquire about the significance of these structures. With a knowing smile, she explains that they are different idols of the previous 1st rankers and generations back. Each idol holds a different weapon, symbolizing the unique specialties of its respective ranker. The idols vary in posture and exude a sense of power and mastery over their chosen disciplines. ");
             Console.WriteLine();
-            smoothPrinting.RapidPrint("\nAffirmative? Press any key to continue...");
-            Console.ReadKey(); // Read the users input, before generating more output.
-            Console.Clear(); // Clear the console for neatness
+            UI.PromptUserToContinue();
+
 
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
             smoothPrinting.RapidPrint("\nWhile walking with Evelyn, you see a bulletin that contains a bunch of names, associted with a ranking and extra details and enquire to her what it exactly entails. She briefly explains that it is the ranking board for the current Arcania's Magic Council members, and lets you see from up-close\n");
-            smoothPrinting.RapidPrint("\nAffirmative? Press any key to continue...");
-            Console.ReadKey(); // Read the users input, before generating more output.
-            Console.Clear(); // Clear the console for neatness
+            UI.PromptUserToContinue();
+
 
             Console.ForegroundColor = ConsoleColor.Yellow; // Display the rankings in a yellow color
             smoothPrinting.PrintLine("--------------------------------------------------");
@@ -2377,27 +2371,24 @@ namespace FantasyRPG
             Console.ForegroundColor = ConsoleColor.White; // Revert to original color for terminal
             Console.WriteLine();
             smoothPrinting.RapidPrint("\nMC's Inner Thoughts: “The top 3 aren't even known? I seriously wonder how powerful they are, perhaps they have a clue as to how I got summoned into this world...”\n");
-            smoothPrinting.RapidPrint("\nAffirmative? Press any key to continue...");
-            Console.ReadKey(); // Read the users input, before generating more output.
-            Console.Clear(); // Clear the console for neatness
+            UI.PromptUserToContinue();
+
 
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
             smoothPrinting.RapidPrint("As you continue walking, you can't help but feel a sense of reverence for those who came before, their legacies immortalized in stone and metal. It's a reminder of the long history and tradition that surrounds the Magic Council, and you can't help but feel honored to be a part of it. Before proceeding inside the Hall, Evelyn stumbles upon her brother, who she hasn’t met for a long time due to her duties as a Guildmaster, they end up meeting each other and talking for some time, there she introduces you, the ‘MC’ and he greets you with a heartwarming smile, just like Evelyn, you can clearly tell that they are siblings. ");
-            smoothPrinting.RapidPrint("\n\nAffirmative? Press any key to continue...");
-            Console.ReadKey(); // Read the users input, before generating more output.
-            Console.Clear(); // Clear the console for neatness
+            UI.PromptUserToContinue();
+
 
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
             smoothPrinting.RapidPrint("Lister's overwhelming aura exudes strength and confidence, casting a palpable sense of authority and prowess. It surrounds him like an invisible shield, commanding respect and attention from those around him. The intensity of his presence is undeniable, leaving an indelible impression on all who encounter him. It's a combination of his unwavering determination, honed skill, and unwavering commitment to his craft that contribute to the formidable aura he emits. In the presence of Lister, one can't help but feel a sense of reverence and admiration for his formidable abilities and commanding demeanor. ");
-            smoothPrinting.RapidPrint("\n\nAffirmative? Press any key to continue...");
-            Console.ReadKey(); // Read the users input, before generating more output.
-            Console.Clear(); // Clear the console for neatness
+            UI.PromptUserToContinue();
+
 
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
@@ -2405,9 +2396,8 @@ namespace FantasyRPG
 
             // Lazy output, fix this when you get the time so it is structurered properly
             smoothPrinting.RapidPrint("\nEvelyn: “Hey Lister, it’s been a long time since we last met. How are you doing?” \r\n\r\nLister: “Oh Evelyn, it really has been a while. You seem even more capable and stronger now. I’m doing great. By the way, who is that with you? I don’t think I’ve seen him before.” \r\n\r\nEvelyn: “He's a recent addition to my guild.” \r\n\r\nLister: “Is that so? Well, I'm usually good at reading people, but I can’t seem to read him. Guess you picked out someone interesting.” ");
-            smoothPrinting.RapidPrint("\n\nAffirmative? Press any key to continue...");
-            Console.ReadKey(); // Read the users input, before generating more output.
-            Console.Clear(); // Clear the console for neatness
+            UI.PromptUserToContinue();
+
 
             firstEncounterDialogue1(); // Function call to enable dialogue
 
@@ -2454,12 +2444,10 @@ namespace FantasyRPG
             }
 
             smoothPrinting.RapidPrint("\r\n\r\nEvelyn: “I am always good at this sort of thing.” \r\n\r\nLister: “Guess I shouldn’t be surprised, ha-ha. Your guild has become quite the powerhouse as well.” \r\n\r\nEvelyn: “It’s been some time since I last saw your representative. He seems to have toughened up a lot. Your training regimen must’ve really bolstered him, ha-ha-ha.” \r\n\r\nLister: “Well, our Everbright techniques will make anyone stronger.” \r\n\r\nEvelyn: “Brother, have you been training lately? I can tell that you have grown a lot stronger. Care to give your sister some advice?” *she says with a soft voice* \r\n\r\nLister: “Just make sure you are working hard, and especially utilizing your mana effectively and training with it very frequently. That’s how I recently broke through to Arcane Savant (Awakening 7).” \r\n\r\nMC Inner thoughts: Arcane Savant? How strong are the magic council members? I wonder if I’ll ever reach their ranks... \r\n\r\nEvelyn: “Okay bro, thanks for the advice. I’ll make sure to work really hard so that way when there’s another meeting, I'll be stronger than before!” \r\n\r\nLister: “Yeah, I hope that's the case as well sis! Now let’s meet with the other members. They are surely taking their time, huh?” \r\n\r\nMC Inner thoughts: I can't believe I'm in the presence of such powerful beings. But I won't let that intimidate me. I'll work hard and prove myself worthy of standing among them.");
-            smoothPrinting.RapidPrint("\n\nAffirmative? Press any key to continue...");
+            UI.PromptUserToContinue();
 
             // This section will be removed when this mission comes to become an integral part of the game, right now this is all for debugging purposes
 
-            Console.ReadKey(); // Read the users input, before generating more output.
-            Console.Clear(); // Clear the console for neatness
             gameDashboard dash = new gameDashboard();
             dash.dashboard(name, npcsEncountered);
 
@@ -2556,6 +2544,7 @@ namespace FantasyRPG
 
             void NPCEncounters(List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered) // This function will display all the npcs that the user has encountered during their time playing the game
             {
+                UIManager UI = new UIManager(); // UI manager class
                 Console.Clear(); // Clear the console 
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine("FantasyRPG: " + "NPC's Encountered");
@@ -2576,9 +2565,7 @@ namespace FantasyRPG
                 }
 
 
-                smoothPrinting.RapidPrint("\nAffirmative? Press any key to continue...");
-                Console.ReadKey(); // Read the users input before going back to the dashboard.
-                Console.Clear(); // Clear the console for neatness
+                UI.PromptUserToContinue();
                 dashboard(name, npcsEncountered); // Return user back to the dashboard
             }
 
@@ -2606,12 +2593,37 @@ namespace FantasyRPG
     }
 
 
-    public class UIManager
+    public class UIManager // UIManager - a class that will allow for the display of progress bars, prompts etc.
     {
-        public void DisplayProgressBar() // Will be used to display progress bars (i.e. health, mana etc.)
+        SmoothConsole smoothPrinting = new SmoothConsole(); // Engage the smoothconsole class
+        public void DisplayProgressBar(string title, int currentValue, int maxValue, int barLength) // Will be used to display progress bars (i.e. health, mana etc.)
         {
-            // Insert code required
+            // Retrieve the percentage amount
+            double percentage = (double)currentValue / maxValue;
 
+            // Retrieve the filled length value and generate a progress bar
+            int filledLength = (int)Math.Round(percentage * barLength);
+            string progressBar = new string('█', filledLength) + new string(' ', barLength);
+            
+            // Output the progress bar based on the context (i.e. level, health, mana etc.)
+            smoothPrinting.RapidPrint($"\n{title}: ({progressBar}] [{currentValue}/{maxValue})\n");
+
+        }
+
+
+        public void PromptUserToContinue()
+        {
+            smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to continue.");
+            Console.ReadKey();
+            Console.Clear();
+
+        }
+
+        public void PromptReturnToDashboard()
+        {
+            smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
+            Console.ReadKey();
+            Console.Clear();
 
         }
 
