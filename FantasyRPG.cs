@@ -416,7 +416,6 @@ namespace FantasyRPG
         // Properties for common wizard attributes
         public List<(string magicSpell, int damage, int manaRequirement)> magicSpells = new List<(string magicSpell, int damage, int manaRequirement)>();
         string[] magicSpecialties; // User can have multiple magic specialties
-        public int spellUsage; // Spell usage to keep spells in control
 
         public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, string[] _currentInventory, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
         {
@@ -425,7 +424,6 @@ namespace FantasyRPG
             magicSpecialties = _magicSpecialties;
             currentInventory = _currentInventory;
             magicSpells = _magicSpells; // Predefined variables for every new wizard in the game
-            spellUsage = 10;
         }
 
 
@@ -459,10 +457,11 @@ namespace FantasyRPG
 
             // }
 
-
+            // Combat methods for the Mage class
             foreach (var spell in magicSpells) // Display all spells currently avaliable to the Mage
             {
-                smoothPrinting.RapidPrint($"\n{spellCount}. {spell.magicSpell}: Damage: {spell.damage}, \nMana Requirement: {spell.manaRequirement}");
+                smoothPrinting.RapidPrint($"\n{spellCount}. Spell: {spell.magicSpell}: Damage: {spell.damage}, \nMana Requirement: {spell.manaRequirement}\n");
+                spellCount++;
             }
 
             smoothPrinting.RapidPrint("\nSelect a spell to attack: ");
@@ -473,15 +472,11 @@ namespace FantasyRPG
 
         }
 
-        public void IncreaseSpellInInventory()
-        {
-            spellUsage++; // Increase number of spells by 1
-            smoothPrinting.RapidPrint($"\n{name} has gained 1 spell in the inventory");
-        }
 
-        public void MageHealthStatus() // Combat purposes
+        public void DisplayMageStatus() 
         {
-            smoothPrinting.RapidPrint($"\n{name} Health: {health}"); // Display Mage's health
+            smoothPrinting.RapidPrint($"\n{name} Mana: {mana}\n"); // Display Mage's remaining mama
+            smoothPrinting.RapidPrint($"\n{name} Health: {health}"); // Display Mage's remaining health
         }
 
         public void MageTraining() // Might remove.
@@ -495,6 +490,7 @@ namespace FantasyRPG
 
         }
 
+        // Promotion method for the Mage class
         public void chooseNewSpeciality(string[] magicSpecialties, string name) // Every 10 levels, a mage will be able to pick another speciality (only 1)
         {
             // For every 10 levels, a mage can pick a new speciality
@@ -2145,6 +2141,11 @@ namespace FantasyRPG
             smoothPrinting.RapidPrint("\n*Windsom slowly sets down into the forest, it's wings shuddering the leaves, crushing branches and any other obstacle that gets in its way, setting the stage for your battle.*");
 
             // Enable the combat system
+            Console.ReadKey();
+            Console.Clear();
+
+            mage.DisplayMageStatus(); // Display Mage's current status
+            mage.MageSpellAttack(); // Display the attack choices that the user has
         }
 
         private void SomaliPirateConfrontation(SomaliPirate pirate)
@@ -2159,7 +2160,6 @@ namespace FantasyRPG
         // Combat panels for all the current classes availiable in the game
         public void mageCombat() 
         {
-
             
         }
 
@@ -2187,7 +2187,10 @@ namespace FantasyRPG
             Console.Clear(); // Clear the console for neatness
             SmoothConsole smoothPrinting = new SmoothConsole();
             Console.ForegroundColor = ConsoleColor.White;
-            string choice1, choice2, choice3; // NPC interaction choices
+            string choice1; // NPC interaction choice
+
+            // Should I decide to make this section more interactive, then these data types will come to use
+            // string choice2, choice3;
 
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
@@ -2426,7 +2429,7 @@ namespace FantasyRPG
 
             void mageDisplayPlayerStatus(Mage mage)
             {
-                smoothPrinting.RapidPrint($"Name: {mage.name}\n Weapon: {mage.weapon}\n, Currency (Arcania's Golden Coins): {mage.arcaniaGoldCoins}\n, Magic Spells: {mage.magicSpells}\n, Remaining Spell Usages: {mage.spellUsage}, Magic Specialities:");
+                smoothPrinting.RapidPrint($"Name: {mage.name}\n Weapon: {mage.weapon}\n, Currency (Arcania's Golden Coins): {mage.arcaniaGoldCoins}\n, Magic Spells: {mage.magicSpells}");
             }
 
             // void guild()
