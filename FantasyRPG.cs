@@ -955,8 +955,8 @@ namespace FantasyRPG
             SmoothConsole smoothOutput = new SmoothConsole(); // Initialize the smooth console
             int userChances = 3; // Will be used for recursive measures to prevent brute force and idiotic input
             // Future reference: Implementing AI mobs and perhaps AI individuals
-
-            int? userChoice; // Used for the start of the game
+  
+            string? userChoice; // Used for the start of the game
             string[] gameTips = {"Did you know that every 10 levels, you can get an extra ability/speciality?",
                 "This game is still in development, so if there's an issue please contact me through my GitHub (Escavine) and send a pull request which I'll review.",
                 "Just to be clear, Eucladian is a magical type ability, not to be confused with the mathematical term Euclidean.",
@@ -986,27 +986,27 @@ namespace FantasyRPG
             smoothOutput.RapidPrint("\n5 - Future plans\n");
             smoothOutput.RapidPrint("\nEnter a corresponding value: ");
             // Register user input
-            userChoice = Convert.ToInt32(Console.ReadLine());
+            userChoice = Convert.ToString(Console.ReadLine());
 
             switch (userChoice)
             {
-                case 1:
+                case "1":
                     Console.Clear();
                     ClassSelection selectClass = new ClassSelection(); // Create a new game session
                     selectClass.userClass(); // Proceed to let the user pick a character class
                     break;
-                case 2:
+                case "2":
                     loadingSaveData(userChances); // Lead user to the method
                     break;
-                case 3:
+                case "3":
                     Console.Clear(); // Neatness structuring
                     userChoice = null;
                     helpSection(userChances); // Lead user to the method
                     break;
-                case 4:
+                case "4":
                     makeGameSuggestion(); // Lead user to the method
                     break;
-                case 5:
+                case "5":
                     futurePlans(); // Lead user to the method
                     break;
                 default:
@@ -1238,7 +1238,7 @@ namespace FantasyRPG
 
             smoothPrinting.RapidPrint("\n\nNaturally, you are not familiar with the system that is implemented in the world of Aeolus, therefore you are sent to a bleak white room, where you learn how to familiarize yourself with the world's customs. This includes the plethora of mana surrounding Aeolus and the world's rulings. You can now select a class type.");
 
-            int? userChoice; // Define the user choice
+            string? userChoice; // Define the user choice
 
             // Defining the different classes and rarity of items
             string[] fantasyClasses = { "Mage", "Knight (N/A)", "Pirate", "Shadowwrath (N/A)", "Archer (N/A)", "Return to Menu" }; // Predefined array of roles
@@ -1260,12 +1260,12 @@ namespace FantasyRPG
             smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
 
             // Future reference: INPUT VALIDATION
-            userChoice = Convert.ToInt32(Console.ReadLine());
+            userChoice = Convert.ToString(Console.ReadLine());
 
             switch (userChoice) // Future reference: Rather than have a userchoice fixed to a single method, add multiple methods for different classes (i.e. a mage class if a user chooses the mage role etc, that way you can implement recursion if the user wants to reset their details)
             {
                 // Should the user decided to become a Mage
-                case 1:
+                case "1":
                     int choiceIncrementer = 1; // Used to increment the user choice when picking magic types
                     int startMageJourneyInput;
                     List<(string npcName, string npcDescription, string npcAffiliation)> mageClassNpcsEncountered = null; // During class selection, individual will have not met any NPCs, therefore this value will be remained null.
@@ -1673,7 +1673,7 @@ namespace FantasyRPG
                     }
                     break;
 
-                case 2:
+                case "2":
                     Console.Clear();
                     Console.BackgroundColor = ConsoleColor.Red;
                     smoothPrinting.RapidPrint("\nKnight's aren't avaliable as of present :3");
@@ -1681,7 +1681,7 @@ namespace FantasyRPG
                     break;
 
 
-                case 3:
+                case "3":
                     int startPirateJourneyInput;
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -2008,27 +2008,27 @@ namespace FantasyRPG
                     break;
 
 
-                case 4:
+                case "4":
                     Console.WriteLine("After long endurance of physical training, you develop eyes as keen as an owl and your bowmanship is first class.");
                     Console.WriteLine("What is your name?");
                     string archerName = Convert.ToString(Console.ReadLine());
 
                     break;
-                case 5:
+                case "5":
                     Console.ForegroundColor = ConsoleColor.Red; // devious colour hahahaha
                     Console.WriteLine("I'm in your walls :3");
                     Console.WriteLine("You died");
                     Console.ReadLine();
 
                     break;
-                case 6:
+                case "6":
                     Console.ForegroundColor = ConsoleColor.Red; // devious colour hahahaha
                     Console.WriteLine("You are not :3, therefore you are not worthy of becoming a devious sigma");
                     Console.WriteLine("You died");
                     Console.ReadLine();
 
                     break;
-                case 7:
+                case "7":
                     GameMenu redirectUserToMenu = new GameMenu();
                     smoothPrinting.FastPrint("You will now be redirected back to the menu....\n");
                     Console.Clear(); // Neater
@@ -2116,10 +2116,36 @@ namespace FantasyRPG
             smoothPrinting.PrintLine("Forest of Mysteries");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
-            smoothPrinting.RapidPrint("You decide that you want to confront the dragon, rather than cower in fear.");
+            // Decision to confront the dragon
+            smoothPrinting.RapidPrint("\nAs the mage, you feel a surge of determination coursing through your veins. The weight of destiny rests upon your shoulders, and you refuse to cower in fear any longer. With gritted teeth and a steady resolve, you decide to confront the dRAGON, knowing that the path ahead is fraught with danger and uncertainty.\n");
 
-            smoothPrinting.RapidPrint($"\n{mage.name}: Stop flying away, and face me at once!");
-            // Other mage-specific actions
+            // Dialogue initiated by the Mage
+            smoothPrinting.RapidPrint($"\"{mage.name}: Stop flying away, and face me at once!\"\n");
+
+            // Dialogue initiated by the Dragon
+            smoothPrinting.RapidPrint("\nDragon: \"This mere mortal dares speak to me in such manner? So be it, you shall now face my wrath!\"\n");
+
+            // Dialogue initiated by Mage
+            smoothPrinting.RapidPrint("\n*You are surprised to hear that the Dragon can speak, though it's come to a point in time where you cannot take back your actions*\n");
+
+            // Dialogue initiated by Dragon
+            smoothPrinting.RapidPrint("\nDragon: \"Mortal, you know not the gravity of your words. I am Windsom, the Guardian of these forests, and you have trespassed into my domain.\"\n");
+
+            // Dialogue initiated by Mage
+            smoothPrinting.RapidPrint($"\"{mage.name}: Windsom? Never heard that name before.\"\n");
+
+            // MC's Inner Thoughts
+            smoothPrinting.RapidPrint("\nMC's Thoughts: \"Perhaps he knows about why I've been summoned to this world...\"\n");
+
+            // Dialogue initiated by Mage
+            smoothPrinting.RapidPrint($"\"{mage.name}: Do you know why I've been summoned to this world?\"\n");
+
+            // Dragon's mysterious response
+            smoothPrinting.RapidPrint($"\"Dragon: Ah, the mysteries of summonings. Perhaps I do, perhaps I don't. But why should I reveal such knowledge to a mere mortal like you? Prove your worth, Mage. Defeat me in battle, and perhaps then, I shall consider sharing what I know.\"\n");
+
+            smoothPrinting.RapidPrint("\n*The Dragon slowly sets down into the forest, it's wings shuddering the leaves, crushing branches and any other obstacle that gets in its way, setting the stage for your battle.*");
+
+            // Enable the combat system
         }
 
         private void SomaliPirateConfrontation(SomaliPirate pirate)
