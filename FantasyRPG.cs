@@ -38,7 +38,9 @@ namespace FantasyRPG
         public float exp;
         public int level;
         private int experienceRequiredForNextLevel;
-        // public int randomDyingChance;
+        // public int randomDyingChance; hehe
+
+        SmoothConsole smoothPrinting = new SmoothConsole(); // Allow for aesthetic output
 
         public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins, int specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) // Default preset for all classes during the start of the game :3
         {
@@ -80,38 +82,72 @@ namespace FantasyRPG
         // Allow for the user to check their current status
         public void CheckStatus()
         {
-            Console.WriteLine(name + " current status: ");
-            Console.WriteLine("Health: " + health);
-            Console.WriteLine("Experience accumuated: " + exp);
-            Console.WriteLine("Current level: " + level);
+            string? userInput; // Register user input
+
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine($"FantasyRPG: {name} Status Check");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+
+            smoothPrinting.RapidPrint($"\nHealth: {health}\n");
+            smoothPrinting.RapidPrint($"\nMana: {mana}");
+            smoothPrinting.RapidPrint($"\nCurrent level: {level}\n");
+            smoothPrinting.RapidPrint($"\nExperience accumuated: {exp}\n");
+
+            smoothPrinting.RapidPrint("\nWould you like to see the EXP required to get to the next level? (1 for 'Yes' and anything else for 'No'");
+            smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
+            userInput = Convert.ToString(Console.ReadKey()); // Register the input
+
+            switch (userInput)
+            {
+                case "1":
+                    Console.Clear();
+                    CalculateExperienceForNextLevel();
+                    break;
+
+                default:
+                    Console.Clear(); // Clear the console to avoid overlapping
+                    gameDashboard dash = new gameDashboard(); 
+                    dash.dashboard(name, npcsEncountered); // Return to the user dashboard
+                    break;
+            }
         }
 
         // Used for recovery
-        public void Meditate()
-        {
-            Console.WriteLine(name + " has meditated ");
-            mana = mana + 20;
-            health = health + 20;
-            Console.WriteLine(name + " has meditated and has recovered:\n");
-            Console.WriteLine("+20 health");
-            Console.WriteLine("+20 mana");
-        }
+        // public void Meditate()
+        // {
+            // Console.WriteLine(name + " has meditated ");
+            // mana = mana + 20;
+            // health = health + 20;
+            // Console.WriteLine(name + " has meditated and has recovered:\n");
+            // Console.WriteLine("+20 health");
+            // Console.WriteLine("+20 mana");
+        // }
 
 
         // Levelling methods 
         public void CalculateExperienceForNextLevel()
         {
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine($"FantasyRPG: {name} Status Check - Required EXP for next level");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+
             if (level < 5)
             {
                 experienceRequiredForNextLevel = 10 * level;
-                Console.WriteLine("For the next level, you'll need " + experienceRequiredForNextLevel + " amount of experience.");
+                smoothPrinting.RapidPrint("\nFor the next level, you'll need " + experienceRequiredForNextLevel + " amount of experience.\n");
             }
             else if (level > 10)
             {
                 experienceRequiredForNextLevel = 100 * level;
-                Console.WriteLine("For the next level, you'll need " + experienceRequiredForNextLevel + " amount of experience.");
+                smoothPrinting.RapidPrint("\nFor the next level, you'll need " + experienceRequiredForNextLevel + " amount of experience.\n");
             }
-            // This sequence of logic will continue as the console game develops (probably not haha)
+
+
+            smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
+            Console.ReadKey(); // Register user input
+            Console.Clear(); // Clear the console to avoid overlapping
+            gameDashboard dash = new gameDashboard();
+            dash.dashboard(name, npcsEncountered); // Return to the user dashboard
 
         }
 
@@ -436,6 +472,7 @@ namespace FantasyRPG
             // mana = mana - 30;
             // exp += 0.3f;
         // }
+
         // WIll be used to display the Mage Combat System header
         public void DisplayMageCombatSystemHeader()
         {
@@ -446,6 +483,10 @@ namespace FantasyRPG
 
         public void MageSpellAttack() // Will load the Mage Combat System for fighting situations
         {
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("FantasyRPG: Mage Combat System - Attack");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+
             string? userInput; // Register the user input in string format for input validation purposes
             List<(string magicSpell, int damage, int manaRequirement)> chosenSpellForAttack; // Will be used to append the chosen spell to attack, and will be cleared through each iteration
             int spellCount = 1; // Likewise with the chosen spell, this will also be cleared through each iteration to keep track of number of user spells
@@ -470,9 +511,9 @@ namespace FantasyRPG
             }
 
             // Register user input
-            smoothPrinting.RapidPrint("\nSelect a spell to attack (Enter '0' to return back): ");
+            // smoothPrinting.RapidPrint("\nSelect a spell to attack (Enter '0' to return back): ");
 
-            smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.");
+            smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.\n");
             smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the MCS.");
 
             Console.ReadKey(); // Register user input
@@ -493,27 +534,31 @@ namespace FantasyRPG
 
         public void DisplayMageStatus() 
         {
+            DisplayMageCombatSystemHeader(); // Display the MCSH (Mage Combat System Header)
+
             int? numCount = 1; // Will display the numeric choices for the Mage's options
             string? userChoice;
 
-            string[] mageChoices = ["Attack", "Check Inventory", "Escape (LOW CHANCE)"]; // Array displaying the different Mage's options
+            string[] mageChoices = ["Attack", "Check Inventory", "Check Status", "Attempt Escape (WARNING: Low Chance)"]; // Array displaying the different Mage's options
             smoothPrinting.RapidPrint($"{name} - Mage Status\n");
             smoothPrinting.RapidPrint($"\nHealth: {health}"); // Display Mage's remaining health
             smoothPrinting.RapidPrint($"\nMana: {mana}"); // Display Mage's remaining mama
             smoothPrinting.RapidPrint($"\nRemaining Healing Potions: {numOfPotionsInInventory}\n"); // Display Mage's remaining potions
 
+
             foreach (var choice in mageChoices)
             {
-                smoothPrinting.RapidPrint($"\n{numCount}. {choice}");
+                smoothPrinting.RapidPrint($"\n{numCount}. {choice}\n");
                 numCount++; // Increment the value to display the other remaining choices
             }
 
-            smoothPrinting.RapidPrint("Enter the corresponding value: ");
+            smoothPrinting.RapidPrint("\nEnter the corresponding value: ");
             userChoice = Convert.ToString(Console.ReadLine()); // Register Mage's choice
 
             switch (userChoice)
             {
                 case "1":
+                    Console.Clear(); // Clear the console, to avoid overlapping
                     MageSpellAttack();
                     break;
                 case "2":
@@ -525,9 +570,19 @@ namespace FantasyRPG
                     break;
                 case "3":
                     // Generate a random value
-                    Random ran = new Random(); 
-                    ran.Next(0, 50);
-
+                    // Random ran = new Random(); 
+                    // ran.Next(0, 50);
+                    // For this stage, if the user gets a value such as (i.e. 1, 10, 12, 15) they will luckily escape, otherwise they'll be locked into combat and cannot attempt escape again.
+                    // Should they escape, they'll return to the Forest Of Mysteries
+                    smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.\n");
+                    smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
+                    Console.ReadKey();
+                    Console.Clear();
+                    DisplayMageStatus(); // Recurse back
+                    break;
+                default:
+                    smoothPrinting.RapidPrint("\nInvalid input, please try again!");
+                    DisplayMageStatus(); // Recurse back
                     break;
 
             }
@@ -2200,9 +2255,7 @@ namespace FantasyRPG
             Console.ReadKey(); // Read user input before proceeding with combat
             Console.Clear(); // Clear the console, to prevent dialogue from getting in the way 
 
-            mage.DisplayMageCombatSystemHeader(); // Display the Mage combat system header
             mage.DisplayMageStatus(); // Display Mage's current status
-            mage.MageSpellAttack(); // Display the attack choices that the user has
         }
 
         private void SomaliPirateConfrontation(SomaliPirate pirate)
