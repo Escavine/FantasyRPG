@@ -22,7 +22,7 @@ namespace FantasyRPG
     {
         // Generic character attributes
         public string name;
-        public int health;
+        public int currentHealth, maxHealth;
         public List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> weapon;
         public float numOfPotionsInInventory;
         public float maxPotions;
@@ -50,7 +50,8 @@ namespace FantasyRPG
             npcsEncountered = null; // During the start of the game, the user will have not encountered any NPC's.
             specialAtkRecharge = 0; // Preset to 0%, as user attacks this will linearly rise
             arcaniaGoldCoins = 0;
-            health = 100;
+            currentHealth = 100;
+            maxHealth = 100; // This can increase overtime, through gaining more experience + SP (Will be introduced in the future)
             exp = 0f;
             numOfPotionsInInventory = 0;
             maxPotions = 5;
@@ -80,22 +81,22 @@ namespace FantasyRPG
         }
 
         // Allow for the user to check their current status
-        public void CheckStatus()
+        public virtual void CheckStatus()
         {
-            string? userInput; // Register user input
+            string userInput; // Register user input
 
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine($"FantasyRPG: {name}'s Status Check");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
             smoothPrinting.RapidPrint($"\nCurrent Level: {level}");
-            smoothPrinting.RapidPrint($"\nHealth: {health}");
+            smoothPrinting.RapidPrint($"\nHealth: {currentHealth}");
             smoothPrinting.RapidPrint($"\nMana: {mana}");
-            smoothPrinting.RapidPrint($"\nExperience accumuated: {exp}\n");
+            smoothPrinting.RapidPrint($"\nExperience accumulated: {exp}\n");
 
-            smoothPrinting.RapidPrint("\nWould you like to see the EXP required to get to the next level? (1 for 'Yes' and anything else for 'No'\n");
-            smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
-            userInput = Convert.ToString(Console.ReadKey()); // Register the input
+            smoothPrinting.RapidPrint("\nWould you like to see the EXP required to get to the next level? (1 for 'Yes' and anything else for 'No')\n");
+            smoothPrinting.RapidPrint("Enter a corresponding value: ");
+            userInput = Console.ReadLine(); // Register the input
 
             switch (userInput)
             {
@@ -103,7 +104,6 @@ namespace FantasyRPG
                     Console.Clear();
                     CalculateExperienceForNextLevel();
                     break;
-
                 default:
                     smoothPrinting.RapidPrint("You will now be redirected back to the dashboard.");
                     smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
@@ -131,22 +131,45 @@ namespace FantasyRPG
         public void CalculateExperienceForNextLevel()
         {
             smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine($"FantasyRPG: {name} Status Check - Required EXP for next Level");
+            smoothPrinting.PrintLine($"FantasyRPG: {name}'s Status Check - Required EXP for next Level");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
             if (level < 5)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 experienceRequiredForNextLevel = 10 * level;
-                smoothPrinting.RapidPrint("\nFor the next level, you'll need " + experienceRequiredForNextLevel + " amount of experience.\n");
+
+                double percentage = exp / experienceRequiredForNextLevel; // Find the mid value, to engage progress bar
+
+                // Defining the bar size for a visual representation of the EXP requirements
+                int barLength = 30;
+                int filledLength = (int)Math.Round(barLength * percentage); // Determine the amount of the bar needing to be filled
+
+                // Generating the progress bar with the following variables
+                string progressBar = new string('█', filledLength) + new string(' ', barLength - filledLength);
+
+
+                smoothPrinting.RapidPrint($"\nExperience Required for Level {level + 1}: [{progressBar}] ({exp}/{experienceRequiredForNextLevel})\n");
             }
             else if (level > 10)
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 experienceRequiredForNextLevel = 100 * level;
-                smoothPrinting.RapidPrint("\nFor the next level, you'll need " + experienceRequiredForNextLevel + " amount of experience.\n");
+                double percentage = exp / experienceRequiredForNextLevel; // Find the mid value, to engage progress bar
+
+                // Defining the bar size for a visual representation of the EXP requirements
+                int barLength = 30;
+                int filledLength = (int)Math.Round(barLength * percentage); // Determine the amount of the bar needing to be filled
+
+                // Generating the progress bar with the following variables
+                string progressBar = new string('█', filledLength) + new string(' ', barLength - filledLength);
+
+                smoothPrinting.RapidPrint($"\nExperience Required for Level {level + 1}: [{progressBar}] ({exp}/{experienceRequiredForNextLevel})\n");
             }
 
 
             smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
+            Console.ResetColor(); // Reset console colour before leaving
             Console.ReadKey(); // Register user input
             Console.Clear(); // Clear the console to avoid overlapping
             gameDashboard dash = new gameDashboard();
@@ -331,6 +354,8 @@ namespace FantasyRPG
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 smoothPrinting.FastPrint("Your level is lower than expected, the Dragon exerts pressure, reducing your attack damage");
+                Console.ResetColor(); // Reset Console Colour
+                
             }
 
         }
@@ -535,6 +560,11 @@ namespace FantasyRPG
 
         }
 
+        public override void CheckStatus()
+        {
+            base.CheckStatus();
+        }
+
         public void DisplayMageStatus() 
         {
             DisplayMageCombatSystemHeader(); // Display the MCSH (Mage Combat System Header)
@@ -544,7 +574,7 @@ namespace FantasyRPG
 
             string[] mageChoices = ["Attack", "Check Inventory", "Check Status", "Attempt Escape (WARNING: Low Chance)"]; // Array displaying the different Mage's options
             smoothPrinting.RapidPrint($"{name} - Mage Status\n");
-            smoothPrinting.RapidPrint($"\nHealth: {health}"); // Display Mage's remaining health
+            smoothPrinting.RapidPrint($"\nHealth: {currentHealth}"); // Display Mage's remaining health
             smoothPrinting.RapidPrint($"\nMana: {mana}"); // Display Mage's remaining mama
             smoothPrinting.RapidPrint($"\nRemaining Healing Potions: {numOfPotionsInInventory}\n"); // Display Mage's remaining potions
 
@@ -2255,7 +2285,7 @@ namespace FantasyRPG
             smoothPrinting.RapidPrint("\nWindsom (The Guardian Dragon): \"Ah, the mysteries of summonings. Perhaps I do, perhaps I don't. But why should I reveal such knowledge to a mere mortal like you? Prove your worth, Mage. Defeat me in battle, and perhaps then, I shall consider sharing what I know.\"\n");
 
 
-            smoothPrinting.RapidPrint("\n*Windsom slowly sets down into the forest, it's wings shuddering the leaves, crushing branches and any other obstacle that gets in its way, setting the stage for your battle.*\n");
+            smoothPrinting.RapidPrint("\n*Windsom slowly sets down into the forest, it's wings shuddering the leaves, crushing branches and any other obstacle that gets in its way, setting the stage for battle*\n");
 
             // Enable the combat system
             smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to engage the Mage Combat System.");
@@ -2573,6 +2603,18 @@ namespace FantasyRPG
             // }
 
         }
+    }
+
+
+    public class UIManager
+    {
+        public void DisplayProgressBar() // Will be used to display progress bars (i.e. health, mana etc.)
+        {
+            // Insert code required
+
+
+        }
+
     }
 
     public class SmoothConsole // This will be used to ensure output from the console is smooth and aesthetic looking
