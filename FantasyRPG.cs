@@ -469,9 +469,22 @@ namespace FantasyRPG
                 spellCount++;
             }
 
+            // Register user input
             smoothPrinting.RapidPrint("\nSelect a spell to attack (Enter '0' to return back): ");
 
-            Console.ReadKey(); // Testing
+            smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.");
+            smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the MCS.");
+
+            Console.ReadKey(); // Register user input
+            Console.Clear(); // Clear the console to avoid overlapping
+            DisplayMageStatus(); // Return back (still in development)
+
+            // userInput = Convert.ToString(Console.ReadLine());
+
+
+            // Next steps: Create a function that will count the number of spells within the individuals 'mageSpell' list and make a switch case for it.
+
+
             
             // chosenSpellForAttack.Add(magicSpells.); // Append the chosen spell to another variable
 
@@ -502,6 +515,20 @@ namespace FantasyRPG
             {
                 case "1":
                     MageSpellAttack();
+                    break;
+                case "2":
+                    CheckInventory();
+                    smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
+                    Console.ReadKey(); // Register user's input
+                    Console.Clear(); // Clear the console to prevent confusion
+                    DisplayMageStatus(); // Recurse back to the original function
+                    break;
+                case "3":
+                    // Generate a random value
+                    Random ran = new Random(); 
+                    ran.Next(0, 50);
+
+                    break;
 
             }
                
