@@ -84,17 +84,19 @@ namespace FantasyRPG
         // Allow for the user to check their current status
         public virtual void CheckStatus()
         {
+            UIManager UI = new UIManager(); // Engage the UIManager for progress bars
             string userInput; // Register user input
 
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine($"FantasyRPG: {name}'s Current Status Check");
             smoothPrinting.PrintLine("--------------------------------------------------");
-            
+
             // Display the users status
-            smoothPrinting.RapidPrint($"\nLevel: {level}");
-            smoothPrinting.RapidPrint($"\nRemaining Health: {currentHealth}");
-            smoothPrinting.RapidPrint($"\nCurrent Mana: {currentMana}");
+            smoothPrinting.RapidPrint($"\nLevel: {level}\n");
+            UI.DisplayProgressBar("Remaining Health:", currentHealth, maxHealth, 30);
+            UI.DisplayProgressBar("Current Mana:", currentMana, maxMana, 30);
             smoothPrinting.RapidPrint($"\nExperience accumulated: {exp}\n");
+
 
             smoothPrinting.RapidPrint("\nWould you like to see the EXP required to get to the next level? (1 for 'Yes' and anything else for 'No')\n");
             smoothPrinting.RapidPrint("Enter a corresponding value: ");
@@ -132,39 +134,21 @@ namespace FantasyRPG
         // Levelling methods 
         public void CalculateExperienceForNextLevel()
         {
+            UIManager UI = new UIManager(); // Engage the UIManager for progress bars
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine($"FantasyRPG: {name}'s Status Check - Required EXP for next Level");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
+            // Depending on level, requirement for level is adjusted
             if (level < 5)
             {
                 experienceRequiredForNextLevel = 10 * level;
-
-                double percentage = exp / experienceRequiredForNextLevel; // Find the mid value, to engage progress bar
-
-                // Defining the bar size for a visual representation of the EXP requirements
-                int barLength = 30;
-                int filledLength = (int)Math.Round(barLength * percentage); // Determine the amount of the bar needing to be filled
-
-                // Generating the progress bar with the following variables
-                string progressBar = new string('█', filledLength) + new string(' ', barLength - filledLength);
-
-
-                smoothPrinting.RapidPrint($"\nExperience Required for Level {level + 1}: [{progressBar}] ({exp}/{experienceRequiredForNextLevel})\n");
+                UI.DisplayProgressBar($"Experience required for {level + 1}", exp, experienceRequiredForNextLevel, 30);
             }
             else if (level > 10)
             {
                 experienceRequiredForNextLevel = 100 * level;
-                double percentage = exp / experienceRequiredForNextLevel; // Find the mid value, to engage progress bar
-
-                // Defining the bar size for a visual representation of the EXP requirements
-                int barLength = 30;
-                int filledLength = (int)Math.Round(barLength * percentage); // Determine the amount of the bar needing to be filled
-
-                // Generating the progress bar with the following variables
-                string progressBar = new string('█', filledLength) + new string(' ', barLength - filledLength);
-
-                smoothPrinting.RapidPrint($"\nExperience Required for Level {level + 1}: [{progressBar}] ({exp}/{experienceRequiredForNextLevel})\n");
+                UI.DisplayProgressBar($"Experience required for {level + 1}", exp, experienceRequiredForNextLevel, 30);
             }
 
 
@@ -574,8 +558,8 @@ namespace FantasyRPG
 
             string[] mageChoices = ["Attack", "Check Inventory", "Check Status", "Attempt Escape (WARNING: Low Chance)"]; // Array displaying the different Mage's options
             smoothPrinting.RapidPrint($"{name} - Mage Status\n");
-            UI.DisplayProgressBar("Health", currentHealth, maxHealth, 5); // Display Mage's health
-            UI.DisplayProgressBar("Mana", currentMana, maxMana, 5); // Display Mage's remaining mama
+            UI.DisplayProgressBar("Health", currentHealth, maxHealth, 30); // Display Mage's health
+            UI.DisplayProgressBar("Mana", currentMana, maxMana, 30); // Display Mage's remaining mama
             smoothPrinting.RapidPrint($"\nRemaining Healing Potions: {numOfPotionsInInventory}\n"); // Display Mage's remaining potions
 
 
@@ -1038,7 +1022,7 @@ namespace FantasyRPG
     {
         static void Main(string[] args) // Future reference: With the implementation of the authentication system soon, this will be moved.
         {
-            // GameMenu menu = new GameMenu();
+            GameMenu menu = new GameMenu();
             // MagicCouncil encounter = new MagicCouncil(); // Debugging
             // string name = "Silver"; // Debugging
             // encounter.firstEncounter(name); // Debugging
@@ -1046,37 +1030,37 @@ namespace FantasyRPG
             // firstScenario.usersFirstJourney("Tristian");
 
             // Define values for debugging mage
-            string mageName = "Zephyr";
-            List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> mageWeapon = new List<(string, int, string, string, string)> {
-               ("Heartblade's Vesper", 150, "Legendary", "Staff", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right. I took it, the developer himself :3")
-            };
+            // string mageName = "Zephyr";
+            // List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> mageWeapon = new List<(string, int, string, string, string)> {
+               // ("Heartblades Vesper", 150, "Legendary", "Staff", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right. I took it, the developer himself :3")
+            // };
 
-            string[] mageSpecialties = new string[] { "Fire", "Lightning" };
-            int arcaniaGoldCoins = 100;
+            // string[] mageSpecialties = new string[] { "Fire", "Lightning" };
+            // int arcaniaGoldCoins = 100;
 
-            List<(string, int, int)> magicSpells = new List<(string, int, int)> {
-                ("Eucladian-Eye", 80, 45),
-                ("Developer's Wrath", 1000, 20)
-            };
+            //List<(string, int, int)> magicSpells = new List<(string, int, int)> {
+            //    ("Eucladian-Eye", 80, 45),
+             //   ("Developer's Wrath", 1000, 20)
+            // };
 
-            string[] currentInventory = new string[] { "Health Potion", "Mana Potion" };
-            int specialAtkRecharge = 100;
+            // string[] currentInventory = new string[] { "Health Potion", "Mana Potion" };
+            // int specialAtkRecharge = 100;
 
-            List<(string npcName, string npcInformation, string npcAffiliation)> npcsEncountered = new List<(string, string, string)> {
-                ("Veridian Pendragon", "False ranker and solo assassin, very capable and someone not to underestimate.", "Heartblade Association"),
-                ("Evelyn Everbright", "Rank 10 of the Arcania's Magic Council and Guildmaster of Arcania's Magic Council.", "Arcania's Magic Council/Arcane Sentinels")
+            // List<(string npcName, string npcInformation, string npcAffiliation)> npcsEncountered = new List<(string, string, string)> {
+             //    ("Veridian Pendragon", "False ranker and solo assassin, very capable and someone not to underestimate.", "Heartblade Association"),
+             //   ("Evelyn Everbright", "Rank 10 of the Arcania's Magic Council and Guildmaster of Arcania's Magic Council.", "Arcania's Magic Council/Arcane Sentinels")
 
-            };
+            // };
 
             // Create a new Mage object with the specified arguments
-            Mage debuggingMage = new Mage(mageName, mageWeapon, mageSpecialties, arcaniaGoldCoins, magicSpells, currentInventory, specialAtkRecharge, npcsEncountered); // Debugging Mage
-            ForestOfMysteries scenario = new ForestOfMysteries();
-            int remainingAttempts = 3;
+            // Mage debuggingMage = new Mage(mageName, mageWeapon, mageSpecialties, arcaniaGoldCoins, magicSpells, currentInventory, specialAtkRecharge, npcsEncountered); // Debugging Mage
+            // ForestOfMysteries scenario = new ForestOfMysteries();
+            // int remainingAttempts = 3;
 
-            scenario.forestOfMysteries(debuggingMage, remainingAttempts); // Call the forestOfMysteries method with the Mage object and remaining attempts
+            // scenario.forestOfMysteries(debuggingMage, remainingAttempts); // Call the forestOfMysteries method with the Mage object and remaining attempts
 
 
-            // menu.gameMenu(); // User is first directed to the game menu method
+            menu.gameMenu(); // User is first directed to the game menu method
 
             // List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered = new List<(string npcName, string npcDescription, string npcAffiliation)>() // Debugging: populating data
             // {
@@ -1410,7 +1394,7 @@ namespace FantasyRPG
                 // Should the user decided to become a Mage
                 case "1":
                     int choiceIncrementer = 1; // Used to increment the user choice when picking magic types
-                    int startMageJourneyInput;
+                    string? startMageJourneyInput;
                     List<(string npcName, string npcDescription, string npcAffiliation)> mageClassNpcsEncountered = null; // During class selection, individual will have not met any NPCs, therefore this value will be remained null.
 
                     // Arrays containing the variety of different magic choices, spells and weapons.
@@ -1744,77 +1728,85 @@ namespace FantasyRPG
                     int mageSpecialAtkRecharge = 0; // Preset
 
                     Mage mage = new Mage(mageName, mageStaff, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory.ToArray(), mageSpecialAtkRecharge, mageClassNpcsEncountered);
-
-                    smoothPrinting.PrintLine("---------Mage Status----------\n"); // Display the users status (i.e. their chosen attack types, weapon etc.)
-                    smoothPrinting.FastPrint($"Mage Name: {mageName} \nMage's Weapon Type: {randomWeapon.weaponType} \nMage's Weapon: {randomWeapon.weaponName}, Damage: {randomWeapon.damage}, Rarity: {randomWeapon.rarity}");
-                    smoothPrinting.FastPrint("\nMage's Magic Specialities: " + string.Join(", ", magicSpecialties));
-
-                    Console.WriteLine(); // Space the properties for neatness
-
-                    // Display users chosen spells
-                    smoothPrinting.FastPrint("\n---------Mage's Chosen Spells---------");
-
-                    foreach (var chosenSpell in magicSpells)
-                    {
-                        smoothPrinting.RapidPrint($"\n * {chosenSpell.magicSpell}: Damage - {chosenSpell.damage}, Mana Requirement - {chosenSpell.manaRequirement}");
-                    };
-
-                    Console.WriteLine(); // Seperate lines
-                    smoothPrinting.CenterPrint("\nWould you like to embark on your journey in the world of Arcania?");
-                    smoothPrinting.RapidPrint("\nEnter the following value, to be directed");
-                    Console.WriteLine(); // Seperate lines
-                    smoothPrinting.RapidPrint("1 - Start your adventure");
-                    smoothPrinting.RapidPrint("\n2 - Return to class selection");
-                    smoothPrinting.RapidPrint("\n3 - Return to the Menu");
-                    Console.WriteLine(); // Seperate lines
-                    smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
-                    startMageJourneyInput = Convert.ToInt32(Console.ReadLine()); // Register the user input
-
-
-                    switch (startMageJourneyInput)
-                    {
-                        case 1:
-                            Console.Clear(); // Neatness
-                            smoothPrinting.FastPrint("First scenario\n");
-                            Console.WriteLine("You will now be sent to the world of Arcania, make sure to not die.");
-                            Console.Clear(); // Neatness
-                            Console.ForegroundColor = ConsoleColor.White; // Reset the console colour
-                            ForestOfMysteries mageJourney = new ForestOfMysteries(); // Journey start!
-                            mageJourney.forestOfMysteries(mage);
-                            break;
-                        case 2:
-                            userChoice = null;
-                            mageName = null;
-                            mageStaff = null;
-                            magicSpecialties = null;
-                            magicSpells = null; // Clear all parameters from their initial values
-                            mageInventory = null;
-                            smoothPrinting.FastPrint("\nYou will now be redirected to the class selection screen...");
-                            Console.ForegroundColor = ConsoleColor.White; // Reset console color
-                            Console.Clear(); // Clear the console to prevent confusion + cleaner look
-                            userClass(); // Redirect user to select a different class...
-                            break;
-                        case 3:
-                            userChoice = null;
-                            mageName = null;
-                            mageStaff = null;
-                            magicSpecialties = null;
-                            magicSpells = null; // Clear all parameters from their initial values
-                            mageInventory = null;
-                            GameMenu menu = new GameMenu();
-                            smoothPrinting.FastPrint("\nYou will now be directed to the game menu...");
-                            Console.ForegroundColor = ConsoleColor.White; // Reset console color
-                            Console.Clear(); // Clear the console to prevent confusion + cleaner look
-                            menu.gameMenu(); // Redirect user back to the the game menu
-                            break;
-
-                        default:
-                            Console.WriteLine("Invalid input, ensure that you enter the correct value (i.e. the value '1').");
-                            Console.Clear();
-                            break;
-
-                    }
+                    DisplayMageDetails(); // Proceed to the function via function call to display Mage's details
                     break;
+
+
+                    void DisplayMageDetails()
+                    {
+                        smoothPrinting.PrintLine("---------Mage Status----------\n"); // Display the users status (i.e. their chosen attack types, weapon etc.)
+                        smoothPrinting.FastPrint($"Mage Name: {mageName} \nMage's Weapon Type: {randomWeapon.weaponType} \nMage's Weapon: {randomWeapon.weaponName}, Damage: {randomWeapon.damage}, Rarity: {randomWeapon.rarity}");
+                        smoothPrinting.FastPrint("\nMage's Magic Specialities: " + string.Join(", ", magicSpecialties));
+
+                        Console.WriteLine(); // Space the properties for neatness
+
+                        // Display users chosen spells
+                        smoothPrinting.FastPrint("\n---------Mage's Chosen Spells---------");
+
+                        foreach (var chosenSpell in magicSpells)
+                        {
+                            smoothPrinting.RapidPrint($"\n * {chosenSpell.magicSpell}: Damage - {chosenSpell.damage}, Mana Requirement - {chosenSpell.manaRequirement}");
+                        };
+
+                        Console.WriteLine(); // Seperate lines
+                        smoothPrinting.CenterPrint("\nWould you like to embark on your journey in the world of Arcania?");
+                        smoothPrinting.RapidPrint("\nEnter the following value, to be directed");
+                        Console.WriteLine(); // Seperate lines
+                        smoothPrinting.RapidPrint("1 - Start your adventure");
+                        smoothPrinting.RapidPrint("\n2 - Return to class selection");
+                        smoothPrinting.RapidPrint("\n3 - Return to the Menu");
+                        Console.WriteLine(); // Seperate lines
+                        smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
+                        startMageJourneyInput = Console.ReadLine(); // Register the user input
+
+
+                        switch (startMageJourneyInput)
+                        {
+                            case "1":
+                                Console.Clear(); // Neatness
+                                smoothPrinting.FastPrint("First scenario\n");
+                                Console.WriteLine("You will now be sent to the world of Arcania, make sure to not die.");
+                                Console.Clear(); // Neatness
+                                Console.ForegroundColor = ConsoleColor.White; // Reset the console colour
+                                ForestOfMysteries mageJourney = new ForestOfMysteries(); // Journey start!
+                                mageJourney.forestOfMysteries(mage);
+                                break;
+                            case "2":
+                                startMageJourneyInput = null;
+                                userChoice = null;
+                                mageName = null;
+                                mageStaff = null;
+                                magicSpecialties = null;
+                                magicSpells = null; // Clear all parameters from their initial values
+                                mageInventory = null;
+                                smoothPrinting.FastPrint("\nYou will now be redirected to the class selection screen...");
+                                Console.ForegroundColor = ConsoleColor.White; // Reset console color
+                                Console.Clear(); // Clear the console to prevent confusion + cleaner look
+                                userClass(); // Redirect user to select a different class...
+                                break;
+                            case "3":
+                                startMageJourneyInput = null;
+                                userChoice = null;
+                                mageName = null;
+                                mageStaff = null;
+                                magicSpecialties = null;
+                                magicSpells = null; // Clear all parameters from their initial values
+                                mageInventory = null;
+                                GameMenu menu = new GameMenu();
+                                smoothPrinting.FastPrint("\nYou will now be directed to the game menu...");
+                                Console.ForegroundColor = ConsoleColor.White; // Reset console color
+                                Console.Clear(); // Clear the console to prevent confusion + cleaner look
+                                menu.gameMenu(); // Redirect user back to the the game menu
+                                break;
+                            default:
+                                Console.WriteLine("Invalid input, ensure that you enter the correct value (i.e. the value '1').");
+                                Console.ReadKey();
+                                Console.Clear();
+                                DisplayMageDetails();
+                                break;
+
+                        }
+                    }
 
                 case "2":
                     Console.Clear();
@@ -2599,18 +2591,19 @@ namespace FantasyRPG
     public class UIManager // UIManager - a class that will allow for the display of progress bars, prompts etc.
     {
         SmoothConsole smoothPrinting = new SmoothConsole(); // Engage the smoothconsole class
-        public void DisplayProgressBar(string title, int currentValue, int maxValue, int barLength) // Will be used to display progress bars (i.e. health, mana etc.)
+        public void DisplayProgressBar(string title, float currentValue, int maxValue, int barLength)
         {
-            // Retrieve the percentage amount
-            double percentage = (double)currentValue / maxValue;
+            // Calculate the percentage
+            double percentage = currentValue / maxValue;
 
-            // Retrieve the filled length value and generate a progress bar
+            // Calculate the number of filled characters
             int filledLength = (int)Math.Round(percentage * barLength);
-            string progressBar = new string('█', filledLength) + new string(' ', barLength);
 
-            // Output the progress bar based on the context (i.e. level, health, mana etc.)
-            Console.WriteLine($"{title}: [{progressBar}] [{currentValue}/{maxValue}]");
+            // Generate the progress bar
+            string progressBar = new string('█', filledLength) + new string(' ', barLength - filledLength);
 
+            // Output the progress bar
+            smoothPrinting.RapidPrint($"\n{title}: [{progressBar}] [{currentValue}/{maxValue}]");
         }
 
 
