@@ -26,7 +26,7 @@ namespace FantasyRPG
         public List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> weapon;
         public float numOfPotionsInInventory;
         public float maxPotions;
-        public int mana;
+        public int currentMana, maxMana;
         public string[] currentInventory; // Will contain the users potions and other weapons.
         public int arcaniaGoldCoins; // Currency for the city of Arcanith
         public int specialAtkRecharge;// Percentage value, going upto 100%
@@ -56,7 +56,8 @@ namespace FantasyRPG
             numOfPotionsInInventory = 0;
             maxPotions = 5;
             level = 1;
-            mana = 100;
+            currentMana = 100;
+            maxMana = 100; // This can increase overtime, through gaining more experience + SP (Will be introduced in the future)
         }
 
         // WIll allow user to equip the following weapon (e.g. if they use a bow, blades, sword etc.)
@@ -86,12 +87,13 @@ namespace FantasyRPG
             string userInput; // Register user input
 
             smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine($"FantasyRPG: {name}'s Status Check");
+            smoothPrinting.PrintLine($"FantasyRPG: {name}'s Current Status Check");
             smoothPrinting.PrintLine("--------------------------------------------------");
-
-            smoothPrinting.RapidPrint($"\nCurrent Level: {level}");
-            smoothPrinting.RapidPrint($"\nHealth: {currentHealth}");
-            smoothPrinting.RapidPrint($"\nMana: {mana}");
+            
+            // Display the users status
+            smoothPrinting.RapidPrint($"\nLevel: {level}");
+            smoothPrinting.RapidPrint($"\nRemaining Health: {currentHealth}");
+            smoothPrinting.RapidPrint($"\nCurrent Mana: {currentMana}");
             smoothPrinting.RapidPrint($"\nExperience accumulated: {exp}\n");
 
             smoothPrinting.RapidPrint("\nWould you like to see the EXP required to get to the next level? (1 for 'Yes' and anything else for 'No')\n");
@@ -564,15 +566,16 @@ namespace FantasyRPG
 
         public void DisplayMageStatus() 
         {
-            DisplayMageCombatSystemHeader(); // Display the MCSH (Mage Combat System Header)
+            DisplayMageCombatSystemHeader(); // Display the MCS (Mage Combat System Header)
+            UIManager UI = new UIManager(); // Engage the UI manager for progress bars
 
             int? numCount = 1; // Will display the numeric choices for the Mage's options
             string? userChoice;
 
             string[] mageChoices = ["Attack", "Check Inventory", "Check Status", "Attempt Escape (WARNING: Low Chance)"]; // Array displaying the different Mage's options
             smoothPrinting.RapidPrint($"{name} - Mage Status\n");
-            smoothPrinting.RapidPrint($"\nHealth: {currentHealth}"); // Display Mage's remaining health
-            smoothPrinting.RapidPrint($"\nMana: {mana}"); // Display Mage's remaining mama
+            UI.DisplayProgressBar("Health", currentHealth, maxHealth, 5); // Display Mage's health
+            UI.DisplayProgressBar("Mana", currentMana, maxMana, 5); // Display Mage's remaining mama
             smoothPrinting.RapidPrint($"\nRemaining Healing Potions: {numOfPotionsInInventory}\n"); // Display Mage's remaining potions
 
 
@@ -2415,7 +2418,7 @@ namespace FantasyRPG
                 smoothPrinting.RapidPrint($"\n2. “My identity remains a secret, that I shall not reveal.\n”");
                 smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
 
-                choice1 = Convert.ToString(Console.ReadLine());
+                choice1 = Console.ReadLine();
 
                 switch (choice1)
                 {
@@ -2604,9 +2607,9 @@ namespace FantasyRPG
             // Retrieve the filled length value and generate a progress bar
             int filledLength = (int)Math.Round(percentage * barLength);
             string progressBar = new string('█', filledLength) + new string(' ', barLength);
-            
+
             // Output the progress bar based on the context (i.e. level, health, mana etc.)
-            smoothPrinting.RapidPrint($"\n{title}: ({progressBar}] [{currentValue}/{maxValue})\n");
+            Console.WriteLine($"{title}: [{progressBar}] [{currentValue}/{maxValue}]");
 
         }
 
