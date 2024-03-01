@@ -85,15 +85,15 @@ namespace FantasyRPG
             string? userInput; // Register user input
 
             smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine($"FantasyRPG: {name} Status Check");
+            smoothPrinting.PrintLine($"FantasyRPG: {name}'s Status Check");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
-            smoothPrinting.RapidPrint($"\nHealth: {health}\n");
+            smoothPrinting.RapidPrint($"\nCurrent Level: {level}");
+            smoothPrinting.RapidPrint($"\nHealth: {health}");
             smoothPrinting.RapidPrint($"\nMana: {mana}");
-            smoothPrinting.RapidPrint($"\nCurrent level: {level}\n");
             smoothPrinting.RapidPrint($"\nExperience accumuated: {exp}\n");
 
-            smoothPrinting.RapidPrint("\nWould you like to see the EXP required to get to the next level? (1 for 'Yes' and anything else for 'No'");
+            smoothPrinting.RapidPrint("\nWould you like to see the EXP required to get to the next level? (1 for 'Yes' and anything else for 'No'\n");
             smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
             userInput = Convert.ToString(Console.ReadKey()); // Register the input
 
@@ -105,6 +105,9 @@ namespace FantasyRPG
                     break;
 
                 default:
+                    smoothPrinting.RapidPrint("You will now be redirected back to the dashboard.");
+                    smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
+                    Console.ReadKey(); // Register user input
                     Console.Clear(); // Clear the console to avoid overlapping
                     gameDashboard dash = new gameDashboard(); 
                     dash.dashboard(name, npcsEncountered); // Return to the user dashboard
@@ -128,7 +131,7 @@ namespace FantasyRPG
         public void CalculateExperienceForNextLevel()
         {
             smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine($"FantasyRPG: {name} Status Check - Required EXP for next level");
+            smoothPrinting.PrintLine($"FantasyRPG: {name} Status Check - Required EXP for next Level");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
             if (level < 5)
@@ -552,7 +555,7 @@ namespace FantasyRPG
                 numCount++; // Increment the value to display the other remaining choices
             }
 
-            smoothPrinting.RapidPrint("\nEnter the corresponding value: ");
+            smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
             userChoice = Convert.ToString(Console.ReadLine()); // Register Mage's choice
 
             switch (userChoice)
@@ -569,6 +572,10 @@ namespace FantasyRPG
                     DisplayMageStatus(); // Recurse back to the original function
                     break;
                 case "3":
+                    Console.Clear();
+                    CheckStatus(); // Allow user to check their status (FUTURE REFERENCE: ALLOW FOR STATUS TO BE USED DURING COMBAT AND OUTSIDE OF COMBAT)
+                    break;
+                case "4":
                     // Generate a random value
                     // Random ran = new Random(); 
                     // ran.Next(0, 50);
@@ -2525,9 +2532,17 @@ namespace FantasyRPG
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 Console.WriteLine(); // Spacing
                 
-                foreach (var npc in npcsEncountered)
+                if (npcsEncountered is not null) // Check if the user has encounted any NPC's during the way, before displaying
                 {
-                    smoothPrinting.RapidPrint($"\nName: {npc.npcName}\nDescription: {npc.npcDescription}\nAffiliation: {npc.npcAffiliation}\n");
+                    foreach (var npc in npcsEncountered)
+                    {
+                        smoothPrinting.RapidPrint($"\nName: {npc.npcName}\nDescription: {npc.npcDescription}\nAffiliation: {npc.npcAffiliation}\n");
+                    }
+
+                }
+                else // Should the user have not encounted any NPC's, then display this...
+                {
+                    smoothPrinting.RapidPrint("\nYou haven't encountered any NPC's at this point of time.");
                 }
 
 
