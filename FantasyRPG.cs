@@ -436,14 +436,18 @@ namespace FantasyRPG
             // mana = mana - 30;
             // exp += 0.3f;
         // }
+        // WIll be used to display the Mage Combat System header
+        public void DisplayMageCombatSystemHeader()
+        {
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("FantasyRPG: Mage Combat System");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+        }
 
         public void MageSpellAttack() // Will load the Mage Combat System for fighting situations
         {
             List<(string magicSpell, int damage, int manaRequirement)> chosenSpellForAttack; // Will be used to append the chosen spell to attack, and will be cleared through each iteration
             int spellCount = 1; // Likewise with the chosen spell, this will also be cleared through each iteration to keep track of number of user spells
-            smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine("FantasyRPG: Mage Combat System");
-            smoothPrinting.PrintLine("--------------------------------------------------");
 
             // magicSpecialties.ToList();
 
@@ -460,7 +464,7 @@ namespace FantasyRPG
             // Combat methods for the Mage class
             foreach (var spell in magicSpells) // Display all spells currently avaliable to the Mage
             {
-                smoothPrinting.RapidPrint($"\n{spellCount}. Spell: {spell.magicSpell}: Damage: {spell.damage}, \nMana Requirement: {spell.manaRequirement}\n");
+                smoothPrinting.RapidPrint($"\n{spellCount}. Spell: {spell.magicSpell}: Damage: {spell.damage}\nMana Requirement: {spell.manaRequirement}\n");
                 spellCount++;
             }
 
@@ -472,11 +476,24 @@ namespace FantasyRPG
 
         }
 
-
         public void DisplayMageStatus() 
         {
-            smoothPrinting.RapidPrint($"\n{name} Mana: {mana}\n"); // Display Mage's remaining mama
-            smoothPrinting.RapidPrint($"\n{name} Health: {health}"); // Display Mage's remaining health
+            int? numCount = 1; // Will display the numeric choices for the Mage's options
+            string? userChoice;
+
+            string[] mageChoices = ["Attack", "Check Inventory", "Escape (LOW CHANCE)"]; // Array displaying the different Mage's options
+            smoothPrinting.RapidPrint($"{name} - Mage Status\n");
+            smoothPrinting.RapidPrint($"\nHealth: {health}"); // Display Mage's remaining health
+            smoothPrinting.RapidPrint($"\nMana: {mana}"); // Display Mage's remaining mama
+            smoothPrinting.RapidPrint($"\nRemaining Healing Potions: {numOfPotionsInInventory}\n"); // Display Mage's remaining potions
+
+            foreach (var choice in mageChoices)
+            {
+                smoothPrinting.RapidPrint($"\n{numCount})
+            }
+
+            smoothPrinting.RapidPrint("Enter the corresponding value: ");
+            userChoice = Convert.ToString(Console.ReadLine()); // Register Mage's choice
         }
 
         public void MageTraining() // Might remove.
@@ -2138,12 +2155,14 @@ namespace FantasyRPG
             smoothPrinting.RapidPrint("\nWindsom (The Guardian Dragon): \"Ah, the mysteries of summonings. Perhaps I do, perhaps I don't. But why should I reveal such knowledge to a mere mortal like you? Prove your worth, Mage. Defeat me in battle, and perhaps then, I shall consider sharing what I know.\"\n");
 
 
-            smoothPrinting.RapidPrint("\n*Windsom slowly sets down into the forest, it's wings shuddering the leaves, crushing branches and any other obstacle that gets in its way, setting the stage for your battle.*");
+            smoothPrinting.RapidPrint("\n*Windsom slowly sets down into the forest, it's wings shuddering the leaves, crushing branches and any other obstacle that gets in its way, setting the stage for your battle.*\n");
 
             // Enable the combat system
-            Console.ReadKey();
-            Console.Clear();
+            smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to engage the Mage Combat System.");
+            Console.ReadKey(); // Read user input before proceeding with combat
+            Console.Clear(); // Clear the console, to prevent dialogue from getting in the way 
 
+            mage.DisplayMageCombatSystemHeader(); // Display the Mage combat system header
             mage.DisplayMageStatus(); // Display Mage's current status
             mage.MageSpellAttack(); // Display the attack choices that the user has
         }
