@@ -2077,7 +2077,7 @@ namespace FantasyRPG
             }
 
             Console.WriteLine("\n[Available Commands:]");
-            smoothPrinting.PrintLine("\n1. Fight: Confront the dragon (N/A)");
+            smoothPrinting.PrintLine("\n1. Fight: Confront the Dragon (TESTING)");
             smoothPrinting.PrintLine("\n2. North: Move northward along the path (N/A)");
             smoothPrinting.PrintLine("\n3. Inventory: View your current inventory of items (N/A)");
             smoothPrinting.PrintLine("\n4. Help: Display a list of available commands (N/A)");
@@ -2113,37 +2113,36 @@ namespace FantasyRPG
             SmoothConsole smoothPrinting = new SmoothConsole();
             Console.Clear();
             smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine("Forest of Mysteries");
+            smoothPrinting.PrintLine("Forest of Mysteries: Confronting the Dragon");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
-            // Decision to confront the dragon
-            smoothPrinting.RapidPrint("\nAs the mage, you feel a surge of determination coursing through your veins. The weight of destiny rests upon your shoulders, and you refuse to cower in fear any longer. With gritted teeth and a steady resolve, you decide to confront the dRAGON, knowing that the path ahead is fraught with danger and uncertainty.\n");
+            // Mage challenges the dragon
+            smoothPrinting.RapidPrint($"\n{mage.name}: \"Stop flying away, and face me at once!\"\n");
 
-            // Dialogue initiated by the Mage
-            smoothPrinting.RapidPrint($"\"{mage.name}: Stop flying away, and face me at once!\"\n");
-
-            // Dialogue initiated by the Dragon
+            // The dragon responds with hostility
             smoothPrinting.RapidPrint("\nDragon: \"This mere mortal dares speak to me in such manner? So be it, you shall now face my wrath!\"\n");
 
-            // Dialogue initiated by Mage
-            smoothPrinting.RapidPrint("\n*You are surprised to hear that the Dragon can speak, though it's come to a point in time where you cannot take back your actions*\n");
+            // The realization that the dragon can speak surprises the character
+            // However, it's too late to retract their actions
+            smoothPrinting.RapidPrint("\n*You are taken aback to hear that the Dragon can speak, though it's come to a point in time where you cannot take back your actions*\n");
 
-            // Dialogue initiated by Dragon
+            // The dragon introduces itself as Windsom, the Guardian of the forests
             smoothPrinting.RapidPrint("\nDragon: \"Mortal, you know not the gravity of your words. I am Windsom, the Guardian of these forests, and you have trespassed into my domain.\"\n");
 
-            // Dialogue initiated by Mage
-            smoothPrinting.RapidPrint($"\"{mage.name}: Windsom? Never heard that name before.\"\n");
+            // {mage.name} expresses surprise at the dragon's name
+            smoothPrinting.RapidPrint($"\n{mage.name}: \"Windsom? Never heard that name before.\"\n");
 
-            // MC's Inner Thoughts
+            // The character ponders whether the dragon knows about their summoning
             smoothPrinting.RapidPrint("\nMC's Thoughts: \"Perhaps he knows about why I've been summoned to this world...\"\n");
 
-            // Dialogue initiated by Mage
-            smoothPrinting.RapidPrint($"\"{mage.name}: Do you know why I've been summoned to this world?\"\n");
+            // {mage.name} directly asks the dragon about their summoning
+            smoothPrinting.RapidPrint($"\n{mage.name}: \"Do you know why I've been summoned to this world?\"\n");
 
-            // Dragon's mysterious response
-            smoothPrinting.RapidPrint($"\"Dragon: Ah, the mysteries of summonings. Perhaps I do, perhaps I don't. But why should I reveal such knowledge to a mere mortal like you? Prove your worth, Mage. Defeat me in battle, and perhaps then, I shall consider sharing what I know.\"\n");
+            // The dragon responds cryptically, challenging the character to prove their worth
+            smoothPrinting.RapidPrint("\nWindsom (The Guardian Dragon): \"Ah, the mysteries of summonings. Perhaps I do, perhaps I don't. But why should I reveal such knowledge to a mere mortal like you? Prove your worth, Mage. Defeat me in battle, and perhaps then, I shall consider sharing what I know.\"\n");
 
-            smoothPrinting.RapidPrint("\n*The Dragon slowly sets down into the forest, it's wings shuddering the leaves, crushing branches and any other obstacle that gets in its way, setting the stage for your battle.*");
+
+            smoothPrinting.RapidPrint("\n*Windsom slowly sets down into the forest, it's wings shuddering the leaves, crushing branches and any other obstacle that gets in its way, setting the stage for your battle.*");
 
             // Enable the combat system
         }
