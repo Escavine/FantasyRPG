@@ -446,6 +446,7 @@ namespace FantasyRPG
 
         public void MageSpellAttack() // Will load the Mage Combat System for fighting situations
         {
+            string? userInput; // Register the user input in string format for input validation purposes
             List<(string magicSpell, int damage, int manaRequirement)> chosenSpellForAttack; // Will be used to append the chosen spell to attack, and will be cleared through each iteration
             int spellCount = 1; // Likewise with the chosen spell, this will also be cleared through each iteration to keep track of number of user spells
 
@@ -468,7 +469,8 @@ namespace FantasyRPG
                 spellCount++;
             }
 
-            smoothPrinting.RapidPrint("\nSelect a spell to attack: ");
+            smoothPrinting.RapidPrint("\nSelect a spell to attack (Enter '0' to return back): ");
+
             Console.ReadKey(); // Testing
             
             // chosenSpellForAttack.Add(magicSpells.); // Append the chosen spell to another variable
@@ -489,11 +491,20 @@ namespace FantasyRPG
 
             foreach (var choice in mageChoices)
             {
-                smoothPrinting.RapidPrint($"\n{numCount})
+                smoothPrinting.RapidPrint($"\n{numCount}. {choice}");
+                numCount++; // Increment the value to display the other remaining choices
             }
 
             smoothPrinting.RapidPrint("Enter the corresponding value: ");
             userChoice = Convert.ToString(Console.ReadLine()); // Register Mage's choice
+
+            switch (userChoice)
+            {
+                case "1":
+                    MageSpellAttack();
+
+            }
+               
         }
 
         public void MageTraining() // Might remove.
