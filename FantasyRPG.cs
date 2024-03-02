@@ -217,7 +217,9 @@ namespace FantasyRPG
             UIManager UI = new UIManager(); // Displaying progress bar
 
             // Add parameters such as the mobs health etc.
-            UI.DisplayProgressBar("Mob Health", currentMobHealth, maxMobHealth, 30); 
+            UI.DisplayProgressBar("Mob Health", currentMobHealth, maxMobHealth, 30);
+            Console.WriteLine();
+            Console.WriteLine(); // Double spacing to avoid overlapping
 
         }
 
@@ -352,9 +354,15 @@ namespace FantasyRPG
         {
             if (level < 10) // Should the users level be below level 10, then the dragon will exert pressure to the individual, reducing their attack value.
             {
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.PrintLine("FantasyRPG: Dragon Race - Exerting Pressure");
+                smoothPrinting.PrintLine("--------------------------------------------------");
+
                 Console.ForegroundColor = ConsoleColor.Red;
-                smoothPrinting.RapidPrint($"{dragonName}:*Uses Draconic Scream*\n");
-                smoothPrinting.RapidPrint("Your level is lower than expected, the Dragon exerts pressure, reducing your attack damage.");
+                smoothPrinting.RapidPrint($"\n{dragonName}: *Roars with a deafening sound, shaking the very ground beneath you.*\n");
+                smoothPrinting.RapidPrint($"Your level is lower than expected, the Dragon {dragonName} exerts immense pressure, casting a shadow of dread over you. You feel your resolve weaken as fear grips your heart.\n");
+                smoothPrinting.RapidPrint($"The ancient power emanating from {dragonName} fills the air, suffocating your magical abilities. You sense a drain on your strength, your magical potency diminishing.\n");
+                smoothPrinting.RapidPrint($"Your attack damage is reduced as the overwhelming presence of {dragonName} weighs heavily upon you.\n");
                 Console.ResetColor(); // Reset Console Colour
                 
             }
@@ -2274,7 +2282,11 @@ namespace FantasyRPG
 
         public void forestOfMysteries(CharacterDefault character, int remainingAttempts = 3)
         {
+            UIManager UI = new UIManager();
             SmoothConsole smoothPrinting = new SmoothConsole();
+
+
+
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine("Forest of Mysteries");
             smoothPrinting.PrintLine("--------------------------------------------------");
@@ -2287,6 +2299,7 @@ namespace FantasyRPG
             {
                 Console.WriteLine(oneTimeFixedScenario + "\n");
             }
+
 
             Console.WriteLine("\n[Available Commands:]");
             smoothPrinting.PrintLine("\n1. Fight: Confront the Dragon (TESTING)");
@@ -2310,6 +2323,11 @@ namespace FantasyRPG
                     break;
                 case "2":
                     // Move northward
+                    break;
+                case "3":
+                    character.CheckInventory();
+                    UI.PromptUserToContinue();
+                    forestOfMysteries(character, remainingAttempts - 1); // Recurse to avoid breaking program haha
                     break;
                 default:
                     Console.WriteLine("\nInvalid input, please try again");
@@ -2400,11 +2418,14 @@ namespace FantasyRPG
             // Create a new instance of the dragon for combat
             Dragon windsom = new Dragon(dragonName, normalAtkNames, specialAtkNames, specialAtkRecharge, currentMobHealth, maxMobHealth, itemDrop);
 
+            // Exert pressure based on mage's level
+            windsom.exertPressure(mage.level, dragonName); // Pass dragonName argument here
+
+            // Display Windsom's Status
+            windsom.displayMobStatus(); // Make sure this method is called properly
+
             // Display the mage's current status
             mage.DisplayMageStatus();
-            // Exert pressure based on mage's level
-            windsom.exertPressure(mage.level, dragonName);
-            windsom.displayMobStatus(); // Display Windsom's Status
         }
 
         private void SomaliPirateConfrontation(SomaliPirate pirate)
