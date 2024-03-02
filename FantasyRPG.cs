@@ -42,7 +42,7 @@ namespace FantasyRPG
 
         SmoothConsole smoothPrinting = new SmoothConsole(); // Allow for aesthetic output
 
-        public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string itemName, string itemDescription, string itemRarity)> _currentInventory, int _arcaniaGoldCoins, int specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) // Default preset for all classes during the start of the game :3
+        public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> _currentInventory, int _arcaniaGoldCoins, int specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) // Default preset for all classes during the start of the game :3
         {
             name = _name;
             weapon = _weapon; // WIll store the details of the given weapon (i.e. weapon name, type, damage, etc.)
@@ -397,7 +397,7 @@ namespace FantasyRPG
 
         }
 
-        public void dropItem(int dropChance, List<(string itemName, string itemDescription, string itemRarity)> currentInventory)
+        public void dropItem(int dropChance, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> currentInventory)
         {
             Random ran = new Random(); // Determine which item will be dropped
             int item = ran.Next(0, 6); // Generate a value between 0 to 6
@@ -454,7 +454,7 @@ namespace FantasyRPG
         public int specialAtkDmg;
         public int normalAtkDmg;
 
-        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _specialAtkName, List<(string itemName, string itemDescription, string itemRarity)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
+        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _specialAtkName, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
         {
             name = _name;
             weapon = _weapon;
@@ -506,7 +506,7 @@ namespace FantasyRPG
         public List<(string magicSpell, int damage, int manaRequirement)> magicSpells = new List<(string magicSpell, int damage, int manaRequirement)>();
         string[] magicSpecialties; // User can have multiple magic specialties
 
-        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, List<(string itemName, string itemDescription, string itemRarity)> _currentInventory, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
+        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> _currentInventory, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
         {
             name = _name;
             weapon = _weapon;
@@ -1001,7 +1001,7 @@ namespace FantasyRPG
         public List<(string attack, int damage, int manaRequirement, string elementType, string description)> pirateSpecialAtks; // Normal and special attack lists, containing all relevant information
         public List<(string auraName, int damage, string rarity, string description)> weaponAura; // Weapon aura
 
-        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string auraName, int damage, string rarity, string description)> _weaponAura, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateNormalAtks, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateSpecialAtks, List<(string itemName, string itemDescription, string itemRarity)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
+        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string auraName, int damage, string rarity, string description)> _weaponAura, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateNormalAtks, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateSpecialAtks, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
         {
             name = _name;
             weapon = _weapon;
@@ -1093,10 +1093,10 @@ namespace FantasyRPG
                 ("Cyclone Strike", 50, 30)
              };
 
-            List<(string itemName, string itemDescription, string itemRarity)> currentInventory = new List<(string, string, string)>
+            List<(string itemName, string itemDescription, string itemRarity, int itemPower)> currentInventory = new List<(string, string, string, int)>
                 {
-                    ("Heartblades Vesper", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right, I took it, the developer himself :3", "Legendary"),
-                    ("Healing Potion", "Regenerates +20 health of a user", "Uncommon")
+                    ("Heartblades Vesper", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right, I took it, the developer himself :3", "Legendary", 250),
+                    ("Healing Potion", "Regenerates +20 health of a user", "Uncommon", 20)
                 };
 
             int specialAtkRecharge = 100;
@@ -1104,8 +1104,8 @@ namespace FantasyRPG
             List<(string npcName, string npcInformation, string npcAffiliation)> npcsEncountered = new List<(string, string, string)> {
                  ("Veridian Pendragon", "False ranker and solo assassin, very capable and someone not to underestimate.", "Heartblade Association"),
                 ("Evelyn Everbright", "Rank 10 of the Arcania's Magic Council and Guildmaster of Arcania's Magic Council.", "Arcania's Magic Council/Arcane Sentinels"),
-                ("Khalid Du-Lucérian", "The true leader of Arcania's Magic Council, identity remains unknown.", "Arcania's Magic Council"),
-                ("Cloud (Real Identity - Silver Eucladian-Nine)", "Rank 1 of the Arcania's Magic Council.", "Arcania's Magic Council")
+                ("Khalid Du-Lucérian", "The true leader of Arcania's Magic Council, identity remains unknown.", "Arcania's Magic Council/Heartblade Association/Lucerian Lineage"),
+                ("Cloud (Real Identity - Silver Eucladian-Nine)", "Rank 1 of the Arcania's Magic Council.", "Arcania's Magic Council/Eucladian-Nine Lineage")
 
             };
 
@@ -1574,7 +1574,7 @@ namespace FantasyRPG
                     mageStaff.Add(starterMageWeaponChoices[random_index]); // Append the weapon into the mage staff list
 
 
-                    List<string> mageInventory = new List<string>();
+                    List<(string itemName, string itemDescription, string itemRarity, int itemPower)> mageInventory = new List<(string, string, string, int)>();
                     mageInventory.Add(starterMageWeaponChoices[random_index].weaponName); // Store the weapon in the users inventory
 
                     smoothPrinting.RapidPrint("\nOnce you are done reading the details, press any key to move on.");
@@ -1784,7 +1784,7 @@ namespace FantasyRPG
 
                     int mageSpecialAtkRecharge = 0; // Preset
 
-                    Mage mage = new Mage(mageName, mageStaff, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory.ToArray(), mageSpecialAtkRecharge, mageClassNpcsEncountered);
+                    Mage mage = new Mage(mageName, mageStaff, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory.ToList(), mageSpecialAtkRecharge, mageClassNpcsEncountered);
                     DisplayMageDetails(); // Proceed to the function via function call to display Mage's details
                     break;
 
