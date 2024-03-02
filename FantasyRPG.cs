@@ -27,7 +27,7 @@ namespace FantasyRPG
         public float numOfPotionsInInventory;
         public float maxPotions;
         public int currentMana, maxMana;
-        public string[] currentInventory; // Will contain the users potions and other weapons.
+        public List<(string itemName, string itemDescription, string itemRarity, int itemPower)> currentInventory; // Will contain item name, description, rarity and power (i.e. healing or attack etc.) 
         public int arcaniaGoldCoins; // Currency for the city of Arcanith
         public int specialAtkRecharge;// Percentage value, going upto 100%
         public List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered;
@@ -42,7 +42,7 @@ namespace FantasyRPG
 
         SmoothConsole smoothPrinting = new SmoothConsole(); // Allow for aesthetic output
 
-        public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins, int specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) // Default preset for all classes during the start of the game :3
+        public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string itemName, string itemDescription, string itemRarity)> _currentInventory, int _arcaniaGoldCoins, int specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) // Default preset for all classes during the start of the game :3
         {
             name = _name;
             weapon = _weapon; // WIll store the details of the given weapon (i.e. weapon name, type, damage, etc.)
@@ -73,9 +73,9 @@ namespace FantasyRPG
         // Display the users inventory
         public void CheckInventory()
         {
-            for (int i = 0; i < currentInventory.Length; i++)
+            for (int i = 0; i < currentInventory.Count; i++)
             {
-                Console.WriteLine(currentInventory[i]);
+                Console.WriteLine($"* {currentInventory[i]}");
 
             }
 
@@ -143,12 +143,12 @@ namespace FantasyRPG
             if (level < 5)
             {
                 experienceRequiredForNextLevel = 10 * level;
-                UI.DisplayProgressBar($"Experience required for {level + 1}", exp, experienceRequiredForNextLevel, 30);
+                UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
             }
             else if (level > 10)
             {
                 experienceRequiredForNextLevel = 100 * level;
-                UI.DisplayProgressBar($"Experience required for {level + 1}", exp, experienceRequiredForNextLevel, 30);
+                UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
             }
 
 
@@ -378,15 +378,15 @@ namespace FantasyRPG
 
         }
 
-        public void dragonDeath(int mobHealth, int exp)
+        public void dragonDeath(string name, int mobHealth, int exp, List<(string itemName, string itemDescription, string itemRarity)> currentInventory)
         {
             if (mobHealth == 0)
             {
                 Random itemDropChance = new Random();
-                int dropChance = itemDropChance.Next(0, 10); // 9% drop rate, due to OP item drops
-                smoothPrinting.FastPrint("\nDragon has been successfully defeated!");
+                int dropChance = itemDropChance.Next(0, 10); // 20% drop rate, due to OP item drops
+                smoothPrinting.FastPrint($"\n{name} has successfully killed the dragon!");
 
-                if (dropChance == 0)
+                if (dropChance == 0 || dropChance == 1)
                 {
                     dropItem(dropChance); // Should the random number be zero, then the mob will drop an item
                 }
@@ -397,8 +397,50 @@ namespace FantasyRPG
 
         }
 
-        public void dropItem(int dropChance)
+        public void dropItem(int dropChance, List<(string itemName, string itemDescription, string itemRarity)> currentInventory)
         {
+            Random ran = new Random(); // Determine which item will be dropped
+            int item = ran.Next(0, 6); // Generate a value between 0 to 6
+
+            List<(string weaponName, (int damage, int rarity, int weaponType))> droppedWeapon;
+            itemDrop.ToList();
+           
+
+            if (item == 0)
+            {
+
+            }
+            else if (item == 1)
+            {
+
+
+            }
+            else if (item == 2)
+            {
+
+
+            }
+            else if (item == 3)
+            {
+
+
+            }
+            else if (item == 4)
+            {
+
+
+
+            }
+            else if (item == 5)
+            {
+
+
+            }
+            else if (item == 6)
+            {
+
+
+            }
 
 
         }
@@ -412,7 +454,7 @@ namespace FantasyRPG
         public int specialAtkDmg;
         public int normalAtkDmg;
 
-        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _specialAtkName, string[] _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
+        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _specialAtkName, List<(string itemName, string itemDescription, string itemRarity)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
         {
             name = _name;
             weapon = _weapon;
@@ -464,7 +506,7 @@ namespace FantasyRPG
         public List<(string magicSpell, int damage, int manaRequirement)> magicSpells = new List<(string magicSpell, int damage, int manaRequirement)>();
         string[] magicSpecialties; // User can have multiple magic specialties
 
-        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, string[] _currentInventory, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
+        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, List<(string itemName, string itemDescription, string itemRarity)> _currentInventory, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
         {
             name = _name;
             weapon = _weapon;
@@ -494,6 +536,8 @@ namespace FantasyRPG
 
         public void MageSpellAttack() // Will load the Mage Combat System for fighting situations
         {
+            UIManager UI = new UIManager(); // To display mana + health progress bar
+
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine("FantasyRPG: Mage Combat System - Attack");
             smoothPrinting.PrintLine("--------------------------------------------------");
@@ -506,18 +550,23 @@ namespace FantasyRPG
 
             // for (int z = 0; z = magicSpecialties.Length; z++)
             // {
-                // switch (magicSpecialties[z])
-                //{
-                    // case "Fire":
-                        // break;
-                // }
+            // switch (magicSpecialties[z])
+            //{
+            // case "Fire":
+            // break;
+            // }
 
             // }
+
+            // Display users mana and remaining health
+            UI.DisplayProgressBar("Health", currentHealth, maxHealth, 30);
+            UI.DisplayProgressBar("Mana", currentMana, maxMana, 30);
+            Console.WriteLine(); // Create space
 
             // Combat methods for the Mage class
             foreach (var spell in magicSpells) // Display all spells currently avaliable to the Mage
             {
-                smoothPrinting.RapidPrint($"\n{spellCount}. Spell: {spell.magicSpell}: Damage: {spell.damage}\nMana Requirement: {spell.manaRequirement}\n");
+                smoothPrinting.RapidPrint($"\n{spellCount}. Spell: {spell.magicSpell} - Damage: {spell.damage}\nMana Requirement: {spell.manaRequirement}\n");
                 spellCount++;
             }
 
@@ -952,7 +1001,7 @@ namespace FantasyRPG
         public List<(string attack, int damage, int manaRequirement, string elementType, string description)> pirateSpecialAtks; // Normal and special attack lists, containing all relevant information
         public List<(string auraName, int damage, string rarity, string description)> weaponAura; // Weapon aura
 
-        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string auraName, int damage, string rarity, string description)> _weaponAura, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateNormalAtks, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateSpecialAtks, string[] _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
+        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string auraName, int damage, string rarity, string description)> _weaponAura, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateNormalAtks, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateSpecialAtks, List<(string itemName, string itemDescription, string itemRarity)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
         {
             name = _name;
             weapon = _weapon;
@@ -1022,45 +1071,53 @@ namespace FantasyRPG
     {
         static void Main(string[] args) // Future reference: With the implementation of the authentication system soon, this will be moved.
         {
-            GameMenu menu = new GameMenu();
-            // MagicCouncil encounter = new MagicCouncil(); // Debugging
+            // GameMenu menu = new GameMenu();
+            MagicCouncil encounter = new MagicCouncil(); // Debugging
             // string name = "Silver"; // Debugging
             // encounter.firstEncounter(name); // Debugging
             // FirstScenario firstScenario = new FirstScenario();
             // firstScenario.usersFirstJourney("Tristian");
 
             // Define values for debugging mage
-            // string mageName = "Zephyr";
-            // List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> mageWeapon = new List<(string, int, string, string, string)> {
-               // ("Heartblades Vesper", 150, "Legendary", "Staff", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right. I took it, the developer himself :3")
-            // };
+            string mageName = "Zephyr Du-Lucérian";
+            List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> mageWeapon = new List<(string, int, string, string, string)> {
+               ("Heartblades Vesper", 250, "Legendary", "Staff", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right. I took it, the developer himself :3")
+            };
 
-            // string[] mageSpecialties = new string[] { "Fire", "Lightning" };
-            // int arcaniaGoldCoins = 100;
+            string[] mageSpecialties = new string[] { "Fire-Magic", "Lightning-Magic", "Eucladian-Magic", "Light-Magic", "Dark-Magic" };
+            int arcaniaGoldCoins = 100000;
 
-            //List<(string, int, int)> magicSpells = new List<(string, int, int)> {
-            //    ("Eucladian-Eye", 80, 45),
-             //   ("Developer's Wrath", 1000, 20)
-            // };
+            List<(string, int, int)> magicSpells = new List<(string, int, int)> {
+                ("Eucladian-Eye", 130, 45),
+                ("Developer's Wrath", 300, 20),
+                ("Cyclone Strike", 50, 30)
+             };
 
-            // string[] currentInventory = new string[] { "Health Potion", "Mana Potion" };
-            // int specialAtkRecharge = 100;
+            List<(string itemName, string itemDescription, string itemRarity)> currentInventory = new List<(string, string, string)>
+                {
+                    ("Heartblades Vesper", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right, I took it, the developer himself :3", "Legendary"),
+                    ("Healing Potion", "Regenerates +20 health of a user", "Uncommon")
+                };
 
-            // List<(string npcName, string npcInformation, string npcAffiliation)> npcsEncountered = new List<(string, string, string)> {
-             //    ("Veridian Pendragon", "False ranker and solo assassin, very capable and someone not to underestimate.", "Heartblade Association"),
-             //   ("Evelyn Everbright", "Rank 10 of the Arcania's Magic Council and Guildmaster of Arcania's Magic Council.", "Arcania's Magic Council/Arcane Sentinels")
+            int specialAtkRecharge = 100;
 
-            // };
+            List<(string npcName, string npcInformation, string npcAffiliation)> npcsEncountered = new List<(string, string, string)> {
+                 ("Veridian Pendragon", "False ranker and solo assassin, very capable and someone not to underestimate.", "Heartblade Association"),
+                ("Evelyn Everbright", "Rank 10 of the Arcania's Magic Council and Guildmaster of Arcania's Magic Council.", "Arcania's Magic Council/Arcane Sentinels"),
+                ("Khalid Du-Lucérian", "The true leader of Arcania's Magic Council, identity remains unknown.", "Arcania's Magic Council"),
+                ("Cloud (Real Identity - Silver Eucladian-Nine)", "Rank 1 of the Arcania's Magic Council.", "Arcania's Magic Council")
 
-            // Create a new Mage object with the specified arguments
-            // Mage debuggingMage = new Mage(mageName, mageWeapon, mageSpecialties, arcaniaGoldCoins, magicSpells, currentInventory, specialAtkRecharge, npcsEncountered); // Debugging Mage
-            // ForestOfMysteries scenario = new ForestOfMysteries();
-            // int remainingAttempts = 3;
+            };
 
-            // scenario.forestOfMysteries(debuggingMage, remainingAttempts); // Call the forestOfMysteries method with the Mage object and remaining attempts
+            // Create the debugging mage object with the specified arguments
+            Mage debuggingMage = new Mage(mageName, mageWeapon, mageSpecialties, arcaniaGoldCoins, magicSpells, currentInventory, specialAtkRecharge, npcsEncountered); // Debugging Mage
+            ForestOfMysteries scenario = new ForestOfMysteries();
+            int remainingAttempts = 3;
+
+            scenario.forestOfMysteries(debuggingMage, remainingAttempts); // Call the forestOfMysteries method with the Mage object and remaining attempts
 
 
-            menu.gameMenu(); // User is first directed to the game menu method
+            // menu.gameMenu(); // User is first directed to the game menu method
 
             // List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered = new List<(string npcName, string npcDescription, string npcAffiliation)>() // Debugging: populating data
             // {
