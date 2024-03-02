@@ -378,7 +378,7 @@ namespace FantasyRPG
 
         }
 
-        public void dragonDeath(string name, int mobHealth, int exp, List<(string itemName, string itemDescription, string itemRarity)> currentInventory)
+        public void dragonDeath(string name, int mobHealth, int exp, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> currentInventory)
         {
             if (mobHealth == 0)
             {
@@ -388,7 +388,7 @@ namespace FantasyRPG
 
                 if (dropChance == 0 || dropChance == 1)
                 {
-                    dropItem(dropChance); // Should the random number be zero, then the mob will drop an item
+                    dropItem(dropChance, currentInventory); // Should the random number be zero, then the mob will drop an item
                 }
 
                 exp += 300; // User gains huge exp from defeating the dragon 
@@ -1573,9 +1573,8 @@ namespace FantasyRPG
                     int random_index = ranNum.Next(0, starterMageWeaponChoices.Count); // Generates random value that'll decide on which weapon the user gets 
                     mageStaff.Add(starterMageWeaponChoices[random_index]); // Append the weapon into the mage staff list
 
-
                     List<(string itemName, string itemDescription, string itemRarity, int itemPower)> mageInventory = new List<(string, string, string, int)>();
-                    mageInventory.Add(starterMageWeaponChoices[random_index].weaponName); // Store the weapon in the users inventory
+                    mageInventory.Add((starterMageWeaponChoices[random_index].weaponName, starterMageWeaponChoices[random_index].weaponDescription, starterMageWeaponChoices[random_index].rarity, starterMageWeaponChoices[random_index].damage)); // Store the weapon in the users inventory
 
                     smoothPrinting.RapidPrint("\nOnce you are done reading the details, press any key to move on.");
                     Console.ReadKey();
@@ -1784,7 +1783,7 @@ namespace FantasyRPG
 
                     int mageSpecialAtkRecharge = 0; // Preset
 
-                    Mage mage = new Mage(mageName, mageStaff, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory.ToList(), mageSpecialAtkRecharge, mageClassNpcsEncountered);
+                    Mage mage = new Mage(mageName, mageStaff, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory, mageSpecialAtkRecharge, mageClassNpcsEncountered);
                     DisplayMageDetails(); // Proceed to the function via function call to display Mage's details
                     break;
 
@@ -2089,7 +2088,7 @@ namespace FantasyRPG
 
                     arcaniaGoldCoins = 0; // Preset zero
 
-                    List<string> pirateInventory = new List<string>();
+                    List<(string itemName, string itemDescription, string itemRarity, int itemPower)> pirateInventory = new List<(string, string, string, int)>();
 
                     // User will be randomly assigned a weapon
                     Random weaponPirateRandom = new Random();
@@ -2104,7 +2103,7 @@ namespace FantasyRPG
                     pirateWeapon.Add((randomPirateWeapon.Key, randomPirateWeapon.Value.damage, randomPirateWeapon.Value.weaponType, randomPirateWeapon.Value.rarity, randomPirateWeapon.Value.weaponDescription));
 
                     // Add the weapon name to the pirateInventory list
-                    pirateInventory.Add(randomPirateWeapon.Key);
+                    pirateInventory.Add((randomPirateWeapon.Key, randomPirateWeapon.Value.weaponDescription, randomPirateWeapon.Value.rarity, randomPirateWeapon.Value.damage));
 
 
 
@@ -2120,7 +2119,7 @@ namespace FantasyRPG
                     pirateWeaponAura.Add((randomAura.Key, randomAura.Value.damage, randomAura.Value.rarity, randomAura.Value.auraDescription));
 
 
-                    SomaliPirate myPirate = new SomaliPirate(pirateName, pirateWeapon, pirateWeaponAura, chosenPirateNormalAttacks, chosenSpecialAttacks, pirateInventory.ToArray(), arcaniaGoldCoins, specialAtkRecharge, pirateClassNpcsEncountered); // Generate the pirate details
+                    SomaliPirate myPirate = new SomaliPirate(pirateName, pirateWeapon, pirateWeaponAura, chosenPirateNormalAttacks, chosenSpecialAttacks, pirateInventory, arcaniaGoldCoins, specialAtkRecharge, pirateClassNpcsEncountered); // Generate the pirate details
 
                     Console.Clear(); // Neater
 
