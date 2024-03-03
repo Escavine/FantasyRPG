@@ -2726,14 +2726,31 @@ namespace FantasyRPG
                     NPCEncounters(character);
                     break;
                 case "6":
+                    Console.Clear();
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("FantasyRPG: Character Status");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
                     UI.PromptReturnToDashboard();
+                    dashboard(character);
                     // Handle character status
                     break;
                 case "7":
+                    Console.Clear();
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("FantasyRPG: Continents");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.RapidPrint("This feature isn't available as of present.");
                     UI.PromptReturnToDashboard();
+                    dashboard(character);
                     break;
                 default:
-                    while (string.IsNullOrEmpty(userInput))
+                    if (string.IsNullOrEmpty(userInput))
+                    {
+                        smoothPrinting.RapidPrint("Invalid input, please try again.");
+                        Console.ReadKey(); // Allow user to see error message
+                        dashboard(character); // Due to lack of functionality, return user back to the dashboard to ensure that they put in the correct input
+                    }
+                    else
                     {
                         smoothPrinting.RapidPrint("Invalid input, please try again.");
                         Console.ReadKey(); // Allow user to see error message
