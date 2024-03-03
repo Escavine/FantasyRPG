@@ -40,7 +40,9 @@ namespace FantasyRPG
         private int experienceRequiredForNextLevel;
         // public int randomDyingChance; hehe
 
-        SmoothConsole smoothPrinting = new SmoothConsole(); // Allow for aesthetic output
+
+        private readonly UIManager UI;
+        private readonly SmoothConsole smoothPrinting;
 
         public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> _currentInventory, int _arcaniaGoldCoins, int specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) // Default preset for all classes during the start of the game :3
         {
@@ -58,6 +60,8 @@ namespace FantasyRPG
             level = 1;
             currentMana = 100;
             maxMana = 100; // This can increase overtime, through gaining more experience + SP (Will be introduced in the future)
+            UI = new UIManager();
+            smoothPrinting = new SmoothConsole();
         }
 
         // WIll allow user to equip the following weapon (e.g. if they use a bow, blades, sword etc.)
@@ -89,7 +93,6 @@ namespace FantasyRPG
         // Allow for the user to check their current status
         public void CheckStatus(CharacterDefault character)
         {
-            UIManager UI = new UIManager();
             string userInput;
 
             smoothPrinting.PrintLine("--------------------------------------------------");
@@ -601,6 +604,7 @@ namespace FantasyRPG
             magicSpecialties = _magicSpecialties;
             currentInventory = _currentInventory;
             magicSpells = _magicSpells; // Predefined variables for every new wizard in the game
+            npcsEncountered = _npcsEncountered;
         }
 
 
@@ -1161,8 +1165,10 @@ namespace FantasyRPG
     {
         static void Main(string[] args) // Future reference: With the implementation of the authentication system soon, this will be moved.
         {
+            SmoothConsole smoothPrinting = new SmoothConsole();
+            UIManager UI = new UIManager();
             // GameMenu menu = new GameMenu();
-            MagicCouncil encounter = new MagicCouncil(); // Debugging
+            // MagicCouncil encounter = new MagicCouncil(); // Debugging
             // string name = "Silver"; // Debugging
             // encounter.firstEncounter(name); // Debugging
             // FirstScenario firstScenario = new FirstScenario();
@@ -1201,11 +1207,12 @@ namespace FantasyRPG
 
             // Create the debugging mage object with the specified arguments
             Mage debuggingMage = new Mage(mageName, mageWeapon, mageSpecialties, arcaniaGoldCoins, magicSpells, currentInventory, specialAtkRecharge, npcsEncountered); // Debugging Mage
-            ForestOfMysteries scenario = new ForestOfMysteries();
+            // ForestOfMysteries scenario = new ForestOfMysteries();
             int remainingAttempts = 3;
 
-            scenario.forestOfMysteries(debuggingMage, remainingAttempts); // Call the forestOfMysteries method with the Mage object and remaining attempts
+            // scenario.forestOfMysteries(debuggingMage, remainingAttempts); // Call the forestOfMysteries method with the Mage object and remaining attempts
 
+            
 
             // menu.gameMenu(); // User is first directed to the game menu method
 
@@ -1218,8 +1225,8 @@ namespace FantasyRPG
             // };
 
 
-            // gameDashboard dash = new gameDashboard();
-            // dash.dashboard(name, npcsEncountered);
+            gameDashboard dash = new gameDashboard();
+            dash.dashboard(debuggingMage);
 
         }
 
@@ -2496,23 +2503,7 @@ namespace FantasyRPG
 
     }
 
-    public class Combat // Will be used to initialize the combat system
-    {
-        // Combat panels for all the current classes availiable in the game
-        public void mageCombat() 
-        {
-            
-        }
 
-        public void pirateCombat() 
-        {
-
-
-
-        }
-
-
-    }
     public class InfiniteDungeon
     {
         public void dungeon()
@@ -2522,12 +2513,20 @@ namespace FantasyRPG
 
     public class MagicCouncil
     {
+        private readonly UIManager UI;
+        private readonly SmoothConsole smoothPrinting;
+
+        public MagicCouncil()
+        {
+            UI = new UIManager();
+            smoothPrinting = new SmoothConsole();
+        }
+
+
         // One-time executable function: Will not happen again.
         public void firstEncounter(string name, List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered) // This will be the first meeting between the MC and the other council members (not all of them are present at that given moment)
         {
-            UIManager UI = new UIManager(); // UI manager class
             Console.Clear(); // Clear the console for neatness
-            SmoothConsole smoothPrinting = new SmoothConsole();
             Console.ForegroundColor = ConsoleColor.White;
             string choice1; // NPC interaction choice
 
@@ -2654,11 +2653,19 @@ namespace FantasyRPG
 
     public class gameDashboard
     {
+        private readonly UIManager UI;
+        private readonly SmoothConsole smoothPrinting;
+
+        public gameDashboard()
+        {
+            UI = new UIManager();
+            smoothPrinting = new SmoothConsole();
+        }
+
         public void dashboard(CharacterDefault character)
         {
             string userInput;
-            UIManager UI = new UIManager(); // Used for repeat functions 
-            SmoothConsole smoothPrinting = new SmoothConsole();
+
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Gray;
             smoothPrinting.PrintLine("--------------------------------------------------");
@@ -2723,15 +2730,14 @@ namespace FantasyRPG
                     dashboard(character); // Due to lack of functionality, return user back to the dashboard
                     break;
                 case "5":
-                    NPCEncounters(character);
+                    NPCEncounters(character, smoothPrinting, UI);
                     break;
                 case "6":
                     Console.Clear();
-                    smoothPrinting.PrintLine("--------------------------------------------------");
-                    smoothPrinting.PrintLine("FantasyRPG: Character Status");
-                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    character.CheckStatus(character);
+                    Console.WriteLine();
                     UI.PromptReturnToDashboard();
-                    dashboard(character);
+                    dashboard(character); // Due to lack of functionality, return user back to the dashboard
                     // Handle character status
                     break;
                 case "7":
@@ -2741,20 +2747,20 @@ namespace FantasyRPG
                     smoothPrinting.PrintLine("--------------------------------------------------");
                     smoothPrinting.RapidPrint("This feature isn't available as of present.");
                     UI.PromptReturnToDashboard();
-                    dashboard(character);
+                    dashboard(character); // Due to lack of functionality, return user back to the dashboard
                     break;
                 default:
                     if (string.IsNullOrEmpty(userInput))
                     {
                         smoothPrinting.RapidPrint("Invalid input, please try again.");
                         Console.ReadKey(); // Allow user to see error message
-                        dashboard(character); // Due to lack of functionality, return user back to the dashboard to ensure that they put in the correct input
+                        dashboard(character); // Due to lack of functionality, return user back to the dashboard
                     }
                     else
                     {
                         smoothPrinting.RapidPrint("Invalid input, please try again.");
                         Console.ReadKey(); // Allow user to see error message
-                        dashboard(character); // Due to lack of functionality, return user back to the dashboard to ensure that they put in the correct input
+                        dashboard(character); // Due to lack of functionality, return user back to the dashboard
                     }
                     break;
             }
@@ -2762,10 +2768,8 @@ namespace FantasyRPG
         }
 
 
-        void NPCEncounters(CharacterDefault character)
+        void NPCEncounters(CharacterDefault character, SmoothConsole smoothPrinting, UIManager UI)
         {
-            UIManager UI = new UIManager();
-            SmoothConsole smoothPrinting = new SmoothConsole();
 
             Console.Clear();
             smoothPrinting.PrintLine("--------------------------------------------------");
@@ -2773,27 +2777,36 @@ namespace FantasyRPG
             smoothPrinting.PrintLine("--------------------------------------------------");
             Console.WriteLine(); // Spacing
 
-            if (character.npcsEncountered != null && character.npcsEncountered.Count > 0)
+            if (character is Mage || character is SomaliPirate)
             {
-                foreach (var npc in character.npcsEncountered)
+                if (character.npcsEncountered != null && character.npcsEncountered.Count > 0)
                 {
-                    smoothPrinting.RapidPrint($"\nName: {npc.npcName}\nDescription: {npc.npcDescription}\nAffiliation: {npc.npcAffiliation}\n");
+                    foreach (var npc in character.npcsEncountered)
+                    {
+                        smoothPrinting.RapidPrint($"\nName: {npc.npcName}\nDescription: {npc.npcDescription}\nAffiliation: {npc.npcAffiliation}\n");
+                    }
+                }
+                else
+                {
+                    smoothPrinting.RapidPrint("\nYou haven't encountered any NPCs at this point.");
                 }
             }
             else
             {
-                smoothPrinting.RapidPrint("\nYou haven't encountered any NPCs at this point.");
+                smoothPrinting.RapidPrint("\nCharacter type not supported.");
             }
 
-            UI.PromptUserToContinue();
+            // Prompt the user to continue
+            smoothPrinting.RapidPrint("Affirmative? If so, click any key to continue.");
+            Console.ReadKey();
+
             dashboard(character); // Return user back to the dashboard
         }
 
         void mageDisplayPlayerStatus(Mage mage)
-            {
-                SmoothConsole smoothPrinting = new SmoothConsole();
-                smoothPrinting.RapidPrint($"Name: {mage.name}\n Weapon: {mage.weapon}\n, Currency (Arcania's Golden Coins): {mage.arcaniaGoldCoins}\n, Magic Spells: {mage.magicSpells}");
-            }
+        {
+           smoothPrinting.RapidPrint($"Name: {mage.name}\n Weapon: {mage.weapon}\n, Currency (Arcania's Golden Coins): {mage.arcaniaGoldCoins}\n, Magic Spells: {mage.magicSpells}");
+        }
 
             // void guild()
             // {
