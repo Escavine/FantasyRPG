@@ -96,17 +96,18 @@ namespace FantasyRPG
             string userInput;
 
             smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine($"FantasyRPG: {character.name}'s Current Status Check");
+            smoothPrinting.PrintLine($"FantasyRPG: {character.name}'s Status Check");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
             // Display the user's status
-            smoothPrinting.RapidPrint($"\nLevel: {character.level}\n");
-            UI.DisplayProgressBar("Remaining Health:", character.currentHealth, character.maxHealth, 30);
-            UI.DisplayProgressBar("Current Mana:", character.currentMana, character.maxMana, 30);
+            smoothPrinting.RapidPrint($"\nCurrent Level: {character.level}\n");
             smoothPrinting.RapidPrint($"\nExperience accumulated: {character.exp}\n");
-
+            UI.DisplayProgressBar("Remaining Health:", character.currentHealth, character.maxHealth, 30);
+            Console.WriteLine(); // Spacing
+            UI.DisplayProgressBar("Current Mana:", character.currentMana, character.maxMana, 30);
+            Console.WriteLine(); // Spacing
             smoothPrinting.RapidPrint("\nWould you like to see the EXP required to get to the next level? (1 for 'Yes' and anything else for 'No')\n");
-            smoothPrinting.RapidPrint("Enter a corresponding value: ");
+            smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
             userInput = Console.ReadLine(); // Register the input
 
             switch (userInput)
@@ -161,6 +162,7 @@ namespace FantasyRPG
                 {
                     experienceRequiredForNextLevel = 10 * level;
                     UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
+                    Console.WriteLine(); // Spacing
                 }
                 else if (level > 10)
                 {
@@ -410,6 +412,7 @@ namespace FantasyRPG
             normalAtkNames = _normalAtkNames;
             specialAtkNames = _specialAtkNames;
             itemDrop = _itemDrop;
+            UIManager UI = new UIManager();
         }
 
         // Future reference: Create different types of dragons that have weaknesses (i.e. water dragons, shadow dragons etc)
@@ -418,15 +421,18 @@ namespace FantasyRPG
         {
             if (level < 10) // Should the users level be below level 10, then the dragon will exert pressure to the individual, reducing their attack value.
             {
+                UIManager UI = new UIManager();
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine("FantasyRPG: Dragon Race - Exerting Pressure");
                 smoothPrinting.PrintLine("--------------------------------------------------");
 
                 Console.ForegroundColor = ConsoleColor.Red;
-                smoothPrinting.RapidPrint($"\n{dragonName}: *Roars with a deafening sound, shaking the very ground beneath you.*\n");
+                smoothPrinting.RapidPrint($"{dragonName}:\n");
+                smoothPrinting.RapidPrint($"*Roars with a deafening sound, shaking the very ground beneath you.*\n");
                 smoothPrinting.RapidPrint($"Your level is lower than expected, the Dragon {dragonName} exerts immense pressure, casting a shadow of dread over you. You feel your resolve weaken as fear grips your heart.\n");
                 smoothPrinting.RapidPrint($"The ancient power emanating from {dragonName} fills the air, suffocating your magical abilities. You sense a drain on your strength, your magical potency diminishing.\n");
                 smoothPrinting.RapidPrint($"Your attack damage is reduced as the overwhelming presence of {dragonName} weighs heavily upon you.\n");
+                UI.PromptUserToContinue();
                 Console.ResetColor(); // Reset Console Colour
                 
             }
@@ -626,7 +632,7 @@ namespace FantasyRPG
             smoothPrinting.PrintLine("--------------------------------------------------");
         }
 
-        public void MageSpellAttack(Mage mage) // Will load the Mage Combat System for fighting situations
+        public void MageSpellAttack(Mage mage, MobDefault mob) // Will load the Mage Combat System for fighting situations
         {
             UIManager UI = new UIManager(); // To display mana + health progress bar
 
@@ -649,11 +655,16 @@ namespace FantasyRPG
             // }
 
             // }
-
+            smoothPrinting.RapidPrint($"{mage.name} - Mage Status\n");
             // Display users mana and remaining health
             UI.DisplayProgressBar("Health", currentHealth, maxHealth, 30);
+            Console.WriteLine(); // Spacing
             UI.DisplayProgressBar("Mana", currentMana, maxMana, 30);
             Console.WriteLine(); // Create space
+
+            smoothPrinting.RapidPrint($"{mob.name} - Enemy Health\n");
+            UI.DisplayProgressBar("Enemy Health", mob.currentMobHealth, mob.maxMobHealth, 30); // Display mob health
+            Console.WriteLine(); // Spacing
 
             // Combat methods for the Mage class
             foreach (var spell in magicSpells) // Display all spells currently avaliable to the Mage
@@ -670,7 +681,7 @@ namespace FantasyRPG
 
             Console.ReadKey(); // Register user input
             Console.Clear(); // Clear the console to avoid overlapping
-            DisplayMageStatus(mage); // Return back (still in development)
+            DisplayMageStatus(mage, mob); // Return back (still in development)
 
             // userInput = Convert.ToString(Console.ReadLine());
 
@@ -686,10 +697,10 @@ namespace FantasyRPG
 
         // public override void CheckStatus()
         // {
-            // base.CheckStatus(cha);
+        // base.CheckStatus(cha);
         // }
 
-        public void DisplayMageStatus(Mage mage) 
+        public void DisplayMageStatus(Mage mage, MobDefault mob) // Naturally this takes in the mage class and the given mob
         {
             DisplayMageCombatSystemHeader(); // Display the MCS (Mage Combat System Header)
             UIManager UI = new UIManager(); // Engage the UI manager for progress bars
@@ -697,10 +708,16 @@ namespace FantasyRPG
             int? numCount = 1; // Will display the numeric choices for the Mage's options
             string? userChoice;
 
-            string[] mageChoices = ["Attack", "Check Inventory", "Check Status", "Attempt Escape (WARNING: Low Chance)"]; // Array displaying the different Mage's options
-            smoothPrinting.RapidPrint($"{name} - Mage Status\n");
-            UI.DisplayProgressBar("Health", currentHealth, maxHealth, 30); // Display Mage's health
-            UI.DisplayProgressBar("Mana", currentMana, maxMana, 30); // Display Mage's remaining mama
+            string[] mageChoices = new string[] { "Attack", "Check Inventory", "Check Status", "Attempt Escape (WARNING: Low Chance)" }; // Array displaying the different Mage's options
+
+            smoothPrinting.RapidPrint($"{mage.name} - Mage Status\n");
+            smoothPrinting.RapidPrint($"{mob.name} - Enemy\n");
+            UI.DisplayProgressBar("Health", mage.currentHealth, mage.maxHealth, 30); // Display Mage's health
+            Console.WriteLine(); // Spacing
+            UI.DisplayProgressBar("Mana", currentMana, maxMana, 30); // Display Mage's remaining mana
+            Console.WriteLine(); // Spacing
+            UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
+            Console.WriteLine(); // Spacing
             smoothPrinting.RapidPrint($"\nRemaining Healing Potions: {numOfPotionsInInventory}\n"); // Display Mage's remaining potions
 
 
@@ -717,14 +734,14 @@ namespace FantasyRPG
             {
                 case "1":
                     Console.Clear(); // Clear the console, to avoid overlapping
-                    MageSpellAttack(mage);
+                    MageSpellAttack(mage, mob);
                     break;
                 case "2":
                     CheckInventory();
                     smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
                     Console.ReadKey(); // Register user's input
                     Console.Clear(); // Clear the console to prevent confusion
-                    DisplayMageStatus(mage); // Recurse back to the original function
+                    DisplayMageStatus(mage, mob); // Recurse back to the original function
                     break;
                 case "3":
                     Console.Clear();
@@ -740,13 +757,13 @@ namespace FantasyRPG
                     smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
                     Console.ReadKey();
                     Console.Clear();
-                    DisplayMageStatus(mage); // Recurse back
+                    DisplayMageStatus(mage, mob); // Recurse back
                     break;
                 default:
                     smoothPrinting.RapidPrint("\nInvalid input, click any key to try again!");
                     Console.ReadKey(); 
                     Console.Clear(); // Clear the console after letting user read the error message
-                    DisplayMageStatus(mage); // Recurse back
+                    DisplayMageStatus(mage, mob); // Recurse back
                     break;
 
             }
@@ -1103,6 +1120,7 @@ namespace FantasyRPG
             pirateNormalAtks = _pirateNormalAtks; // Presets for all new Somali Pirates in the game
             pirateSpecialAtks = _pirateSpecialAtks;
             currentInventory = _currentInventory; // This will be readjusted to a list in the future
+            npcsEncountered = _npcsEncountered;
         }
 
 
@@ -1167,6 +1185,7 @@ namespace FantasyRPG
         {
             SmoothConsole smoothPrinting = new SmoothConsole();
             UIManager UI = new UIManager();
+            Console.Title = "FantasyRPG";
             // GameMenu menu = new GameMenu();
             // MagicCouncil encounter = new MagicCouncil(); // Debugging
             // string name = "Silver"; // Debugging
@@ -1175,7 +1194,7 @@ namespace FantasyRPG
             // firstScenario.usersFirstJourney("Tristian");
 
             // Define values for debugging mage
-            string mageName = "Zephyr Du-Lucérian";
+            string mageName = "Khalid Du-Lucérian";
             List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> mageWeapon = new List<(string, int, string, string, string)> {
                ("Heartblades Vesper", 250, "Legendary", "Staff", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right. I took it, the developer himself :3")
             };
@@ -1198,7 +1217,7 @@ namespace FantasyRPG
             int specialAtkRecharge = 100;
 
             List<(string npcName, string npcInformation, string npcAffiliation)> npcsEncountered = new List<(string, string, string)> {
-                 ("Veridian Pendragon", "False ranker and solo assassin, very capable and someone not to underestimate.", "Heartblade Association"),
+                 ("Veridian Pendragon", "False ranker and solo assassin, very capable and someone not to underestimate.", "Heartblade Association/Pendragon Lineage"),
                 ("Evelyn Everbright", "Rank 10 of the Arcania's Magic Council and Guildmaster of Arcania's Magic Council.", "Arcania's Magic Council/Arcane Sentinels"),
                 ("Khalid Du-Lucérian", "The true leader of Arcania's Magic Council, identity remains unknown.", "Arcania's Magic Council/Heartblade Association/Lucerian Lineage"),
                 ("Cloud (Real Identity - Silver Eucladian-Nine)", "Rank 1 of the Arcania's Magic Council.", "Arcania's Magic Council/Eucladian-Nine Lineage")
@@ -1207,10 +1226,10 @@ namespace FantasyRPG
 
             // Create the debugging mage object with the specified arguments
             Mage debuggingMage = new Mage(mageName, mageWeapon, mageSpecialties, arcaniaGoldCoins, magicSpells, currentInventory, specialAtkRecharge, npcsEncountered); // Debugging Mage
-            // ForestOfMysteries scenario = new ForestOfMysteries();
+            ForestOfMysteries scenario = new ForestOfMysteries();
             int remainingAttempts = 3;
 
-            // scenario.forestOfMysteries(debuggingMage, remainingAttempts); // Call the forestOfMysteries method with the Mage object and remaining attempts
+            scenario.forestOfMysteries(debuggingMage, remainingAttempts); // Call the forestOfMysteries method with the Mage object and remaining attempts
 
             
 
@@ -1225,8 +1244,8 @@ namespace FantasyRPG
             // };
 
 
-            gameDashboard dash = new gameDashboard();
-            dash.dashboard(debuggingMage);
+            // gameDashboard dash = new gameDashboard();
+            // dash.dashboard(debuggingMage);
 
         }
 
@@ -2489,11 +2508,8 @@ namespace FantasyRPG
             // Exert pressure based on mage's level
             windsom.exertPressure(mage.level, dragonName); // Pass dragonName argument here
 
-            // Display Windsom's Status
-            windsom.displayMobStatus(); // Make sure this method is called properly
-
-            // Display the mage's current status
-            mage.DisplayMageStatus(mage);
+            // Engage the combat system
+            mage.DisplayMageStatus(mage, windsom);
         }
 
         private void SomaliPirateConfrontation(SomaliPirate pirate)
@@ -2741,11 +2757,15 @@ namespace FantasyRPG
                     // Handle character status
                     break;
                 case "7":
+                    // Future reference: Create a dictionary, and will unlock in an instance that the continent has been explore (i.e. with a Boolean function)
                     Console.Clear();
                     smoothPrinting.PrintLine("--------------------------------------------------");
                     smoothPrinting.PrintLine("FantasyRPG: Continents");
                     smoothPrinting.PrintLine("--------------------------------------------------");
-                    smoothPrinting.RapidPrint("This feature isn't available as of present.");
+                    smoothPrinting.RapidPrint("\n* Tenebris");
+                    smoothPrinting.RapidPrint("\n* ???\n");
+                    smoothPrinting.RapidPrint("* ???\n");
+                    smoothPrinting.RapidPrint("* ???\n");
                     UI.PromptReturnToDashboard();
                     dashboard(character); // Due to lack of functionality, return user back to the dashboard
                     break;
@@ -2797,9 +2817,7 @@ namespace FantasyRPG
             }
 
             // Prompt the user to continue
-            smoothPrinting.RapidPrint("Affirmative? If so, click any key to continue.");
-            Console.ReadKey();
-
+            UI.PromptReturnToDashboard();
             dashboard(character); // Return user back to the dashboard
         }
 
