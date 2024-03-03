@@ -87,7 +87,7 @@ namespace FantasyRPG
         }
 
         // Allow for the user to check their current status
-        public virtual void CheckStatus()
+        public virtual void CheckStatus(CharacterDefault character)
         {
             UIManager UI = new UIManager(); // Engage the UIManager for progress bars
             string userInput; // Register user input
@@ -96,32 +96,67 @@ namespace FantasyRPG
             smoothPrinting.PrintLine($"FantasyRPG: {name}'s Current Status Check");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
-            // Display the users status
-            smoothPrinting.RapidPrint($"\nLevel: {level}\n");
-            UI.DisplayProgressBar("Remaining Health:", currentHealth, maxHealth, 30);
-            UI.DisplayProgressBar("Current Mana:", currentMana, maxMana, 30);
-            smoothPrinting.RapidPrint($"\nExperience accumulated: {exp}\n");
-
-
-            smoothPrinting.RapidPrint("\nWould you like to see the EXP required to get to the next level? (1 for 'Yes' and anything else for 'No')\n");
-            smoothPrinting.RapidPrint("Enter a corresponding value: ");
-            userInput = Console.ReadLine(); // Register the input
-
-            switch (userInput)
+            if (character is Mage)
             {
-                case "1":
-                    Console.Clear();
-                    CalculateExperienceForNextLevel();
-                    break;
-                default:
-                    smoothPrinting.RapidPrint("You will now be redirected back to the dashboard.");
-                    smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
-                    Console.ReadKey(); // Register user input
-                    Console.Clear(); // Clear the console to avoid overlapping
-                    gameDashboard dash = new gameDashboard(); 
-                    dash.dashboard(name, npcsEncountered); // Return to the user dashboard
-                    break;
+                // Display the users status
+                smoothPrinting.RapidPrint($"\nLevel: {level}\n");
+                UI.DisplayProgressBar("Remaining Health:", currentHealth, maxHealth, 30);
+                UI.DisplayProgressBar("Current Mana:", currentMana, maxMana, 30);
+                smoothPrinting.RapidPrint($"\nExperience accumulated: {exp}\n");
+
+
+                smoothPrinting.RapidPrint("\nWould you like to see the EXP required to get to the next level? (1 for 'Yes' and anything else for 'No')\n");
+                smoothPrinting.RapidPrint("Enter a corresponding value: ");
+                userInput = Console.ReadLine(); // Register the input
+
+                switch (userInput)
+                {
+                    case "1":
+                        Console.Clear();
+                        CalculateExperienceForNextLevel(character);
+                        break;
+                    default:
+                        smoothPrinting.RapidPrint("You will now be redirected back to the dashboard.");
+                        smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
+                        Console.ReadKey(); // Register user input
+                        Console.Clear(); // Clear the console to avoid overlapping
+                        gameDashboard dash = new gameDashboard();
+                        dash.dashboard(character); // Return to the user dashboard
+                        break;
+                }
+
             }
+            else if (character is SomaliPirate)
+            {
+                // Display the users status
+                smoothPrinting.RapidPrint($"\nLevel: {level}\n");
+                UI.DisplayProgressBar("Remaining Health:", currentHealth, maxHealth, 30);
+                UI.DisplayProgressBar("Current Mana:", currentMana, maxMana, 30);
+                smoothPrinting.RapidPrint($"\nExperience accumulated: {exp}\n");
+
+
+                smoothPrinting.RapidPrint("\nWould you like to see the EXP required to get to the next level? (1 for 'Yes' and anything else for 'No')\n");
+                smoothPrinting.RapidPrint("Enter a corresponding value: ");
+                userInput = Console.ReadLine(); // Register the input
+
+                switch (userInput)
+                {
+                    case "1":
+                        Console.Clear();
+                        CalculateExperienceForNextLevel(character);
+                        break;
+                    default:
+                        smoothPrinting.RapidPrint("You will now be redirected back to the dashboard.");
+                        smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
+                        Console.ReadKey(); // Register user input
+                        Console.Clear(); // Clear the console to avoid overlapping
+                        gameDashboard dash = new gameDashboard();
+                        dash.dashboard(character); // Return to the user dashboard
+                        break;
+                }
+            }
+
+
         }
 
         // Used for recovery
@@ -137,52 +172,86 @@ namespace FantasyRPG
 
 
         // Levelling methods 
-        public void CalculateExperienceForNextLevel()
+        public void CalculateExperienceForNextLevel(CharacterDefault character)
         {
             UIManager UI = new UIManager(); // Engage the UIManager for progress bars
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine($"FantasyRPG: {name}'s Status Check - Required EXP for next Level");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
-            // Depending on level, requirement for level is adjusted
-            if (level < 5)
-            {
-                experienceRequiredForNextLevel = 10 * level;
-                UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
-            }
-            else if (level > 10)
-            {
-                experienceRequiredForNextLevel = 100 * level;
-                UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
-            }
 
+            if (character is Mage)
+            {
+                // Depending on level, requirement for level is adjusted
+                if (level < 5)
+                {
+                    experienceRequiredForNextLevel = 10 * level;
+                    UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
+                }
+                else if (level > 10)
+                {
+                    experienceRequiredForNextLevel = 100 * level;
+                    UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
+                }
+
+            }
+            else if (character is SomaliPirate)
+            {
+                // Depending on level, requirement for level is adjusted
+                if (level < 5)
+                {
+                    experienceRequiredForNextLevel = 10 * level;
+                    UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
+                }
+                else if (level > 10)
+                {
+                    experienceRequiredForNextLevel = 100 * level;
+                    UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
+                }
+            }
 
             smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
             Console.ReadKey(); // Register user input
             Console.Clear(); // Clear the console to avoid overlapping
             gameDashboard dash = new gameDashboard();
-            dash.dashboard(name, npcsEncountered); // Return to the user dashboard
+            dash.dashboard(character); // Return to the user dashboard
 
         }
 
         // Should the condiition be met
-        public void LevelUp()
+        public void LevelUp(CharacterDefault character)
         {
-            level++;
-            Console.WriteLine(name + " has levelled up! " + " You are now level " + level);
-            CalculateExperienceForNextLevel();
+            if (character is Mage)
+            {
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.PrintLine($"FantasyRPG: Mage Level Up!");
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                level++;
+                Console.WriteLine(name + " has levelled up! " + " You are now level " + level);
+                CalculateExperienceForNextLevel(character);
+
+            }
+            else if (character is SomaliPirate)
+            {
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.PrintLine($"FantasyRPG: Pirate Level Up!");
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                level++;
+                Console.WriteLine(name + " has levelled up! " + " You are now level " + level);
+                CalculateExperienceForNextLevel(character);
+            }
 
         }
 
         // Check if user has enough to level up
-        public void GainExperience(int experiencePoints)
+        public void GainExperience(CharacterDefault character, int experiencePoints)
         {
             exp += experiencePoints;
 
             // Check if the character should level up
             if (exp >= experienceRequiredForNextLevel)
             {
-                LevelUp();
+                LevelUp(character);
             }
 
         }
@@ -561,7 +630,7 @@ namespace FantasyRPG
             smoothPrinting.PrintLine("--------------------------------------------------");
         }
 
-        public void MageSpellAttack() // Will load the Mage Combat System for fighting situations
+        public void MageSpellAttack(Mage mage) // Will load the Mage Combat System for fighting situations
         {
             UIManager UI = new UIManager(); // To display mana + health progress bar
 
@@ -605,7 +674,7 @@ namespace FantasyRPG
 
             Console.ReadKey(); // Register user input
             Console.Clear(); // Clear the console to avoid overlapping
-            DisplayMageStatus(); // Return back (still in development)
+            DisplayMageStatus(mage); // Return back (still in development)
 
             // userInput = Convert.ToString(Console.ReadLine());
 
@@ -619,12 +688,12 @@ namespace FantasyRPG
 
         }
 
-        public override void CheckStatus()
-        {
-            base.CheckStatus();
-        }
+        // public override void CheckStatus()
+        // {
+            // base.CheckStatus(cha);
+        // }
 
-        public void DisplayMageStatus() 
+        public void DisplayMageStatus(Mage mage) 
         {
             DisplayMageCombatSystemHeader(); // Display the MCS (Mage Combat System Header)
             UIManager UI = new UIManager(); // Engage the UI manager for progress bars
@@ -652,18 +721,18 @@ namespace FantasyRPG
             {
                 case "1":
                     Console.Clear(); // Clear the console, to avoid overlapping
-                    MageSpellAttack();
+                    MageSpellAttack(mage);
                     break;
                 case "2":
                     CheckInventory();
                     smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
                     Console.ReadKey(); // Register user's input
                     Console.Clear(); // Clear the console to prevent confusion
-                    DisplayMageStatus(); // Recurse back to the original function
+                    DisplayMageStatus(mage); // Recurse back to the original function
                     break;
                 case "3":
                     Console.Clear();
-                    CheckStatus(); // Allow user to check their status (FUTURE REFERENCE: ALLOW FOR STATUS TO BE USED DURING COMBAT AND OUTSIDE OF COMBAT)
+                    CheckStatus(mage); // Allow user to check their status (FUTURE REFERENCE: ALLOW FOR STATUS TO BE USED DURING COMBAT AND OUTSIDE OF COMBAT)
                     break;
                 case "4":
                     // Generate a random value
@@ -675,13 +744,13 @@ namespace FantasyRPG
                     smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
                     Console.ReadKey();
                     Console.Clear();
-                    DisplayMageStatus(); // Recurse back
+                    DisplayMageStatus(mage); // Recurse back
                     break;
                 default:
                     smoothPrinting.RapidPrint("\nInvalid input, click any key to try again!");
                     Console.ReadKey(); 
                     Console.Clear(); // Clear the console after letting user read the error message
-                    DisplayMageStatus(); // Recurse back
+                    DisplayMageStatus(mage); // Recurse back
                     break;
 
             }
@@ -2425,7 +2494,7 @@ namespace FantasyRPG
             windsom.displayMobStatus(); // Make sure this method is called properly
 
             // Display the mage's current status
-            mage.DisplayMageStatus();
+            mage.DisplayMageStatus(mage);
         }
 
         private void SomaliPirateConfrontation(SomaliPirate pirate)
@@ -2584,8 +2653,8 @@ namespace FantasyRPG
 
             // This section will be removed when this mission comes to become an integral part of the game, right now this is all for debugging purposes
 
-            gameDashboard dash = new gameDashboard();
-            dash.dashboard(name, npcsEncountered);
+            // gameDashboard dash = new gameDashboard();
+            // dash.dashboard(character);
 
         }
     }
@@ -2593,120 +2662,239 @@ namespace FantasyRPG
 
     public class gameDashboard
     {
-        public void dashboard(string name, List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered) // Will display the user dashboard for the game
+        public void dashboard(CharacterDefault character) // Will display the user dashboard for the game
         {
-            string userInput;
-            SmoothConsole smoothPrinting = new SmoothConsole();
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Gray;
-            smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine("FantasyRPG: " + name + "'s " + "Dashboard");
-            smoothPrinting.PrintLine("--------------------------------------------------");
 
-            smoothPrinting.RapidPrint("\n1. Main Storyline (N/A)\n");
-            smoothPrinting.RapidPrint("\n2. Infinite Dungeon (N/A)\n");
-            smoothPrinting.RapidPrint("\n3. Arcane Sentinels (N/A)\n");
-            smoothPrinting.RapidPrint("\n4. Shop (N/A)\n");
-            smoothPrinting.RapidPrint("\n5. NPC's Encountered (N/A)\n");
-            smoothPrinting.RapidPrint("\n6. Character Status (N/A)\n");
-            smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
-
-            userInput = Convert.ToString(Console.ReadLine()); // Register user input
-
-            switch (userInput)
+            if (character is Mage)
             {
-                case "1":
-                    Console.Clear(); // Clear the console
-                    smoothPrinting.PrintLine("--------------------------------------------------");
-                    smoothPrinting.PrintLine("FantasyRPG: " + "Storyline Missions");
-                    smoothPrinting.PrintLine("--------------------------------------------------");
+                MageDashboard();
+            }
+            else if (character is SomaliPirate)
+            {
+                PirateDashboard();
+            }
 
-                    smoothPrinting.RapidPrint("\nMissions are not available yet.");
-                    Console.ReadKey(); 
-                    Console.Clear(); // Clear the console.
-                    dashboard(name, npcsEncountered); // Due to lack of functionality, return user back to the dashboard
+            void MageDashboard()
+            {
+                string userInput;
+                SmoothConsole smoothPrinting = new SmoothConsole();
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Gray;
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.PrintLine($"FantasyRPG: {character.name}'s Dashboard");
+                smoothPrinting.PrintLine("--------------------------------------------------");
 
-                    break;
-                case "2":
-                    Console.Clear(); // Clear the console
-                    smoothPrinting.PrintLine("--------------------------------------------------");
-                    smoothPrinting.PrintLine("FantasyRPG: " + "Infinite Dungeon");
-                    smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.RapidPrint("\n1. Main Storyline (N/A)\n");
+                smoothPrinting.RapidPrint("\n2. Infinite Dungeon (N/A)\n");
+                smoothPrinting.RapidPrint("\n3. Arcane Sentinels (N/A)\n");
+                smoothPrinting.RapidPrint("\n4. Shop (N/A)\n");
+                smoothPrinting.RapidPrint("\n5. NPC's Encountered (N/A)\n");
+                smoothPrinting.RapidPrint("\n6. Character Status (N/A)\n");
+                smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
 
-                    smoothPrinting.RapidPrint("\nInfinite Dungeon is not available yet.");
-                    Console.ReadKey();
-                    Console.Clear(); // Clear the console.
-                    dashboard(name, npcsEncountered); // Due to lack of functionality, return user back to the dashboard
-                    break;
-                case "3":
-                    Console.Clear(); // Clear the console
-                    smoothPrinting.PrintLine("--------------------------------------------------");
-                    smoothPrinting.PrintLine("FantasyRPG: " + "Guild Reputation");
-                    smoothPrinting.PrintLine("--------------------------------------------------");
+                userInput = Convert.ToString(Console.ReadLine()); // Register user input
 
-                    smoothPrinting.RapidPrint("\nGuild Reputation is not available yet.");
-                    Console.ReadKey();
-                    Console.Clear(); // Clear the console.
-                    dashboard(name, npcsEncountered); // Due to lack of functionality, return user back to the dashboard
-                    break;
-                case "4":
-                    Console.Clear(); // Clear the console
-                    smoothPrinting.PrintLine("--------------------------------------------------");
-                    smoothPrinting.PrintLine("FantasyRPG: " + "Shop");
-                    smoothPrinting.PrintLine("--------------------------------------------------");
+                switch (userInput)
+                {
+                    case "1":
+                        Console.Clear(); // Clear the console
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+                        smoothPrinting.PrintLine("FantasyRPG: " + "Storyline Missions");
+                        smoothPrinting.PrintLine("--------------------------------------------------");
 
-                    smoothPrinting.RapidPrint("\nShop is not available yet.");
-                    Console.ReadKey();
-                    Console.Clear(); // Clear the console.
-                    dashboard(name, npcsEncountered); // Due to lack of functionality, return user back to the dashboard
-                    break;
-                case "5":
-                    NPCEncounters(npcsEncountered);
-                    break;
-                case "6":
+                        smoothPrinting.RapidPrint("\nMissions are not available yet.");
+                        Console.ReadKey();
+                        Console.Clear(); // Clear the console.
+                        dashboard(character); // Due to lack of functionality, return user back to the dashboard
 
-                    break;
-                default:
-                    while (string.IsNullOrEmpty(userInput))
-                    {
-                        smoothPrinting.RapidPrint("Invalid input, please try again.");
-                        Console.ReadKey(); // Allow user to see error message
-                        dashboard(name, npcsEncountered); // Due to lack of functionality, return user back to the dashboard to ensure that they put in the correct input
-                    }
-                    break;
+                        break;
+                    case "2":
+                        Console.Clear(); // Clear the console
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+                        smoothPrinting.PrintLine("FantasyRPG: " + "Infinite Dungeon");
+                        smoothPrinting.PrintLine("--------------------------------------------------");
 
+                        smoothPrinting.RapidPrint("\nInfinite Dungeon is not available yet.");
+                        Console.ReadKey();
+                        Console.Clear(); // Clear the console.
+                        dashboard(character); // Due to lack of functionality, return user back to the dashboard
+                        break;
+                    case "3":
+                        Console.Clear(); // Clear the console
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+                        smoothPrinting.PrintLine("FantasyRPG: " + "Guild Reputation");
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+
+                        smoothPrinting.RapidPrint("\nGuild Reputation is not available yet.");
+                        Console.ReadKey();
+                        Console.Clear(); // Clear the console.
+                        dashboard(character); // Due to lack of functionality, return user back to the dashboard
+                        break;
+                    case "4":
+                        Console.Clear(); // Clear the console
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+                        smoothPrinting.PrintLine("FantasyRPG: " + "Shop");
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+
+                        smoothPrinting.RapidPrint("\nShop is not available yet.");
+                        Console.ReadKey();
+                        Console.Clear(); // Clear the console.
+                        dashboard(character); // Due to lack of functionality, return user back to the dashboard
+                        break;
+                    case "5":
+                        NPCEncounters(character);
+                        break;
+                    case "6":
+
+                        break;
+                    default:
+                        while (string.IsNullOrEmpty(userInput))
+                        {
+                            smoothPrinting.RapidPrint("Invalid input, please try again.");
+                            Console.ReadKey(); // Allow user to see error message
+                            dashboard(character); // Due to lack of functionality, return user back to the dashboard to ensure that they put in the correct input
+                        }
+                        break;
+                }
+            }
+
+
+            void PirateDashboard()
+            {
+                string userInput;
+                SmoothConsole smoothPrinting = new SmoothConsole();
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Gray;
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.PrintLine($"FantasyRPG: {character.name}'s Dashboard");
+                smoothPrinting.PrintLine("--------------------------------------------------");
+
+                smoothPrinting.RapidPrint("\n1. Main Storyline (N/A)\n");
+                smoothPrinting.RapidPrint("\n2. Infinite Dungeon (N/A)\n");
+                smoothPrinting.RapidPrint("\n3. Arcane Sentinels (N/A)\n");
+                smoothPrinting.RapidPrint("\n4. Shop (N/A)\n");
+                smoothPrinting.RapidPrint("\n5. NPC's Encountered (N/A)\n");
+                smoothPrinting.RapidPrint("\n6. Character Status (N/A)\n");
+                smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
+
+                userInput = Convert.ToString(Console.ReadLine()); // Register user input
+
+                switch (userInput)
+                {
+                    case "1":
+                        Console.Clear(); // Clear the console
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+                        smoothPrinting.PrintLine("FantasyRPG: " + "Storyline Missions");
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+
+                        smoothPrinting.RapidPrint("\nMissions are not available yet.");
+                        Console.ReadKey();
+                        Console.Clear(); // Clear the console.
+                        dashboard(character); // Due to lack of functionality, return user back to the dashboard
+
+                        break;
+                    case "2":
+                        Console.Clear(); // Clear the console
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+                        smoothPrinting.PrintLine("FantasyRPG: " + "Infinite Dungeon");
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+
+                        smoothPrinting.RapidPrint("\nInfinite Dungeon is not available yet.");
+                        Console.ReadKey();
+                        Console.Clear(); // Clear the console.
+                        dashboard(character); // Due to lack of functionality, return user back to the dashboard
+                        break;
+                    case "3":
+                        Console.Clear(); // Clear the console
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+                        smoothPrinting.PrintLine("FantasyRPG: " + "Guild Reputation");
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+
+                        smoothPrinting.RapidPrint("\nGuild Reputation is not available yet.");
+                        Console.ReadKey();
+                        Console.Clear(); // Clear the console.
+                        dashboard(character); // Due to lack of functionality, return user back to the dashboard
+                        break;
+                    case "4":
+                        Console.Clear(); // Clear the console
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+                        smoothPrinting.PrintLine("FantasyRPG: " + "Shop");
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+
+                        smoothPrinting.RapidPrint("\nShop is not available yet.");
+                        Console.ReadKey();
+                        Console.Clear(); // Clear the console.
+                        dashboard(character); // Due to lack of functionality, return user back to the dashboard
+                        break;
+                    case "5":
+                        NPCEncounters(character);
+                        break;
+                    case "6":
+
+                        break;
+                    default:
+                        while (string.IsNullOrEmpty(userInput))
+                        {
+                            smoothPrinting.RapidPrint("Invalid input, please try again.");
+                            Console.ReadKey(); // Allow user to see error message
+                            dashboard(character); // Due to lack of functionality, return user back to the dashboard to ensure that they put in the correct input
+                        }
+                        break;
+                }
 
             }
 
-            void NPCEncounters(List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered) // This function will display all the npcs that the user has encountered during their time playing the game
+
+            void NPCEncounters(CharacterDefault character) // This function will display all the npcs that the user has encountered during their time playing the game
             {
                 UIManager UI = new UIManager(); // UI manager class
+                SmoothConsole smoothPrinting = new SmoothConsole();
                 Console.Clear(); // Clear the console 
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine("FantasyRPG: " + "NPC's Encountered");
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 Console.WriteLine(); // Spacing
                 
-                if (npcsEncountered is not null) // Check if the user has encounted any NPC's during the way, before displaying
+                if (character is Mage)
                 {
-                    foreach (var npc in npcsEncountered)
+                    if (character.npcsEncountered is not null) // Check if the user has encounted any NPC's during the way, before displaying
                     {
-                        smoothPrinting.RapidPrint($"\nName: {npc.npcName}\nDescription: {npc.npcDescription}\nAffiliation: {npc.npcAffiliation}\n");
+                        foreach (var npc in character.npcsEncountered)
+                        {
+                            smoothPrinting.RapidPrint($"\nName: {npc.npcName}\nDescription: {npc.npcDescription}\nAffiliation: {npc.npcAffiliation}\n");
+                        }
+
+                    }
+                    else // Should the user have not encounted any NPC's, then display this...
+                    {
+                        smoothPrinting.RapidPrint("\nYou haven't encountered any NPC's at this point of time.");
+                    }
+                }
+                else if (character is SomaliPirate)
+                {
+                    if (character.npcsEncountered is not null) // Check if the user has encounted any NPC's during the way, before displaying
+                    {
+                        foreach (var npc in character.npcsEncountered)
+                        {
+                            smoothPrinting.RapidPrint($"\nName: {npc.npcName}\nDescription: {npc.npcDescription}\nAffiliation: {npc.npcAffiliation}\n");
+                        }
+
+                    }
+                    else // Should the user have not encounted any NPC's, then display this...
+                    {
+                        smoothPrinting.RapidPrint("\nYou haven't encountered any NPC's at this point of time.");
                     }
 
-                }
-                else // Should the user have not encounted any NPC's, then display this...
-                {
-                    smoothPrinting.RapidPrint("\nYou haven't encountered any NPC's at this point of time.");
                 }
 
 
                 UI.PromptUserToContinue();
-                dashboard(name, npcsEncountered); // Return user back to the dashboard
+                dashboard(character); // Return user back to the dashboard
             }
 
             void mageDisplayPlayerStatus(Mage mage)
             {
+                SmoothConsole smoothPrinting = new SmoothConsole();
                 smoothPrinting.RapidPrint($"Name: {mage.name}\n Weapon: {mage.weapon}\n, Currency (Arcania's Golden Coins): {mage.arcaniaGoldCoins}\n, Magic Spells: {mage.magicSpells}");
             }
 
