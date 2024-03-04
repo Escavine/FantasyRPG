@@ -375,7 +375,7 @@ namespace FantasyRPG
         SmoothConsole smoothPrinting = new SmoothConsole();
         string name;
         int currentMobHealth, maxMobHealth = 350;
-       
+
 
         // Dictionary containing dragon attacks and their associated damage value
         Dictionary<string, int> normalAtkNames = new Dictionary<string, int>() // Preset names for all dragon's normal attacks
@@ -434,7 +434,7 @@ namespace FantasyRPG
                 smoothPrinting.RapidPrint($"Your attack damage is reduced as the overwhelming presence of {dragonName} weighs heavily upon you.\n");
                 UI.PromptUserToContinue();
                 Console.ResetColor(); // Reset Console Colour
-                
+
             }
 
         }
@@ -501,7 +501,7 @@ namespace FantasyRPG
 
             List<(string weaponName, (int damage, int rarity, int weaponType))> droppedWeapon;
             itemDrop.ToList();
-           
+
 
             if (item == 0)
             {
@@ -597,7 +597,7 @@ namespace FantasyRPG
 
     class Mage : CharacterDefault // Wizard class properties + methods
     {
-        SmoothConsole smoothPrinting = new SmoothConsole(); 
+        SmoothConsole smoothPrinting = new SmoothConsole();
 
         // Properties for common wizard attributes
         public List<(string magicSpell, int damage, int manaRequirement)> magicSpells = new List<(string magicSpell, int damage, int manaRequirement)>();
@@ -614,14 +614,15 @@ namespace FantasyRPG
         }
 
 
+
         // All methods for the Mage Class
 
         // public void SpellCast() Spell casting for enemies
         // {
-            // smoothPrinting.RapidPrint($"{name} has casted:");
-            // spellUsage--;
-            // mana = mana - 30;
-            // exp += 0.3f;
+        // smoothPrinting.RapidPrint($"{name} has casted:");
+        // spellUsage--;
+        // mana = mana - 30;
+        // exp += 0.3f;
         // }
 
         // WIll be used to display the Mage Combat System header
@@ -641,7 +642,7 @@ namespace FantasyRPG
             smoothPrinting.PrintLine("--------------------------------------------------");
 
             string? userInput; // Register the user input in string format for input validation purposes
-            List<(string magicSpell, int damage, int manaRequirement)> chosenSpellForAttack; // Will be used to append the chosen spell to attack, and will be cleared through each iteration
+            List<(string magicSpell, int damage, int manaRequirement)> chosenSpellForAttack = new List<(string magicSpell, int damage, int manaRequirement)>(); // Will be used to append the chosen spell to attack, and will be cleared through each iteration
             int spellCount = 1; // Likewise with the chosen spell, this will also be cleared through each iteration to keep track of number of user spells
 
             // magicSpecialties.ToList();
@@ -672,16 +673,51 @@ namespace FantasyRPG
                 smoothPrinting.RapidPrint($"\n{spellCount}. Spell: {spell.magicSpell} - Damage: {spell.damage}\nMana Requirement: {spell.manaRequirement}\n");
                 spellCount++;
             }
-
             // Register user input
-            // smoothPrinting.RapidPrint("\nSelect a spell to attack (Enter '0' to return back): ");
+            smoothPrinting.RapidPrint("\nSelect a spell to attack (Enter '0' to return back): ");
+            userInput = Console.ReadLine();
 
-            smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.\n");
-            smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the MCS.");
+            int registeredInput = Int32.Parse(userInput); // Convert value to integer
 
-            Console.ReadKey(); // Register user input
-            Console.Clear(); // Clear the console to avoid overlapping
-            DisplayMageStatus(mage, mob); // Return back (still in development)
+            // Check if the user input corresponds to a spell index
+            if (registeredInput > 0 && registeredInput <= magicSpells.Count)
+            {
+                // Get the chosen spell based on the user's input
+                var chosenSpell = magicSpells[registeredInput - 1];
+
+                // Add the chosen spell to the list of spells for attack
+                chosenSpellForAttack.Add((chosenSpell.magicSpell, chosenSpell.damage, chosenSpell.manaRequirement));
+            }
+            else if (registeredInput == 0)
+            {
+                // User wants to return back, handle accordingly
+                smoothPrinting.RapidPrint("\nYou will be redirected back to the Mage Combat System (MCS)");
+                UI.PromptUserToContinue();
+                DisplayMageStatus(mage, mob);
+            }
+            else
+            {
+                smoothPrinting.RapidPrint("\nInvalid input, please try again.");
+                UI.PromptUserToContinue();
+                MageSpellAttack(mage, mob);
+                // Invalid input, handle accordingly
+            }
+
+            foreach (var spell in chosenSpellForAttack)
+            {
+                smoothPrinting.RapidPrint($"\n{mage.name}: has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}");
+                mob.currentMobHealth -= spell.damage;
+                Console.ReadKey();
+                Console.Clear();
+                DisplayMageStatus(mage, mob); // Return after attack (TESTING)
+            }
+
+            // smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.\n");
+            // smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the MCS.");
+
+            // Console.ReadKey(); // Register user input
+            // Console.Clear(); // Clear the console to avoid overlapping
+            // DisplayMageStatus(mage, mob); // Return back (still in development)
 
             // userInput = Convert.ToString(Console.ReadLine());
 
@@ -689,7 +725,7 @@ namespace FantasyRPG
             // Next steps: Create a function that will count the number of spells within the individuals 'mageSpell' list and make a switch case for it.
 
 
-            
+
             // chosenSpellForAttack.Add(magicSpells.); // Append the chosen spell to another variable
 
 
@@ -761,13 +797,13 @@ namespace FantasyRPG
                     break;
                 default:
                     smoothPrinting.RapidPrint("\nInvalid input, click any key to try again!");
-                    Console.ReadKey(); 
+                    Console.ReadKey();
                     Console.Clear(); // Clear the console after letting user read the error message
                     DisplayMageStatus(mage, mob); // Recurse back
                     break;
 
             }
-               
+
         }
 
         public void MageTraining() // Might remove.
@@ -1153,23 +1189,23 @@ namespace FantasyRPG
 
     // class Archer : CharacterDefault
     // {
-        // public Archer(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge)
-        // {
-           // name = _name;
-            // weapon = _weapon;
-        // }
+    // public Archer(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge)
+    // {
+    // name = _name;
+    // weapon = _weapon;
+    // }
     // }
 
 
     // Warrior class
     // class Warrior : CharacterDefault
     // {
-        // public Warrior(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge)
-        // {
-            // name = _name;
-            // weapon = _weapon;
-            // currentInventory = _currentInventory;
-        // }
+    // public Warrior(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge)
+    // {
+    // name = _name;
+    // weapon = _weapon;
+    // currentInventory = _currentInventory;
+    // }
     // }
 
 
@@ -1231,7 +1267,7 @@ namespace FantasyRPG
 
             scenario.forestOfMysteries(debuggingMage, remainingAttempts); // Call the forestOfMysteries method with the Mage object and remaining attempts
 
-            
+
 
             // menu.gameMenu(); // User is first directed to the game menu method
 
@@ -1254,8 +1290,8 @@ namespace FantasyRPG
         {
             SmoothConsole smoothOutput = new SmoothConsole(); // Initialize the smooth console
             int userChances = 3; // Will be used for recursive measures to prevent brute force and idiotic input
-            // Future reference: Implementing AI mobs and perhaps AI individuals
-  
+                                 // Future reference: Implementing AI mobs and perhaps AI individuals
+
             string? userChoice; // Used for the start of the game
             string[] gameTips = {"Did you know that every 10 levels, you can get an extra ability/speciality?",
                 "This game is still in development, so if there's an issue please contact me through my GitHub (Escavine) and send a pull request which I'll review.",
@@ -2478,7 +2514,7 @@ namespace FantasyRPG
                 { "Dragon's Claw", 30 },
                 { "Dragon's Breath", 40 },
                 { "Raging Tempest", 50 }
-            };  
+            };
 
             Dictionary<string, (int, string)> specialAtkNames = new Dictionary<string, (int, string)>()
             {
@@ -2823,109 +2859,109 @@ namespace FantasyRPG
 
         void mageDisplayPlayerStatus(Mage mage)
         {
-           smoothPrinting.RapidPrint($"Name: {mage.name}\n Weapon: {mage.weapon}\n, Currency (Arcania's Golden Coins): {mage.arcaniaGoldCoins}\n, Magic Spells: {mage.magicSpells}");
+            smoothPrinting.RapidPrint($"Name: {mage.name}\n Weapon: {mage.weapon}\n, Currency (Arcania's Golden Coins): {mage.arcaniaGoldCoins}\n, Magic Spells: {mage.magicSpells}");
         }
 
-            // void guild()
-            // {
-            // This will contain information such as guild members, speaking with guild members such as asking them questions etc, which I'll try make dynamic and also being able to see ones current reputation
-            // }
+        // void guild()
+        // {
+        // This will contain information such as guild members, speaking with guild members such as asking them questions etc, which I'll try make dynamic and also being able to see ones current reputation
+        // }
 
-            // void infiniteDungeon()
-            // {
-            // This will be a recursive dungeon that will allow players to be able to obtain loot and level up, in turn enabling them to become stronger
-            // }
+        // void infiniteDungeon()
+        // {
+        // This will be a recursive dungeon that will allow players to be able to obtain loot and level up, in turn enabling them to become stronger
+        // }
 
-            // void shop()
-            // {
-            // Items will be sold within the shop, that the user can purchase, along with weapons etc.
-            // }
+        // void shop()
+        // {
+        // Items will be sold within the shop, that the user can purchase, along with weapons etc.
+        // }
 
-        }
+    }
+}
+
+
+public class UIManager // UIManager - a class that will allow for the display of progress bars, prompts etc.
+{
+    SmoothConsole smoothPrinting = new SmoothConsole(); // Engage the smoothconsole class
+    public void DisplayProgressBar(string title, float currentValue, int maxValue, int barLength)
+    {
+        // Calculate the percentage
+        double percentage = currentValue / maxValue;
+
+        // Calculate the number of filled characters
+        int filledLength = (int)Math.Round(percentage * barLength);
+
+        // Generate the progress bar
+        string progressBar = new string('█', filledLength) + new string(' ', barLength - filledLength);
+
+        // Output the progress bar
+        smoothPrinting.RapidPrint($"\n{title}: [{progressBar}] [{currentValue}/{maxValue}]");
     }
 
 
-    public class UIManager // UIManager - a class that will allow for the display of progress bars, prompts etc.
+    public void PromptUserToContinue()
     {
-        SmoothConsole smoothPrinting = new SmoothConsole(); // Engage the smoothconsole class
-        public void DisplayProgressBar(string title, float currentValue, int maxValue, int barLength)
-        {
-            // Calculate the percentage
-            double percentage = currentValue / maxValue;
-
-            // Calculate the number of filled characters
-            int filledLength = (int)Math.Round(percentage * barLength);
-
-            // Generate the progress bar
-            string progressBar = new string('█', filledLength) + new string(' ', barLength - filledLength);
-
-            // Output the progress bar
-            smoothPrinting.RapidPrint($"\n{title}: [{progressBar}] [{currentValue}/{maxValue}]");
-        }
-
-
-        public void PromptUserToContinue()
-        {
-            smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to continue.");
-            Console.ReadKey();
-            Console.Clear();
-
-        }
-
-        public void PromptReturnToDashboard()
-        {
-            smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
-            Console.ReadKey();
-            Console.Clear();
-
-        }
+        smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to continue.");
+        Console.ReadKey();
+        Console.Clear();
 
     }
 
-    public class SmoothConsole // This will be used to ensure output from the console is smooth and aesthetic looking
+    public void PromptReturnToDashboard()
     {
-        public void CenterPrint(string text) // Will center user output
+        smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
+        Console.ReadKey();
+        Console.Clear();
+
+    }
+
+}
+
+public class SmoothConsole // This will be used to ensure output from the console is smooth and aesthetic looking
+{
+    public void CenterPrint(string text) // Will center user output
+    {
+        int width = Console.WindowWidth;
+        int spaces = (width - text.Length) / 2;
+        Console.Write(new string(' ', spaces) + text);
+        Thread.Sleep(10);
+    }
+
+    public void RapidPrint(string text) // Even faster console output
+    {
+        foreach (char c in text)
         {
-            int width = Console.WindowWidth;
-            int spaces = (width - text.Length) / 2;
-            Console.Write(new string(' ', spaces) + text);
+            Console.Write(c);
             Thread.Sleep(10);
         }
-
-        public void RapidPrint(string text) // Even faster console output
+    }
+    public void SlowPrint(string text) // Slower, smoother console output
+    {
+        foreach (char c in text)
         {
-            foreach (char c in text)
-            {
-                Console.Write(c);
-                Thread.Sleep(10);
-            }
-        }
-        public void SlowPrint(string text) // Slower, smoother console output
-        {
-            foreach (char c in text)
-            {
 
-                Console.Write(c);
-                Thread.Sleep(50);
-
-            }
+            Console.Write(c);
+            Thread.Sleep(50);
 
         }
 
-        public void PrintLine(string line) // Printing lines 
+    }
+
+    public void PrintLine(string line) // Printing lines 
+    {
+        Console.WriteLine(line.PadLeft((Console.WindowWidth + line.Length) / 2));
+    }
+
+    public void FastPrint(string text) // Faster, smoother console output
+    {
+        foreach (char c in text)
         {
-            Console.WriteLine(line.PadLeft((Console.WindowWidth + line.Length) / 2));
+
+            Console.Write(c);
+            Thread.Sleep(20);
+
         }
+    }
 
-        public void FastPrint(string text) // Faster, smoother console output
-        {
-            foreach (char c in text)
-            {
-
-                Console.Write(c);
-                Thread.Sleep(20);
-
-            }
-        }
-
-    }  // Namespace coverage: DO NOT REMOVE THIS
+}  // Namespace coverage: DO NOT REMOVE THIS
