@@ -705,11 +705,23 @@ namespace FantasyRPG
 
             foreach (var spell in chosenSpellForAttack)
             {
-                smoothPrinting.RapidPrint($"\n{mage.name}: has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}");
-                mob.currentMobHealth -= spell.damage;
-                Console.ReadKey();
-                Console.Clear();
-                DisplayMageStatus(mage, mob); // Return after attack (TESTING)
+                if (mage.currentMana >= spell.manaRequirement)
+                {
+                    smoothPrinting.RapidPrint($"\n{mage.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}");
+                    mob.currentMobHealth -= spell.damage;
+                    mage.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
+                    Console.ReadKey();
+                    Console.Clear();
+                    DisplayMageStatus(mage, mob); // Return after attack (TESTING)
+                }
+                else
+                {
+                    smoothPrinting.RapidPrint("\nYou do not have enough mana to cast this spell.");
+                    Console.ReadKey();
+                    Console.Clear();
+                    MageSpellAttack(mage, mob); // Recurse back to the function, should the user wish to use an alternative spell
+                }
+
             }
 
             // smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.\n");
@@ -738,7 +750,6 @@ namespace FantasyRPG
 
         public void DisplayMageStatus(Mage mage, MobDefault mob) // Naturally this takes in the mage class and the given mob
         {
-            DisplayMageCombatSystemHeader(); // Display the MCS (Mage Combat System Header)
             UIManager UI = new UIManager(); // Engage the UI manager for progress bars
 
             int? numCount = 1; // Will display the numeric choices for the Mage's options
@@ -746,63 +757,85 @@ namespace FantasyRPG
 
             string[] mageChoices = new string[] { "Attack", "Check Inventory", "Check Status", "Attempt Escape (WARNING: Low Chance)" }; // Array displaying the different Mage's options
 
-            smoothPrinting.RapidPrint($"{mage.name} - Mage Status\n");
-            smoothPrinting.RapidPrint($"{mob.name} - Enemy\n");
-            UI.DisplayProgressBar("Health", mage.currentHealth, mage.maxHealth, 30); // Display Mage's health
-            Console.WriteLine(); // Spacing
-            UI.DisplayProgressBar("Mana", currentMana, maxMana, 30); // Display Mage's remaining mana
-            Console.WriteLine(); // Spacing
-            UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
-            Console.WriteLine(); // Spacing
-            smoothPrinting.RapidPrint($"\nRemaining Healing Potions: {numOfPotionsInInventory}\n"); // Display Mage's remaining potions
 
-
-            foreach (var choice in mageChoices)
+            if (mob.currentMobHealth == 0) // Check everytime if the mob has died
             {
-                smoothPrinting.RapidPrint($"\n{numCount}. {choice}\n");
-                numCount++; // Increment the value to display the other remaining choices
+                Console.Clear();
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.PrintLine($"FantasyRPG: Defeated {mob.name}");
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                UI.DisplayProgressBar("Health", mage.currentHealth, mage.maxHealth, 30); // Display Mage's health
+                Console.WriteLine(); // Spacing
+                UI.DisplayProgressBar("Mana", currentMana, maxMana, 30); // Display Mage's remaining mana
+                Console.WriteLine(); // Spacing
+                UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
+                Console.WriteLine(); // Spacing
+                smoothPrinting.RapidPrint($"\n{mob.name} has been defeated by {mage.name}, rewards incoming...");
+                gameDashboard dash = new gameDashboard();
+                dash.dashboard(mage);
+            }
+            else
+            {
+                DisplayMageCombatSystemHeader(); // Display the MCS (Mage Combat System Header)
+                smoothPrinting.RapidPrint($"{mage.name} - Mage Status\n");
+                smoothPrinting.RapidPrint($"{mob.name} - Enemy\n");
+                UI.DisplayProgressBar("Health", mage.currentHealth, mage.maxHealth, 30); // Display Mage's health
+                Console.WriteLine(); // Spacing
+                UI.DisplayProgressBar("Mana", currentMana, maxMana, 30); // Display Mage's remaining mana
+                Console.WriteLine(); // Spacing
+                UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
+                Console.WriteLine(); // Spacing
+                smoothPrinting.RapidPrint($"\nRemaining Healing Potions: {numOfPotionsInInventory}\n"); // Display Mage's remaining potions
+
+
+                foreach (var choice in mageChoices)
+                {
+                    smoothPrinting.RapidPrint($"\n{numCount}. {choice}\n");
+                    numCount++; // Increment the value to display the other remaining choices
+                }
+
+                smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
+                userChoice = Convert.ToString(Console.ReadLine()); // Register Mage's choice
+
+                switch (userChoice)
+                {
+                    case "1":
+                        Console.Clear(); // Clear the console, to avoid overlapping
+                        MageSpellAttack(mage, mob);
+                        break;
+                    case "2":
+                        CheckInventory();
+                        smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
+                        Console.ReadKey(); // Register user's input
+                        Console.Clear(); // Clear the console to prevent confusion
+                        DisplayMageStatus(mage, mob); // Recurse back to the original function
+                        break;
+                    case "3":
+                        Console.Clear();
+                        CheckStatus(mage); // Allow user to check their status (FUTURE REFERENCE: ALLOW FOR STATUS TO BE USED DURING COMBAT AND OUTSIDE OF COMBAT)
+                        break;
+                    case "4":
+                        // Generate a random value
+                        // Random ran = new Random(); 
+                        // ran.Next(0, 50);
+                        // For this stage, if the user gets a value such as (i.e. 1, 10, 12, 15) they will luckily escape, otherwise they'll be locked into combat and cannot attempt escape again.
+                        // Should they escape, they'll return to the Forest Of Mysteries
+                        smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.\n");
+                        smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
+                        Console.ReadKey();
+                        Console.Clear();
+                        DisplayMageStatus(mage, mob); // Recurse back
+                        break;
+                    default:
+                        smoothPrinting.RapidPrint("\nInvalid input, click any key to try again!");
+                        Console.ReadKey();
+                        Console.Clear(); // Clear the console after letting user read the error message
+                        DisplayMageStatus(mage, mob); // Recurse back
+                        break;
+                }
+
             }
 
-            smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
-            userChoice = Convert.ToString(Console.ReadLine()); // Register Mage's choice
-
-            switch (userChoice)
-            {
-                case "1":
-                    Console.Clear(); // Clear the console, to avoid overlapping
-                    MageSpellAttack(mage, mob);
-                    break;
-                case "2":
-                    CheckInventory();
-                    smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
-                    Console.ReadKey(); // Register user's input
-                    Console.Clear(); // Clear the console to prevent confusion
-                    DisplayMageStatus(mage, mob); // Recurse back to the original function
-                    break;
-                case "3":
-                    Console.Clear();
-                    CheckStatus(mage); // Allow user to check their status (FUTURE REFERENCE: ALLOW FOR STATUS TO BE USED DURING COMBAT AND OUTSIDE OF COMBAT)
-                    break;
-                case "4":
-                    // Generate a random value
-                    // Random ran = new Random(); 
-                    // ran.Next(0, 50);
-                    // For this stage, if the user gets a value such as (i.e. 1, 10, 12, 15) they will luckily escape, otherwise they'll be locked into combat and cannot attempt escape again.
-                    // Should they escape, they'll return to the Forest Of Mysteries
-                    smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.\n");
-                    smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
-                    Console.ReadKey();
-                    Console.Clear();
-                    DisplayMageStatus(mage, mob); // Recurse back
-                    break;
-                default:
-                    smoothPrinting.RapidPrint("\nInvalid input, click any key to try again!");
-                    Console.ReadKey();
-                    Console.Clear(); // Clear the console after letting user read the error message
-                    DisplayMageStatus(mage, mob); // Recurse back
-                    break;
-
-            }
 
         }
 
