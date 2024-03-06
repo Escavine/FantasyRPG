@@ -750,6 +750,7 @@ namespace FantasyRPG
 
         public void DisplayMageStatus(Mage mage, MobDefault mob) // Naturally this takes in the mage class and the given mob
         {
+            bool userTurn; // These boolean measures are to create the turn based dynamic for the game
             UIManager UI = new UIManager(); // Engage the UI manager for progress bars
 
             int? numCount = 1; // Will display the numeric choices for the Mage's options
