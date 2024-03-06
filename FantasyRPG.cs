@@ -516,36 +516,102 @@ namespace FantasyRPG
                 {
                     case 0:
                         smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
+                        userChoice = Console.ReadLine(); // Register user input
+
+                        if (userChoice == "1")
+                        {
+                            character.weapon.Remove(); // Remove the current weapon equipped by the user
+                            character.weapon.Add(weapon.Key, weapon.Value.damage, weapon.Value.damage, weapon.Value.rarity, weapon.Value.weaponType); // Replace the weapon, with the chosen weapon from the drop
+                        }
+                        else
+                        {
+                            smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
+                        }
 
                         // Append the weapon to users inventory
                         character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
                         break;
                     case 1:
                         smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
+                        userChoice = Console.ReadLine(); // Register user input
+
+                        if (userChoice == "1")
+                        {
+                            character.weapon.Remove(); // Remove the current weapon equipped by the user
+                            character.weapon.Add(weapon.Key, weapon.Value.damage, weapon.Value.damage, weapon.Value.rarity, weapon.Value.weaponType); // Replace the weapon, with the chosen weapon from the drop
+                        }
+                        else
+                        {
+                            smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
+                        }
 
                         // Append the weapon to users inventory
                         character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
                         break;
                     case 2:
                         smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
+                        userChoice = Console.ReadLine(); // Register user input
+
+                        if (userChoice == "1")
+                        {
+                            character.weapon.Remove(); // Remove the current weapon equipped by the user
+                            character.weapon.Add(weapon.Key, weapon.Value.damage, weapon.Value.damage, weapon.Value.rarity, weapon.Value.weaponType); // Replace the weapon, with the chosen weapon from the drop
+                        }
+                        else
+                        {
+                            smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
+                        }
 
                         // Append the weapon to users inventory
                         character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
                         break;
                     case 3:
                         smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
+                        userChoice = Console.ReadLine(); // Register user input
+
+                        if (userChoice == "1")
+                        {
+                            character.weapon.Remove(); // Remove the current weapon equipped by the user
+                            character.weapon.Add(weapon.Key, weapon.Value.damage, weapon.Value.damage, weapon.Value.rarity, weapon.Value.weaponType); // Replace the weapon, with the chosen weapon from the drop
+                        }
+                        else
+                        {
+                            smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
+                        }
 
                         // Append the weapon to users inventory
                         character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
                         break;
                     case 4:
                         smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
+                        userChoice = Console.ReadLine(); // Register user input
+
+                        if (userChoice == "1")
+                        {
+                            character.weapon.Remove(); // Remove the current weapon equipped by the user
+                            character.weapon.Add(weapon.Key, weapon.Value.damage, weapon.Value.damage, weapon.Value.rarity, weapon.Value.weaponType); // Replace the weapon, with the chosen weapon from the drop
+                        }
+                        else
+                        {
+                            smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
+                        }
 
                         // Append the weapon to users inventory
                         character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
                         break;
                     case 5:
                         smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
+                        userChoice = Console.ReadLine(); // Register user input
+
+                        if (userChoice == "1")
+                        {
+                            character.weapon.Remove(); // Remove the current weapon equipped by the user
+                            character.weapon.Add(weapon.Key, weapon.Value.damage, weapon.Value.damage, weapon.Value.rarity, weapon.Value.weaponType); // Replace the weapon, with the chosen weapon from the drop
+                        }
+                        else
+                        {
+                            smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
+                        }
 
                         // Append the weapon to users inventory
                         character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
