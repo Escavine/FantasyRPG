@@ -278,12 +278,12 @@ namespace FantasyRPG
 
         }
 
-        public void displayMobStatus()
+        public void displayMobStatus(MobDefault mob)
         {
             UIManager UI = new UIManager(); // Displaying progress bar
 
             // Add parameters such as the mobs health etc.
-            UI.DisplayProgressBar("Mob Health", currentMobHealth, maxMobHealth, 30);
+            UI.DisplayProgressBar("Mob Health", mob.currentMobHealth, mob.maxMobHealth, 30);
             Console.WriteLine();
             Console.WriteLine(); // Double spacing to avoid overlapping
 
@@ -771,8 +771,38 @@ namespace FantasyRPG
                 UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
                 Console.WriteLine(); // Spacing
                 smoothPrinting.RapidPrint($"\n{mob.name} has been defeated by {mage.name}, rewards incoming...");
+                Console.ReadKey(); // Testing
                 gameDashboard dash = new gameDashboard();
                 dash.dashboard(mage);
+            }
+            else if (mage.currentMana == 0) // Should the user die instead
+            {
+                string? userInput;
+
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.PrintLine($"FantasyRPG: You have died by {mob.name}");
+                smoothPrinting.PrintLine("--------------------------------------------------");
+
+                smoothPrinting.RapidPrint("\nWould you like to go back to the Menu? ('1' for Yes, any other key for No)");
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        smoothPrinting.RapidPrint("\nYou will now be redirected back to the Menu...");
+                        userInput = null; // This is case measure to prevent the userInput value from already having a stored value, if the user reaches this point in the game again
+                        GameMenu redirectUserToMenu = new GameMenu();
+                        redirectUserToMenu.gameMenu(); // Redirect user to the game menu, if they enter the value '1'
+                        break;
+                    default:
+                        smoothPrinting.RapidPrint("\nConsole will now terminate, press any key to leave the game");
+                        Console.ReadKey();
+                        break;
+                }
+
+
             }
             else
             {
