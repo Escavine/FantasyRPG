@@ -227,7 +227,7 @@ namespace FantasyRPG
         }
 
         // Check if user has enough to level up
-        public void GainExperience(CharacterDefault character, int experiencePoints)
+        public void GainExperience(CharacterDefault character, float experiencePoints)
         {
             if (character is Mage)
             {
@@ -479,71 +479,77 @@ namespace FantasyRPG
 
         }
 
-        public void dragonDeath(string name, int mobHealth, int exp, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> currentInventory)
+        public void dragonDeath(MobDefault mob, CharacterDefault character)
         {
-            if (mobHealth == 0)
+            if (mob.currentMobHealth == 0)
             {
                 Random itemDropChance = new Random();
-                int dropChance = itemDropChance.Next(0, 10); // 20% drop rate, due to OP item drops
+                int dropChance = itemDropChance.Next(0, 1); // 20% drop rate, due to OP item drops
                 smoothPrinting.FastPrint($"\n{name} has successfully killed the dragon!");
 
                 if (dropChance == 0 || dropChance == 1)
                 {
-                    dropItem(dropChance, currentInventory); // Should the random number be zero, then the mob will drop an item
+                    
+                    dropItem(dropChance, character); // Should the random number be zero, then the mob will drop an item
                 }
 
-                exp += 300; // User gains huge exp from defeating the dragon 
+                character.exp += 300; // User gains huge exp from defeating the dragon 
+                character.GainExperience(character, character.exp);
 
             }
 
         }
 
-        public void dropItem(int dropChance, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> currentInventory)
+        public void dropItem(int dropChance, CharacterDefault character)
         {
             Random ran = new Random(); // Determine which item will be dropped
-            int item = ran.Next(0, 6); // Generate a value between 0 to 6
-
-            List<(string weaponName, (int damage, int rarity, int weaponType))> droppedWeapon;
-            itemDrop.ToList();
+            int randomWeapon = ran.Next(0, 6); // Generate a value between 0 to 5 (inclusive)
 
 
-            if (item == 0)
+
+            itemDrop.ToList(); // Convert the item drops to a list
+
+
+            foreach (var weapon in itemDrop) // Traverse through the item drops based on the number generated, all weapons received are randomly given
             {
+                switch (randomWeapon)
+                {
+                    case 0:
+                        smoothPrinting.RapidPrint($"\n{character.name} has received {weapon.Key}, would you like to equip this weapon?");
+                        character.currentInventory.Add(weapon.Key, weapon.Value.damage, weapon.Value.);
+                        itemName = "Etherial Froststaff";
+                        break;
+                    case 1:
+                        itemName = "Nightfall Rapier";
+                        break;
+                    case 2:
+                        itemName = "Chaosfire Greatsword";
+                        break;
+                    case 3:
+                        itemName = "Nightshade Arc";
+                        break;
+                    case 4:
+                        itemName = "Aerith's Heirloom";
+                        break;
+                    case 5:
+                        itemName = "Eucladian's Aura";
+                        break;
+                }
 
             }
-            else if (item == 1)
+           
+
+            // Retrieve item details from the dictionary
+            if (itemDrop.ContainsKey(itemName))
             {
-
-
-            }
-            else if (item == 2)
-            {
-
-
-            }
-            else if (item == 3)
-            {
-
-
-            }
-            else if (item == 4)
-            {
-
-
-
-            }
-            else if (item == 5)
-            {
-
-
-            }
-            else if (item == 6)
-            {
-
-
+                var itemDetails = itemDrop[itemName];
+                itemDescription = ""; // You can add item descriptions based on your requirements
+                itemRarity = itemDetails.rarity;
+                itemPower = itemDetails.damage; // Assuming itemPower corresponds to damage for weapons
             }
 
-
+            // Add the dropped item to the player's inventory
+            currentInventory.Add((itemName, itemDescription, itemRarity, itemPower));
         }
     }
 
@@ -783,8 +789,10 @@ namespace FantasyRPG
                 smoothPrinting.RapidPrint($"\n{mob.name} has been defeated by {mage.name}, rewards incoming...");
                 Console.ReadKey(); // Testing
 
-                gameDashboard dash = new gameDashboard();
-                dash.dashboard(mage);
+                mob.itemDrop();
+
+                // gameDashboard dash = new gameDashboard();
+                // dash.dashboard(mage);
             }
             else if (mage.currentHealth == 0) // Should the user die instead
             {
