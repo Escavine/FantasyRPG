@@ -417,9 +417,9 @@ namespace FantasyRPG
 
         // Future reference: Create different types of dragons that have weaknesses (i.e. water dragons, shadow dragons etc)
 
-        public void exertPressure(int level, string dragonName) // Dragons will exert 'pressure' to make humans fear them, should the users level be lower than expected
+        public void exertPressure(CharacterDefault character, MobDefault mob) // Dragons will exert 'pressure' to make humans fear them, should the users level be lower than expected
         {
-            if (level < 10) // Should the users level be below level 10, then the dragon will exert pressure to the individual, reducing their attack value.
+            if (character.level <= 10) // Should the users level be below level 10, then the dragon will exert pressure to the individual, reducing their attack value.
             {
                 UIManager UI = new UIManager();
                 smoothPrinting.PrintLine("--------------------------------------------------");
@@ -427,11 +427,15 @@ namespace FantasyRPG
                 smoothPrinting.PrintLine("--------------------------------------------------");
 
                 Console.ForegroundColor = ConsoleColor.Red;
-                smoothPrinting.RapidPrint($"{dragonName}:\n");
-                smoothPrinting.RapidPrint($"*Roars with a deafening sound, shaking the very ground beneath you.*\n");
-                smoothPrinting.RapidPrint($"Your level is lower than expected, the Dragon {dragonName} exerts immense pressure, casting a shadow of dread over you. You feel your resolve weaken as fear grips your heart.\n");
-                smoothPrinting.RapidPrint($"The ancient power emanating from {dragonName} fills the air, suffocating your magical abilities. You sense a drain on your strength, your magical potency diminishing.\n");
-                smoothPrinting.RapidPrint($"Your attack damage is reduced as the overwhelming presence of {dragonName} weighs heavily upon you.\n");
+                smoothPrinting.RapidPrint($"{mob.name}:\n");
+                smoothPrinting.RapidPrint("\n*Roars with a deafening sound, shaking the very ground beneath you.*\n");
+
+                smoothPrinting.RapidPrint($"\nYour level is lower than expected, {mob.name} exerts immense pressure, casting a shadow of dread over you. You feel your resolve weaken as fear grips your heart.\n");
+
+                smoothPrinting.RapidPrint($"\nThe ancient power emanating from {mob.name} fills the air, suffocating your magical abilities. You sense a drain on your strength, your magical potency diminishing.\n");
+
+                smoothPrinting.RapidPrint("\nYour attack damage is reduced as the overwhelming presence of Windsom weighs heavily upon you.\n");
+
                 UI.PromptUserToContinue();
                 Console.ResetColor(); // Reset Console Colour
 
@@ -657,7 +661,7 @@ namespace FantasyRPG
 
             // }
             smoothPrinting.RapidPrint($"{mage.name} - Mage Status\n");
-            smoothPrinting.RapidPrint($"\n{mob.name} - Enemy Health\n");
+            smoothPrinting.RapidPrint($"{mob.name} - Enemy\n");
 
             // Display users mana and remaining health
             UI.DisplayProgressBar("Health", currentHealth, maxHealth, 30);
@@ -708,7 +712,7 @@ namespace FantasyRPG
             {
                 if (mage.currentMana >= spell.manaRequirement)
                 {
-                    smoothPrinting.RapidPrint($"\n{mage.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}");
+                    smoothPrinting.RapidPrint($"\n{mage.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
                     mob.currentMobHealth -= spell.damage;
                     mage.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
                     Console.ReadKey();
@@ -832,13 +836,13 @@ namespace FantasyRPG
 
                     if (mage.currentHealth <= 30) // Check if users health is low
                     {
-                        smoothPrinting.RapidPrint("\nWARINING: Your health is critically low, consider using a health potion or a recovery spell.");
+                        smoothPrinting.RapidPrint("WARINING: Your health is critically low, consider using a health potion or a recovery spell.");
                         Console.WriteLine(); // Spacing
                     }
 
                     if (mage.currentMana <= 30) // Check if users mana levels are low
                     {
-                        smoothPrinting.RapidPrint("\nWarning: Your mana is critically low. Consider using a mana potion or a recovery spell to replenish your mana reserves.");
+                        smoothPrinting.RapidPrint("Warning: Your mana is critically low. Consider using a mana potion or a recovery spell to replenish your mana reserves.");
                         Console.WriteLine(); // Spacing
                     }
 
@@ -909,13 +913,13 @@ namespace FantasyRPG
 
                     if (mage.currentHealth <= 30) // Check if users health is low
                     {
-                        smoothPrinting.RapidPrint("\nWARINING: Your health is critically low, consider using a health potion or a recovery spell.");
+                        smoothPrinting.RapidPrint("WARINING: Your health is critically low, consider using a health potion or a recovery spell.");
                         Console.WriteLine(); // Spacing
                     }
 
                     if (mage.currentMana <= 30) // Check if users mana levels are low
                     {
-                        smoothPrinting.RapidPrint("\nWarning: Your mana is critically low. Consider using a mana potion or a recovery spell to replenish your mana reserves.");
+                        smoothPrinting.RapidPrint("Warning: Your mana is critically low. Consider using a mana potion or a recovery spell to replenish your mana reserves.");
                         Console.WriteLine(); // Spacing
                     }
 
@@ -2709,7 +2713,7 @@ namespace FantasyRPG
             Dragon windsom = new Dragon(dragonName, normalAtkNames, specialAtkNames, specialAtkRecharge, currentMobHealth, maxMobHealth, itemDrop);
 
             // Exert pressure based on mage's level
-            windsom.exertPressure(mage.level, dragonName); // Pass dragonName argument here
+            windsom.exertPressure(mage, windsom); // Pass mage and dragon class with relevant attributes and methods here
             bool quickDisplay = false;
 
             // Engage the combat system
