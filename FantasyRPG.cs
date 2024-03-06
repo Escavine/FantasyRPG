@@ -633,7 +633,7 @@ namespace FantasyRPG
             smoothPrinting.PrintLine("--------------------------------------------------");
         }
 
-        public void MageSpellAttack(Mage mage, MobDefault mob) // Will load the Mage Combat System for fighting situations
+        public void MageSpellAttack(Mage mage, MobDefault mob, bool userTurn, bool enemyTurn) // Will load the Mage Combat System for fighting situations
         {
             UIManager UI = new UIManager(); // To display mana + health progress bar
 
@@ -664,6 +664,7 @@ namespace FantasyRPG
             Console.WriteLine(); // Create space
 
             smoothPrinting.RapidPrint($"{mob.name} - Enemy Health\n");
+            Console.WriteLine(); // Spacing
             UI.DisplayProgressBar("Enemy Health", mob.currentMobHealth, mob.maxMobHealth, 30); // Display mob health
             Console.WriteLine(); // Spacing
 
@@ -673,6 +674,7 @@ namespace FantasyRPG
                 smoothPrinting.RapidPrint($"\n{spellCount}. Spell: {spell.magicSpell} - Damage: {spell.damage}\nMana Requirement: {spell.manaRequirement}\n");
                 spellCount++;
             }
+
             // Register user input
             smoothPrinting.RapidPrint("\nSelect a spell to attack (Enter '0' to return back): ");
             userInput = Console.ReadLine();
@@ -697,10 +699,10 @@ namespace FantasyRPG
             }
             else
             {
+                // Invalid input, handle accordingly
                 smoothPrinting.RapidPrint("\nInvalid input, please try again.");
                 UI.PromptUserToContinue();
-                MageSpellAttack(mage, mob);
-                // Invalid input, handle accordingly
+                MageSpellAttack(mage, mob, userTurn, enemyTurn);
             }
 
             foreach (var spell in chosenSpellForAttack)
@@ -719,7 +721,7 @@ namespace FantasyRPG
                     smoothPrinting.RapidPrint("\nYou do not have enough mana to cast this spell.");
                     Console.ReadKey();
                     Console.Clear();
-                    MageSpellAttack(mage, mob); // Recurse back to the function, should the user wish to use an alternative spell
+                    MageSpellAttack(mage, mob, userTurn, enemyTurn); // Recurse back to the function, should the user wish to use an alternative spell
                 }
 
             }
@@ -750,7 +752,7 @@ namespace FantasyRPG
 
         public void DisplayMageStatus(Mage mage, MobDefault mob) // Naturally this takes in the mage class and the given mob
         {
-            bool userTurn; // These boolean measures are to create the turn based dynamic for the game
+            bool userTurn, enemyTurn; // These boolean measures are to create the turn based dynamic for the game
             UIManager UI = new UIManager(); // Engage the UI manager for progress bars
 
             int? numCount = 1; // Will display the numeric choices for the Mage's options
@@ -765,18 +767,23 @@ namespace FantasyRPG
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine($"FantasyRPG: Defeated {mob.name}");
                 smoothPrinting.PrintLine("--------------------------------------------------");
+
                 UI.DisplayProgressBar("Health", mage.currentHealth, mage.maxHealth, 30); // Display Mage's health
                 Console.WriteLine(); // Spacing
+
                 UI.DisplayProgressBar("Mana", currentMana, maxMana, 30); // Display Mage's remaining mana
                 Console.WriteLine(); // Spacing
+
                 UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
                 Console.WriteLine(); // Spacing
+
                 smoothPrinting.RapidPrint($"\n{mob.name} has been defeated by {mage.name}, rewards incoming...");
                 Console.ReadKey(); // Testing
+
                 gameDashboard dash = new gameDashboard();
                 dash.dashboard(mage);
             }
-            else if (mage.currentMana == 0) // Should the user die instead
+            else if (mage.currentHealth == 0) // Should the user die instead
             {
                 string? userInput;
 
@@ -808,10 +815,24 @@ namespace FantasyRPG
             else
             {
                 DisplayMageCombatSystemHeader(); // Display the MCS (Mage Combat System Header)
+
                 smoothPrinting.RapidPrint($"{mage.name} - Mage Status\n");
                 smoothPrinting.RapidPrint($"{mob.name} - Enemy\n");
+
+                if (mage.currentHealth < 30) // Check if users health is low
+                {
+                    smoothPrinting.RapidPrint("\nCritically low health, consider recovering for instance using a potion or a recovery spell.");
+                    Console.WriteLine(); // Spacing
+                }
                 UI.DisplayProgressBar("Health", mage.currentHealth, mage.maxHealth, 30); // Display Mage's health
                 Console.WriteLine(); // Spacing
+
+                if (mage.currentMana < 30) // Check if users mana levels are low
+                {
+                    smoothPrinting.RapidPrint("\nCritically low mana, consider recovering for instance using a potion or a recovery spell.");
+                    Console.WriteLine(); // Spacing
+                }
+
                 UI.DisplayProgressBar("Mana", currentMana, maxMana, 30); // Display Mage's remaining mana
                 Console.WriteLine(); // Spacing
                 UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
@@ -832,7 +853,7 @@ namespace FantasyRPG
                 {
                     case "1":
                         Console.Clear(); // Clear the console, to avoid overlapping
-                        MageSpellAttack(mage, mob);
+                        MageSpellAttack(mage, mob, userTurn = true, enemyTurn = false);
                         break;
                     case "2":
                         CheckInventory();
@@ -1303,8 +1324,8 @@ namespace FantasyRPG
             int arcaniaGoldCoins = 100000;
 
             List<(string, int, int)> magicSpells = new List<(string, int, int)> {
-                ("Eucladian-Eye", 130, 45),
-                ("Developer's Wrath", 300, 20),
+                ("Eucladian-Eye", 130, 30),
+                ("Developer's Wrath", 300, 70),
                 ("Cyclone Strike", 50, 30)
              };
 
