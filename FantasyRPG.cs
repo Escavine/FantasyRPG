@@ -490,7 +490,7 @@ namespace FantasyRPG
                 if (dropChance == 0 || dropChance == 1)
                 {
                     
-                    dropItem(dropChance, character); // Should the random number be zero, then the mob will drop an item
+                    dropItem(dropChance, character, mob); // Should the random number be zero, then the mob will drop an item
                 }
 
                 character.exp += 300; // User gains huge exp from defeating the dragon 
@@ -500,11 +500,11 @@ namespace FantasyRPG
 
         }
 
-        public void dropItem(int dropChance, CharacterDefault character)
+        public void dropItem(int dropChance, CharacterDefault character, MobDefault mob)
         {
             Random ran = new Random(); // Determine which item will be dropped
             int randomWeapon = ran.Next(0, 6); // Generate a value between 0 to 5 (inclusive)
-
+            string? userChoice;
 
 
             itemDrop.ToList(); // Convert the item drops to a list
@@ -515,24 +515,40 @@ namespace FantasyRPG
                 switch (randomWeapon)
                 {
                     case 0:
-                        smoothPrinting.RapidPrint($"\n{character.name} has received {weapon.Key}, would you like to equip this weapon?");
-                        character.currentInventory.Add(weapon.Key, weapon.Value.damage, weapon.Value.);
-                        itemName = "Etherial Froststaff";
+                        smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
+
+                        // Append the weapon to users inventory
+                        character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
                         break;
                     case 1:
-                        itemName = "Nightfall Rapier";
+                        smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
+
+                        // Append the weapon to users inventory
+                        character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
                         break;
                     case 2:
-                        itemName = "Chaosfire Greatsword";
+                        smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
+
+                        // Append the weapon to users inventory
+                        character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
                         break;
                     case 3:
-                        itemName = "Nightshade Arc";
+                        smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
+
+                        // Append the weapon to users inventory
+                        character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
                         break;
                     case 4:
-                        itemName = "Aerith's Heirloom";
+                        smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
+
+                        // Append the weapon to users inventory
+                        character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
                         break;
                     case 5:
-                        itemName = "Eucladian's Aura";
+                        smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
+
+                        // Append the weapon to users inventory
+                        character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
                         break;
                 }
 
