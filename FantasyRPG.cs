@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
@@ -262,11 +263,11 @@ namespace FantasyRPG
 
 
         // Mobs can have different attack names and varying item drops, each associated with a rarity and damage value
-        public Dictionary<string, (int, string, string)> itemDrop; // First string defines the weapon name, second integer defines the weapon damage, thirs stirng defines the weapon rarity and fourth string defines the weapon type
+        public Dictionary<string, (int, string, string, string)> itemDrop; // First string defines the weapon name, second integer defines the weapon damage, thirs stirng defines the weapon rarity and fourth string defines the weapon type
         public Dictionary<string, int> normalAtkNames;
         public Dictionary<string, (int, string)> specialAtkNames;
 
-        public MobDefault(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string)> _itemDrop) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
+        public MobDefault(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
         {
             name = _name;
             normalAtkNames = _normalAtkNames;
@@ -296,7 +297,7 @@ namespace FantasyRPG
     {
         SmoothConsole smoothPrinting = new SmoothConsole();
 
-        public Crawler(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
+        public Crawler(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
         {
 
             // Default presets for a crawler, inherited from the mob default class
@@ -304,6 +305,7 @@ namespace FantasyRPG
             name = "Crawler";
             currentMobHealth = 20; // Crawlers are very weak creatures, and by default have 20 health
             maxMobHealth = 20;
+
 
             // Dictionary containing crawler attacks and their associated damage value
             Dictionary<string, int> normalAtkNames = new Dictionary<string, int>() // Preset name for all dragon's normal attacks
@@ -314,10 +316,10 @@ namespace FantasyRPG
             };
 
             // Dictionary that contains weapon name, damage, rarity and weapon type (item drops)
-            Dictionary<string, (int, string, string)> itemDrop = new Dictionary<string, (int, string, string)>()
+            Dictionary<string, (int, string, string, string)> itemDrop = new Dictionary<string, (int, string, string, string)>()
             {
-                { "Staff of Spite", (7, "(Common)", "Staff") },
-                { "Crawler's Revant", (10, "(Uncommon)", "Rapier/Sword") },
+                { "Staff of Spite", (7, "(Common)", "Staff", "Not cool") },
+                { "Crawler's Revant", (10, "(Uncommon)", "Rapier/Sword", "Bad") },
             };
 
             itemDrop = _itemDrop;
@@ -385,16 +387,16 @@ namespace FantasyRPG
                 { "Raging Tempest", 50 }
             };
 
-        // Dictionary that contains weapon name, damage, rarity and weapon type (item drops)
-        Dictionary<string, (int damage, string rarity, string weaponType)> itemDrop = new Dictionary<string, (int, string, string)>()
-            {
-                { "Etherial Froststaff", (50, "Unique", "Staff") },
-                { "Nightfall Rapier", (50, "Unique", "Rapier/Sword") },
-                { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword") }, // OP item drops
-                { "Nightshade Arc", (55, "Unique", "Bow") },
-                { "Aerith's Heirloom", (80, "Legendary", "Staff") },
-                { "Eucladian's Aura", (55, "Legendary", "Aura") } // Should the individual get lucky, then they could potentially get an aura drop, this is only equipabble by knights, pirates, shadowwraths etc.
-            };
+        // Dictionary that contains weapon name, damage, rarity, and weapon type (item drops)
+        Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop = new Dictionary<string, (int, string, string, string)>()
+        {
+            { "Frostfire Fang", (65, "Unique", "Staff", "Forged in the icy flames of the dragon's breath, this fang drips with frostfire, capable of freezing enemies in their tracks.") },
+            { "Serpent's Gaze", (50, "Unique", "Rapier/Sword", "Crafted from the scales of the ancient serpent, this gaze holds the power to petrify foes with a single glance.") },
+            { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword", "Tempered in the chaosfire of the dragon's lair, this greatsword burns with an insatiable hunger for destruction.") },
+            { "Nightshade Arc", (55, "Unique", "Bow", "Fashioned from the sinew of the nocturnal shadows, this bow strikes with deadly accuracy under the cover of darkness.") },
+            { "Aerith's Heirloom", (80, "Legendary", "Staff", "Once wielded by the legendary Aerith, this staff channels the primordial magic of creation itself, capable of reshaping reality.") },
+            { "Eucladian's Aura", (55, "Legendary", "Aura", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.") }
+        };
 
         Dictionary<string, (int damage, string magicType)> specialAtkNames = new Dictionary<string, (int, string)>() // Preset names for all dragon's special attacks
             {
@@ -403,7 +405,7 @@ namespace FantasyRPG
                 { "Rampant Flame Charge", (200, "Fire-Magic") } // Flame type ULT
             };
 
-        public Dragon(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
+        public Dragon(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
         {
             // Default presets for a dragon, inherited from the mob default class
             name = _name;
@@ -504,134 +506,31 @@ namespace FantasyRPG
         {
             Random ran = new Random(); // Determine which item will be dropped
             int randomWeapon = ran.Next(0, 6); // Generate a value between 0 to 5 (inclusive)
-            string? userChoice;
-
+            string userChoice;
 
             itemDrop.ToList(); // Convert the item drops to a list
+            var weapon = itemDrop.ElementAtOrDefault(randomWeapon); // Select the weapon based on random index
 
-
-            foreach (var weapon in itemDrop) // Traverse through the item drops based on the number generated, all weapons received are randomly given
+            if (weapon != null)
             {
-                switch (randomWeapon)
+                smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
+                userChoice = Console.ReadLine(); // Register user input
+
+                if (userChoice == "1")
                 {
-                    case 0:
-                        smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
-                        userChoice = Console.ReadLine(); // Register user input
-
-                        if (userChoice == "1")
-                        {
-                            character.weapon.Remove(); // Remove the current weapon equipped by the user
-                            character.weapon.Add(weapon.Key, weapon.Value.damage, weapon.Value.damage, weapon.Value.rarity, weapon.Value.weaponType); // Replace the weapon, with the chosen weapon from the drop
-                        }
-                        else
-                        {
-                            smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
-                        }
-
-                        // Append the weapon to users inventory
-                        character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
-                        break;
-                    case 1:
-                        smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
-                        userChoice = Console.ReadLine(); // Register user input
-
-                        if (userChoice == "1")
-                        {
-                            character.weapon.Remove(); // Remove the current weapon equipped by the user
-                            character.weapon.Add(weapon.Key, weapon.Value.damage, weapon.Value.damage, weapon.Value.rarity, weapon.Value.weaponType); // Replace the weapon, with the chosen weapon from the drop
-                        }
-                        else
-                        {
-                            smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
-                        }
-
-                        // Append the weapon to users inventory
-                        character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
-                        break;
-                    case 2:
-                        smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
-                        userChoice = Console.ReadLine(); // Register user input
-
-                        if (userChoice == "1")
-                        {
-                            character.weapon.Remove(); // Remove the current weapon equipped by the user
-                            character.weapon.Add(weapon.Key, weapon.Value.damage, weapon.Value.damage, weapon.Value.rarity, weapon.Value.weaponType); // Replace the weapon, with the chosen weapon from the drop
-                        }
-                        else
-                        {
-                            smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
-                        }
-
-                        // Append the weapon to users inventory
-                        character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
-                        break;
-                    case 3:
-                        smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
-                        userChoice = Console.ReadLine(); // Register user input
-
-                        if (userChoice == "1")
-                        {
-                            character.weapon.Remove(); // Remove the current weapon equipped by the user
-                            character.weapon.Add(weapon.Key, weapon.Value.damage, weapon.Value.damage, weapon.Value.rarity, weapon.Value.weaponType); // Replace the weapon, with the chosen weapon from the drop
-                        }
-                        else
-                        {
-                            smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
-                        }
-
-                        // Append the weapon to users inventory
-                        character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
-                        break;
-                    case 4:
-                        smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
-                        userChoice = Console.ReadLine(); // Register user input
-
-                        if (userChoice == "1")
-                        {
-                            character.weapon.Remove(); // Remove the current weapon equipped by the user
-                            character.weapon.Add(weapon.Key, weapon.Value.damage, weapon.Value.damage, weapon.Value.rarity, weapon.Value.weaponType); // Replace the weapon, with the chosen weapon from the drop
-                        }
-                        else
-                        {
-                            smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
-                        }
-
-                        // Append the weapon to users inventory
-                        character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
-                        break;
-                    case 5:
-                        smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
-                        userChoice = Console.ReadLine(); // Register user input
-
-                        if (userChoice == "1")
-                        {
-                            character.weapon.Remove(); // Remove the current weapon equipped by the user
-                            character.weapon.Add(weapon.Key, weapon.Value.damage, weapon.Value.damage, weapon.Value.rarity, weapon.Value.weaponType); // Replace the weapon, with the chosen weapon from the drop
-                        }
-                        else
-                        {
-                            smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
-                        }
-
-                        // Append the weapon to users inventory
-                        character.currentInventory.Add(weapon.Key, weapon.Value.weaponType, weapon.Value.damage);
-                        break;
+                    character.weapon.Clear(); // Remove the current weapon equipped by the user
+                    character.weapon.Add(weapon[randomWeapon]);
                 }
-
+                else
+                {
+                    smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
+                }
             }
-           
-
-            // Retrieve item details from the dictionary
-            if (itemDrop.ContainsKey(itemName))
+            else
             {
-                var itemDetails = itemDrop[itemName];
-                itemDescription = ""; // You can add item descriptions based on your requirements
-                itemRarity = itemDetails.rarity;
-                itemPower = itemDetails.damage; // Assuming itemPower corresponds to damage for weapons
+                // Debugging measure (try, except)
+                smoothPrinting.RapidPrint("No weapon selected.");
             }
-
-            // Add the dropped item to the player's inventory
-            currentInventory.Add((itemName, itemDescription, itemRarity, itemPower));
         }
     }
 
@@ -871,7 +770,7 @@ namespace FantasyRPG
                 smoothPrinting.RapidPrint($"\n{mob.name} has been defeated by {mage.name}, rewards incoming...");
                 Console.ReadKey(); // Testing
 
-                mob.itemDrop();
+                // mob.dragonDeath();
 
                 // gameDashboard dash = new gameDashboard();
                 // dash.dashboard(mage);
@@ -2786,15 +2685,15 @@ namespace FantasyRPG
 
 
 
-            // Dictionary that contains weapon name, damage, rarity and weapon type (item drops)
-            Dictionary<string, (int, string, string)> itemDrop = new Dictionary<string, (int, string, string)>()
+            // Dictionary that contains weapon name, damage, rarity, and weapon type (item drops)
+            Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop = new Dictionary<string, (int, string, string, string)>()
             {
-                { "Etherial Froststaff", (50, "Unique", "Staff") },
-                { "Nightfall Rapier", (50, "Unique", "Rapier/Sword") },
-                { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword") }, // OP item drops
-                { "Nightshade Arc", (55, "Unique", "Bow") },
-                { "Aerith's Heirloom", (80, "Legendary", "Staff") },
-                { "Eucladian's Aura", (55, "Legendary", "Aura") } // Should the individual get lucky, then they could potentially get an aura drop, this is only equipabble by knights, pirates, shadowwraths etc.
+                { "Frostfire Fang", (65, "Unique", "Staff", "Forged in the icy flames of the dragon's breath, this fang drips with frostfire, capable of freezing enemies in their tracks.") },
+                { "Serpent's Gaze", (50, "Unique", "Rapier/Sword", "Crafted from the scales of the ancient serpent, this gaze holds the power to petrify foes with a single glance.") },
+                { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword", "Tempered in the chaosfire of the dragon's lair, this greatsword burns with an insatiable hunger for destruction.") },
+                { "Nightshade Arc", (55, "Unique", "Bow", "Fashioned from the sinew of the nocturnal shadows, this bow strikes with deadly accuracy under the cover of darkness.") },
+                { "Aerith's Heirloom", (80, "Legendary", "Staff", "Once wielded by the legendary Aerith, this staff channels the primordial magic of creation itself, capable of reshaping reality.") },
+                { "Eucladian's Aura", (55, "Legendary", "Aura", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.") }
             };
 
 
