@@ -260,7 +260,8 @@ namespace FantasyRPG
     {
         public string name;
         public int specialAtkRecharge, currentMobHealth, maxMobHealth;
-
+        private readonly UIManager UI; // Progress bars and repeatable functions
+        private readonly SmoothConsole smoothPrinting; // Cleaner and neater output
 
         // Mobs can have different attack names and varying item drops, each associated with a rarity and damage value
         public Dictionary<string, (int, string, string, string)> itemDrop; // First string defines the weapon name, second integer defines the weapon damage, thirs stirng defines the weapon rarity and fourth string defines the weapon type
@@ -276,7 +277,8 @@ namespace FantasyRPG
             specialAtkRecharge = 100;
             currentMobHealth = _currentMobHealth;
             maxMobHealth = _maxMobHealth;
-
+            UI = new UIManager();
+            smoothPrinting = new SmoothConsole();
         }
 
         public void displayMobStatus(MobDefault mob)
@@ -290,17 +292,34 @@ namespace FantasyRPG
 
         }
 
-        public void dragonDeath(MobDefault mob, CharacterDefault character)
+        public void mobDeath(MobDefault mob, CharacterDefault character) // Should a mob die, the user will be displayed with the following information.
         {
             if (mob.currentMobHealth == 0)
             {
+                Console.Clear();
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.PrintLine($"FantasyRPG: Defeated {mob.name}");
+                smoothPrinting.PrintLine("--------------------------------------------------");
+
+                UI.DisplayProgressBar("Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
+                Console.WriteLine(); // Spacing
+
+                UI.DisplayProgressBar("Mana", character.currentMana, character.maxMana, 30); // Display Mage's remaining mana
+                Console.WriteLine(); // Spacing
+
+                UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
+                Console.WriteLine(); // Spacing
+
+                smoothPrinting.RapidPrint($"\n{mob.name} has been defeated by {character.name}, rewards incoming...");
+
+
                 Random itemDropChance = new Random();
                 int dropChance = itemDropChance.Next(0, 1); // 20% drop rate, due to OP item drops
                 smoothPrinting.FastPrint($"\n{name} has successfully killed the dragon!");
 
                 if (dropChance == 0 || dropChance == 1)
                 {
-
+                    smoothPrinting.RapidPrint("\nYou received a drop!");
                     dropItem(dropChance, character, mob); // Should the random number be zero, then the mob will drop an item
                 }
 
@@ -311,7 +330,7 @@ namespace FantasyRPG
 
         }
 
-        public void dropItem(int dropChance, CharacterDefault character, MobDefault mob)
+        public void dropItem(int dropChance, CharacterDefault character, MobDefault mob, Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop)
         {
             Random ran = new Random(); // Determine which item will be dropped
             int randomWeapon = ran.Next(0, 6); // Generate a value between 0 to 5 (inclusive)
@@ -398,7 +417,7 @@ namespace FantasyRPG
         }
 
 
-        public void crawlerDeath(int mobHealth, int exp) // If the crawler dies, then the user gains exp and has a chance of receiving an item drop
+        public void crawlerDeath(CharacterDefault character, MobDefault mob) // If the crawler dies, then the user gains exp and has a chance of receiving an item drop
         {
             if (mobHealth == 0)
             {
@@ -408,19 +427,13 @@ namespace FantasyRPG
 
                 if (dropChance == 0)
                 {
-                    dropItem(mobHealth); // Should the random number be zero, then the mob will drop an item
+                    mob.dropItem(dropChance, character, mob, itemDrop); // Should the random number be zero, then the mob will drop an item
                 }
 
-                exp += 5; // User gets experience from the drop
-                smoothPrinting.SlowPrint("User has gained " + exp + " experience points!");
+                character.exp += 5; // User gets experience from the drop
+                smoothPrinting.SlowPrint("User has gained " + character.exp + " experience points!");
 
             }
-        }
-
-        public void dropItem(int dropChance)
-        {
-
-
         }
 
 
@@ -756,23 +769,7 @@ namespace FantasyRPG
 
             if (mob.currentMobHealth == 0) // Check everytime if the mob has died
             {
-                Console.Clear();
-                smoothPrinting.PrintLine("--------------------------------------------------");
-                smoothPrinting.PrintLine($"FantasyRPG: Defeated {mob.name}");
-                smoothPrinting.PrintLine("--------------------------------------------------");
-
-                UI.DisplayProgressBar("Health", mage.currentHealth, mage.maxHealth, 30); // Display Mage's health
-                Console.WriteLine(); // Spacing
-
-                UI.DisplayProgressBar("Mana", currentMana, maxMana, 30); // Display Mage's remaining mana
-                Console.WriteLine(); // Spacing
-
-                UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
-                Console.WriteLine(); // Spacing
-
-                smoothPrinting.RapidPrint($"\n{mob.name} has been defeated by {mage.name}, rewards incoming...");
-
-
+                mob.mobDeath(mob, mage); // Run the following method to display the relevant information
                 // gameDashboard dash = new gameDashboard();
                 // dash.dashboard(mage);
             }
