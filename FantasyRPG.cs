@@ -283,24 +283,25 @@ namespace FantasyRPG
 
         public void displayMobStatus(MobDefault mob)
         {
-            UIManager UI = new UIManager(); // Displaying progress bar
-
             // Add parameters such as the mobs health etc.
             UI.DisplayProgressBar("Mob Health", mob.currentMobHealth, mob.maxMobHealth, 30);
             Console.WriteLine();
             Console.WriteLine(); // Double spacing to avoid overlapping
-
         }
 
-        public void mobDeath(MobDefault mob, CharacterDefault character) // Should a mob die, the user will be displayed with the following information.
+        public void mobDeath(MobDefault mob, CharacterDefault character) // Should a mob die, the user will be displayed with the following information
         {
             if (mob.currentMobHealth == 0)
             {
                 Console.Clear();
+
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine($"FantasyRPG: Defeated {mob.name}");
                 smoothPrinting.PrintLine("--------------------------------------------------");
 
+                smoothPrinting.RapidPrint($"\n{mob.name} has been defeated by {character.name}, rewards incoming...\n");
+
+                smoothPrinting.RapidPrint("\nFinal battle stats\n");
                 UI.DisplayProgressBar("Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
                 Console.WriteLine(); // Spacing
 
@@ -310,17 +311,15 @@ namespace FantasyRPG
                 UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
                 Console.WriteLine(); // Spacing
 
-                smoothPrinting.RapidPrint($"\n{mob.name} has been defeated by {character.name}, rewards incoming...");
-
-
-                Random itemDropChance = new Random();
-                int dropChance = itemDropChance.Next(0, 1); // 20% drop rate, due to OP item drops
-                smoothPrinting.FastPrint($"\n{name} has successfully killed the dragon!");
+                Random itemDropChance = new Random(); // Each mob class should have a dynamic integer for the item drop chance, this way it isn't the same drop rate for all mobs
+                int dropChance = itemDropChance.Next(0, 1); // Will be adjusted accordingly
 
                 if (dropChance == 0 || dropChance == 1)
                 {
-                    smoothPrinting.RapidPrint("\nYou received a drop!");
-                    dropItem(dropChance, character, mob); // Should the random number be zero, then the mob will drop an item
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine($"FantasyRPG: You received a drop!");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    mob.dropItem(dropChance, character, mob, itemDrop); // Should the random number be zero, then the mob will drop an item
                 }
 
                 character.exp += 300; // User gains huge exp from defeating the dragon 
@@ -330,6 +329,7 @@ namespace FantasyRPG
 
         }
 
+        // If the user gets lucky, then they can get a mob drop, which can vary as it is RNG
         public void dropItem(int dropChance, CharacterDefault character, MobDefault mob, Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop)
         {
             Random ran = new Random(); // Determine which item will be dropped
@@ -337,24 +337,25 @@ namespace FantasyRPG
             string userChoice;
 
             itemDrop.ToList(); // Convert the item drops to a list
-            var weapon = itemDrop.ElementAtOrDefault(randomWeapon); // Select the weapon based on random index
+            var drop = itemDrop.ElementAtOrDefault(randomWeapon); // Select the weapon based on random index
 
-            if (!string.IsNullOrEmpty(weapon.Key))
+            if (!string.IsNullOrEmpty(drop.Key))
             {
-                smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
+                Console.WriteLine(); // Spacing
+                smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {drop.Key}, would you like to equip this weapon? (1 for 'Yes' and any other key for 'No'");
                 userChoice = Console.ReadLine(); // Register user input
 
                 if (userChoice == "1")
                 {
                     character.weapon.Clear(); // Remove the current weapon equipped by the user
-                    character.weapon.Add((weapon.Key, weapon.Value.damage, weapon.Value.rarity, weapon.Value.weaponType, weapon.Value.weaponDescription));
+                    character.weapon.Add((drop.Key, drop.Value.damage, drop.Value.rarity, drop.Value.weaponType, drop.Value.weaponDescription));
                 }
                 else
                 {
                     smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
                 }
 
-                character.currentInventory.Add((weapon.Key, weapon.Value.weaponDescription, weapon.Value.rarity, weapon.Value.damage)); // Add the weapon to the character's inventory
+                character.currentInventory.Add((drop.Key, drop.Value.weaponDescription, drop.Value.rarity, drop.Value.damage)); // Add the item drop to the player's inventory
             }
             else
             {
@@ -417,25 +418,24 @@ namespace FantasyRPG
         }
 
 
-        public void crawlerDeath(CharacterDefault character, MobDefault mob) // If the crawler dies, then the user gains exp and has a chance of receiving an item drop
-        {
-            if (mobHealth == 0)
-            {
-                Random itemDropChance = new Random();
-                int dropChance = itemDropChance.Next(1, 2); // 50% drop rate, as the mob is easy to defeat
-                smoothPrinting.FastPrint("\nDragon has been successfully defeated!");
+        // public void crawlerDeath(CharacterDefault character, MobDefault mob) // If the crawler dies, then the user gains exp and has a chance of receiving an item drop
+        // {
+            // if (mobHealth == 0)
+            // {
+                // Random itemDropChance = new Random();
+                // int dropChance = itemDropChance.Next(1, 2); // 50% drop rate, as the mob is easy to defeat
+                // smoothPrinting.FastPrint("\nDragon has been successfully defeated!");
 
-                if (dropChance == 0)
-                {
-                    mob.dropItem(dropChance, character, mob, itemDrop); // Should the random number be zero, then the mob will drop an item
-                }
+                // if (dropChance == 0)
+                // {
+                    // mob.dropItem(dropChance, character, mob, itemDrop); // Should the random number be zero, then the mob will drop an item
+                // }
 
-                character.exp += 5; // User gets experience from the drop
-                smoothPrinting.SlowPrint("User has gained " + character.exp + " experience points!");
+                // character.exp += 5; // User gets experience from the drop
+                // smoothPrinting.SlowPrint("User has gained " + character.exp + " experience points!");
 
-            }
-        }
-
+            // }
+        // }
 
     }
 
