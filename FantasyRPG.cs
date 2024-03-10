@@ -511,7 +511,7 @@ namespace FantasyRPG
             itemDrop.ToList(); // Convert the item drops to a list
             var weapon = itemDrop.ElementAtOrDefault(randomWeapon); // Select the weapon based on random index
 
-            if (weapon != null)
+            if (!string.IsNullOrEmpty(weapon.Key))
             {
                 smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
                 userChoice = Console.ReadLine(); // Register user input
@@ -519,12 +519,14 @@ namespace FantasyRPG
                 if (userChoice == "1")
                 {
                     character.weapon.Clear(); // Remove the current weapon equipped by the user
-                    character.weapon.Add(weapon[randomWeapon]);
+                    character.weapon.Add((weapon.Key, weapon.Value.damage, weapon.Value.rarity, weapon.Value.weaponType, weapon.Value.weaponDescription));
                 }
                 else
                 {
                     smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
                 }
+
+                character.currentInventory.Add((weapon.Key, weapon.Value.weaponDescription, weapon.Value.rarity, weapon.Value.damage)); // Add the weapon to the character's inventory
             }
             else
             {
