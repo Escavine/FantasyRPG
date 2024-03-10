@@ -290,6 +290,60 @@ namespace FantasyRPG
 
         }
 
+        public void dragonDeath(MobDefault mob, CharacterDefault character)
+        {
+            if (mob.currentMobHealth == 0)
+            {
+                Random itemDropChance = new Random();
+                int dropChance = itemDropChance.Next(0, 1); // 20% drop rate, due to OP item drops
+                smoothPrinting.FastPrint($"\n{name} has successfully killed the dragon!");
+
+                if (dropChance == 0 || dropChance == 1)
+                {
+
+                    dropItem(dropChance, character, mob); // Should the random number be zero, then the mob will drop an item
+                }
+
+                character.exp += 300; // User gains huge exp from defeating the dragon 
+                character.GainExperience(character, character.exp);
+
+            }
+
+        }
+
+        public void dropItem(int dropChance, CharacterDefault character, MobDefault mob)
+        {
+            Random ran = new Random(); // Determine which item will be dropped
+            int randomWeapon = ran.Next(0, 6); // Generate a value between 0 to 5 (inclusive)
+            string userChoice;
+
+            itemDrop.ToList(); // Convert the item drops to a list
+            var weapon = itemDrop.ElementAtOrDefault(randomWeapon); // Select the weapon based on random index
+
+            if (!string.IsNullOrEmpty(weapon.Key))
+            {
+                smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
+                userChoice = Console.ReadLine(); // Register user input
+
+                if (userChoice == "1")
+                {
+                    character.weapon.Clear(); // Remove the current weapon equipped by the user
+                    character.weapon.Add((weapon.Key, weapon.Value.damage, weapon.Value.rarity, weapon.Value.weaponType, weapon.Value.weaponDescription));
+                }
+                else
+                {
+                    smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
+                }
+
+                character.currentInventory.Add((weapon.Key, weapon.Value.weaponDescription, weapon.Value.rarity, weapon.Value.damage)); // Add the weapon to the character's inventory
+            }
+            else
+            {
+                // Debugging measure (try, except)
+                smoothPrinting.RapidPrint("No weapon selected.");
+            }
+        }
+
     }
 
 
@@ -481,59 +535,6 @@ namespace FantasyRPG
 
         }
 
-        public void dragonDeath(MobDefault mob, CharacterDefault character)
-        {
-            if (mob.currentMobHealth == 0)
-            {
-                Random itemDropChance = new Random();
-                int dropChance = itemDropChance.Next(0, 1); // 20% drop rate, due to OP item drops
-                smoothPrinting.FastPrint($"\n{name} has successfully killed the dragon!");
-
-                if (dropChance == 0 || dropChance == 1)
-                {
-                    
-                    dropItem(dropChance, character, mob); // Should the random number be zero, then the mob will drop an item
-                }
-
-                character.exp += 300; // User gains huge exp from defeating the dragon 
-                character.GainExperience(character, character.exp);
-
-            }
-
-        }
-
-        public void dropItem(int dropChance, CharacterDefault character, MobDefault mob)
-        {
-            Random ran = new Random(); // Determine which item will be dropped
-            int randomWeapon = ran.Next(0, 6); // Generate a value between 0 to 5 (inclusive)
-            string userChoice;
-
-            itemDrop.ToList(); // Convert the item drops to a list
-            var weapon = itemDrop.ElementAtOrDefault(randomWeapon); // Select the weapon based on random index
-
-            if (!string.IsNullOrEmpty(weapon.Key))
-            {
-                smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {weapon.Key}, would you like to equip this weapon? (1 for 'yes' and any other key for 'no'");
-                userChoice = Console.ReadLine(); // Register user input
-
-                if (userChoice == "1")
-                {
-                    character.weapon.Clear(); // Remove the current weapon equipped by the user
-                    character.weapon.Add((weapon.Key, weapon.Value.damage, weapon.Value.rarity, weapon.Value.weaponType, weapon.Value.weaponDescription));
-                }
-                else
-                {
-                    smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
-                }
-
-                character.currentInventory.Add((weapon.Key, weapon.Value.weaponDescription, weapon.Value.rarity, weapon.Value.damage)); // Add the weapon to the character's inventory
-            }
-            else
-            {
-                // Debugging measure (try, except)
-                smoothPrinting.RapidPrint("No weapon selected.");
-            }
-        }
     }
 
 
@@ -770,9 +771,7 @@ namespace FantasyRPG
                 Console.WriteLine(); // Spacing
 
                 smoothPrinting.RapidPrint($"\n{mob.name} has been defeated by {mage.name}, rewards incoming...");
-                Console.ReadKey(); // Testing
 
-                // mob.dragonDeath();
 
                 // gameDashboard dash = new gameDashboard();
                 // dash.dashboard(mage);
