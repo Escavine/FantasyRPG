@@ -168,12 +168,12 @@ namespace FantasyRPG
 
                     if (character.exp > experienceRequiredForNextLevel) // Should the individual have more exp than the requirement, then they'll level up accordingly, this could happen if the user defeats a strong opponent
                     {
-                        LevelUp(character); 
+                        LevelUp(character);
                     }
 
                     Console.WriteLine(); // Spacing
                 }
-                else if (level >= 10) 
+                else if (level >= 10)
                 {
                     experienceRequiredForNextLevel = 100 * level;
                     UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
@@ -308,12 +308,37 @@ namespace FantasyRPG
             Console.WriteLine(); // Double spacing to avoid overlapping
         }
 
-        public void mobAttack(MobDefault mob, CharacterDefault character, bool enemyTurn)
+        // Mob attack
+        public void mobAttack(MobDefault mob, CharacterDefault character, bool enemyTurn, Dictionary<string, int> normalAtkNames, Dictionary<string, int> specialAtkNames)
         {
-            // Method that will allow mob to attack
+
+            List<(string attackName, int attackDamage)> normalAttacks = normalAtkNames.ToList();
+            List<(string attackName, int attackDamage)> specialAttacks = specialAtkNames.ToList();
+
 
             if (enemyTurn)
             {
+                if (mob.specialAtkRecharge == 100)
+                {
+                    // Allow mob to use their special attack
+                }
+                else
+                {
+                    Random ran = new Random();
+                    int randomAttack = ran.Next(0, normalAtkNames.Count()); // Dynamic selection for the mob attacks
+
+                    normalAtkNames.ToList(); // Convert the attacks to a list
+
+                    var normalAttacks = normalAtkNames.ElementAtOrDefault(randomAttack); // Select the attack based on random index
+
+                    foreach (var attack in normalAttacks)
+                    {
+                        smoothPrinting.RapidPrint($"{mob.name} has used {attack.attackName[randomAttack]} dealing {attack.attackDamage}");
+                        character.currentHealth -= attack.attackDamage; // Linearly reduce health according to the damage given
+                    }
+
+
+                }
 
             }
 
@@ -457,21 +482,21 @@ namespace FantasyRPG
 
         // public void crawlerDeath(CharacterDefault character, MobDefault mob) // If the crawler dies, then the user gains exp and has a chance of receiving an item drop
         // {
-            // if (mobHealth == 0)
-            // {
-                // Random itemDropChance = new Random();
-                // int dropChance = itemDropChance.Next(1, 2); // 50% drop rate, as the mob is easy to defeat
-                // smoothPrinting.FastPrint("\nDragon has been successfully defeated!");
+        // if (mobHealth == 0)
+        // {
+        // Random itemDropChance = new Random();
+        // int dropChance = itemDropChance.Next(1, 2); // 50% drop rate, as the mob is easy to defeat
+        // smoothPrinting.FastPrint("\nDragon has been successfully defeated!");
 
-                // if (dropChance == 0)
-                // {
-                    // mob.dropItem(dropChance, character, mob, itemDrop); // Should the random number be zero, then the mob will drop an item
-                // }
+        // if (dropChance == 0)
+        // {
+        // mob.dropItem(dropChance, character, mob, itemDrop); // Should the random number be zero, then the mob will drop an item
+        // }
 
-                // character.exp += 5; // User gets experience from the drop
-                // smoothPrinting.SlowPrint("User has gained " + character.exp + " experience points!");
+        // character.exp += 5; // User gets experience from the drop
+        // smoothPrinting.SlowPrint("User has gained " + character.exp + " experience points!");
 
-            // }
+        // }
         // }
 
     }
@@ -1012,7 +1037,7 @@ namespace FantasyRPG
                     }
 
                 }
-                
+
 
             }
 
@@ -2944,7 +2969,8 @@ namespace FantasyRPG
             smoothPrinting.RapidPrint("\n4. Shop (N/A)\n");
             smoothPrinting.RapidPrint("\n5. NPC's Encountered (N/A)\n");
             smoothPrinting.RapidPrint("\n6. Character Status (N/A)\n");
-            smoothPrinting.RapidPrint("\n7. Continents (N/A)\n");
+            smoothPrinting.RapidPrint("\n7. Check Inventory\n");
+            smoothPrinting.RapidPrint("\n8. Continents (N/A)\n");
             smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
 
             userInput = Console.ReadLine(); // Register user input
@@ -3007,6 +3033,11 @@ namespace FantasyRPG
                     // Handle character status
                     break;
                 case "7":
+                    character.CheckInventory();
+                    UI.PromptReturnToDashboard();
+                    dashboard(character);
+                    break;
+                case "8":
                     // Future reference: Create a dictionary, and will unlock in an instance that the continent has been explore (i.e. with a Boolean function)
                     Console.Clear();
                     smoothPrinting.PrintLine("--------------------------------------------------");
