@@ -163,6 +163,12 @@ namespace FantasyRPG
                 {
                     experienceRequiredForNextLevel = 10 * level;
                     UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
+
+                    if (character.exp > experienceRequiredForNextLevel) // Should the individual have more exp than the requirement, then they'll level up accordingly
+                    {
+                        LevelUp(character); 
+                    }
+
                     Console.WriteLine(); // Spacing
                 }
                 else if (level > 10)
@@ -207,21 +213,23 @@ namespace FantasyRPG
         {
             if (character is Mage)
             {
+                Console.WriteLine(); // Spacing
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine($"FantasyRPG: Mage Level Up!");
                 smoothPrinting.PrintLine("--------------------------------------------------");
-                level++;
-                Console.WriteLine(name + " has levelled up! " + " You are now level " + level);
+                level++; // Increment the level
+                smoothPrinting.RapidPrint($"\n{name} has levelled up! You are now level {level}");
                 CalculateExperienceForNextLevel((Mage)character);
 
             }
             else if (character is SomaliPirate)
             {
+                Console.WriteLine(); // Spacing
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine($"FantasyRPG: Pirate Level Up!");
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 level++;
-                Console.WriteLine(name + " has levelled up! " + " You are now level " + level);
+                smoothPrinting.RapidPrint($"\n{name} has levelled up! You are now level {level}");
                 CalculateExperienceForNextLevel((SomaliPirate)character);
             }
 
@@ -289,9 +297,14 @@ namespace FantasyRPG
             Console.WriteLine(); // Double spacing to avoid overlapping
         }
 
-        public void mobAttack(MobDefault mob, CharacterDefault character)
+        public void mobAttack(MobDefault mob, CharacterDefault character, bool enemyTurn)
         {
             // Method that will allow mob to attack
+
+            if (enemyTurn)
+            {
+
+            }
 
 
         }
@@ -323,6 +336,7 @@ namespace FantasyRPG
 
                 if (dropChance == 0 || dropChance == 1)
                 {
+                    Console.WriteLine(); // Spacing
                     smoothPrinting.PrintLine("--------------------------------------------------");
                     smoothPrinting.PrintLine($"FantasyRPG: You received a drop!");
                     smoothPrinting.PrintLine("--------------------------------------------------");
@@ -349,7 +363,8 @@ namespace FantasyRPG
             if (!string.IsNullOrEmpty(drop.Key))
             {
                 Console.WriteLine(); // Spacing
-                smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {drop.Key}, would you like to equip this weapon? (1 for 'Yes' and any other key for 'No'");
+                smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {drop.Key}\nWould you like to equip this weapon? (1 for 'Yes' and any other key to store the item in your inventory)");
+                smoothPrinting.RapidPrint("Enter a corresponding value: ");
                 userChoice = Console.ReadLine(); // Register user input
 
                 if (userChoice == "1")
@@ -722,14 +737,14 @@ namespace FantasyRPG
             {
                 if (mage.currentMana >= spell.manaRequirement)
                 {
-                    if (mob.currentMobHealth < spell.damage) // Check if the spell damage is more than the enemies health (in that case, set the enemies health to zero, to mitigate crashes
+                    if (mob.currentMobHealth < spell.damage) // Check if the spell damage is more than the enemies health (in that case, set the enemies health to zero, to avoid game crash)
                     {
                         smoothPrinting.RapidPrint($"\n{mage.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
                         mob.currentMobHealth = 0; // Set the enemies health to zero, to prevent game from crashing
                         mage.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
                         Console.ReadKey();
                         Console.Clear();
-                        DisplayMageStatus(mage, mob, quickDisplay = true); // Return after attack (TESTING)
+                        DisplayMageStatus(mage, mob, quickDisplay = true); // Return after attack
                     }
                     else
                     {
@@ -745,7 +760,7 @@ namespace FantasyRPG
                     mage.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
                     Console.ReadKey();
                     Console.Clear();
-                    DisplayMageStatus(mage, mob, quickDisplay = true); // Return after attack (TESTING)
+                    DisplayMageStatus(mage, mob, quickDisplay = true); // Return after attack 
                 }
                 else
                 {
@@ -864,7 +879,7 @@ namespace FantasyRPG
                         numCount++; // Increment the value to display the other remaining choices
                     }
 
-                    Console.WriteLine("\nEnter a corresponding value: ");
+                    smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
                     userChoice = Convert.ToString(Console.ReadLine()); // Register Mage's choice
 
                     switch (userChoice)
