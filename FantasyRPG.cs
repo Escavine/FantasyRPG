@@ -312,8 +312,8 @@ namespace FantasyRPG
         public void mobAttack(MobDefault mob, CharacterDefault character, bool enemyTurn, Dictionary<string, int> normalAtkNames, Dictionary<string, int> specialAtkNames)
         {
 
-            List<(string attackName, int attackDamage)> normalAttacks = normalAtkNames.ToList();
-            List<(string attackName, int attackDamage)> specialAttacks = specialAtkNames.ToList();
+            // List<(string attackName, int attackDamage)> normalAttacks = normalAtkNames.ToList();
+            // List<(string attackName, int attackDamage)> specialAttacks = specialAtkNames.ToList();
 
 
             if (enemyTurn)
@@ -331,11 +331,11 @@ namespace FantasyRPG
 
                     var normalAttacks = normalAtkNames.ElementAtOrDefault(randomAttack); // Select the attack based on random index
 
-                    foreach (var attack in normalAttacks)
-                    {
-                        smoothPrinting.RapidPrint($"{mob.name} has used {attack.attackName[randomAttack]} dealing {attack.attackDamage}");
-                        character.currentHealth -= attack.attackDamage; // Linearly reduce health according to the damage given
-                    }
+                    // foreach (var attack in normalAttacks)
+                    // {
+                        // smoothPrinting.RapidPrint($"{mob.name} has used {attack.attackName[randomAttack]} dealing {attack.attackDamage}");
+                        // character.currentHealth -= attack.attackDamage; // Linearly reduce health according to the damage given
+                    // }
 
 
                 }
@@ -402,7 +402,7 @@ namespace FantasyRPG
             if (!string.IsNullOrEmpty(drop.Key))
             {
                 Console.WriteLine(); // Spacing
-                smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {drop.Key}\nWould you like to equip this weapon? (1 for 'Yes' and any other key to store the item in your inventory)");
+                smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received...\n\nItem Name: {drop.Key}\nDamage: {drop.Value.damage}\nRarity: {drop.Value.rarity}\nDescription: {drop.Value.weaponDescription}\nWeapon Type: {drop.Value.weaponType}\n\nWould you like to equip the following weapon/item? (1 for 'Yes' and any other key to store the item in your inventory)");
                 Console.WriteLine(); // Spacing
                 smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
                 userChoice = Console.ReadLine(); // Register user input
