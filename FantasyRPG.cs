@@ -289,6 +289,13 @@ namespace FantasyRPG
             Console.WriteLine(); // Double spacing to avoid overlapping
         }
 
+        public void mobAttack(MobDefault mob, CharacterDefault character)
+        {
+            // Method that will allow mob to attack
+
+
+        }
+
         public void mobDeath(MobDefault mob, CharacterDefault character) // Should a mob die, the user will be displayed with the following information
         {
             if (mob.currentMobHealth == 0)
@@ -715,6 +722,24 @@ namespace FantasyRPG
             {
                 if (mage.currentMana >= spell.manaRequirement)
                 {
+                    if (mob.currentMobHealth < spell.damage) // Check if the spell damage is more than the enemies health (in that case, set the enemies health to zero, to mitigate crashes
+                    {
+                        smoothPrinting.RapidPrint($"\n{mage.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
+                        mob.currentMobHealth = 0; // Set the enemies health to zero, to prevent game from crashing
+                        mage.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
+                        Console.ReadKey();
+                        Console.Clear();
+                        DisplayMageStatus(mage, mob, quickDisplay = true); // Return after attack (TESTING)
+                    }
+                    else
+                    {
+                        smoothPrinting.RapidPrint($"\n{mage.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
+                        mob.currentMobHealth -= spell.damage;
+                        mage.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
+                        Console.ReadKey();
+                        Console.Clear();
+                        DisplayMageStatus(mage, mob, quickDisplay = true); // Return after attack (TESTING)
+                    }
                     smoothPrinting.RapidPrint($"\n{mage.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
                     mob.currentMobHealth -= spell.damage;
                     mage.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
@@ -3043,8 +3068,11 @@ namespace FantasyRPG
 public class UIManager // UIManager - a class that will allow for the display of progress bars, prompts etc.
 {
     SmoothConsole smoothPrinting = new SmoothConsole(); // Engage the smoothconsole class
-    public void DisplayProgressBar(string title, float currentValue, int maxValue, int barLength)
+    public void DisplayProgressBar(string title, float currentValue, float maxValue, float barLength)
     {
+        // Ensure currentValue does not exceed maxValue
+        currentValue = Math.Min(currentValue, maxValue);
+
         // Calculate the percentage
         double percentage = currentValue / maxValue;
 
@@ -3052,11 +3080,12 @@ public class UIManager // UIManager - a class that will allow for the display of
         int filledLength = (int)Math.Round(percentage * barLength);
 
         // Generate the progress bar
-        string progressBar = new string('█', filledLength) + new string(' ', barLength - filledLength);
+        string progressBar = new string('█', filledLength) + new string(' ', (int)barLength - filledLength);
 
         // Output the progress bar
         smoothPrinting.RapidPrint($"\n{title}: [{progressBar}] [{currentValue}/{maxValue}]");
     }
+
 
 
     public void PromptUserToContinue()
