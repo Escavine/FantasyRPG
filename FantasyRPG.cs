@@ -151,6 +151,8 @@ namespace FantasyRPG
         public void CalculateExperienceForNextLevel(CharacterDefault character)
         {
             UIManager UI = new UIManager(); // Engage the UIManager for progress bars
+            Console.WriteLine(); // Spacing to stop overlapping
+            Console.WriteLine(); // Double spacing to stop overlapping
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine($"FantasyRPG: {name}'s Status Check - Required EXP for next Level");
             smoothPrinting.PrintLine("--------------------------------------------------");
@@ -158,24 +160,25 @@ namespace FantasyRPG
 
             if (character is Mage)
             {
-                // Depending on level, requirement for level is adjusted
-                if (level < 5)
+                // Depending on level, requirement for level is adjusted, when user reaches level 10 and above, exp requirements are increased
+                if (level < 10)
                 {
                     experienceRequiredForNextLevel = 10 * level;
                     UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
 
-                    if (character.exp > experienceRequiredForNextLevel) // Should the individual have more exp than the requirement, then they'll level up accordingly
+                    if (character.exp > experienceRequiredForNextLevel) // Should the individual have more exp than the requirement, then they'll level up accordingly, this could happen if the user defeats a strong opponent
                     {
                         LevelUp(character); 
                     }
 
                     Console.WriteLine(); // Spacing
                 }
-                else if (level > 10)
+                else if (level >= 10) 
                 {
                     experienceRequiredForNextLevel = 100 * level;
                     UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
                 }
+                Console.WriteLine(); // Spacing to avoid overlaps
                 smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
                 Console.ReadKey(); // Register user input
                 Console.Clear(); // Clear the console to avoid overlapping
@@ -214,11 +217,12 @@ namespace FantasyRPG
             if (character is Mage)
             {
                 Console.WriteLine(); // Spacing
+                Console.WriteLine(); // Double spacing to avoid overlapping
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine($"FantasyRPG: Mage Level Up!");
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 level++; // Increment the level
-                smoothPrinting.RapidPrint($"\n{name} has levelled up! You are now level {level}");
+                smoothPrinting.RapidPrint($"\n{name} has levelled up, you are now level {level}!");
                 CalculateExperienceForNextLevel((Mage)character);
 
             }
@@ -319,7 +323,7 @@ namespace FantasyRPG
                 smoothPrinting.PrintLine($"FantasyRPG: Defeated {mob.name}");
                 smoothPrinting.PrintLine("--------------------------------------------------");
 
-                smoothPrinting.RapidPrint($"\n{mob.name} has been defeated by {character.name}, rewards incoming...\n");
+                smoothPrinting.RapidPrint($"\n{mob.name} has been defeated by {character.name}\n");
 
                 smoothPrinting.RapidPrint("\nFinal battle stats\n");
                 UI.DisplayProgressBar("Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
@@ -331,12 +335,15 @@ namespace FantasyRPG
                 UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
                 Console.WriteLine(); // Spacing
 
+                smoothPrinting.RapidPrint($"\nRewards incoming...");
+
                 Random itemDropChance = new Random(); // Each mob class should have a dynamic integer for the item drop chance, this way it isn't the same drop rate for all mobs
                 int dropChance = itemDropChance.Next(0, 1); // Will be adjusted accordingly
 
                 if (dropChance == 0 || dropChance == 1)
                 {
                     Console.WriteLine(); // Spacing
+                    Console.WriteLine(); // Double spacing to stop overlapping
                     smoothPrinting.PrintLine("--------------------------------------------------");
                     smoothPrinting.PrintLine($"FantasyRPG: You received a drop!");
                     smoothPrinting.PrintLine("--------------------------------------------------");
@@ -364,7 +371,8 @@ namespace FantasyRPG
             {
                 Console.WriteLine(); // Spacing
                 smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {drop.Key}\nWould you like to equip this weapon? (1 for 'Yes' and any other key to store the item in your inventory)");
-                smoothPrinting.RapidPrint("Enter a corresponding value: ");
+                Console.WriteLine(); // Spacing
+                smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
                 userChoice = Console.ReadLine(); // Register user input
 
                 if (userChoice == "1")
