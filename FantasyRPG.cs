@@ -188,23 +188,30 @@ namespace FantasyRPG
             }
             else if (character is SomaliPirate)
             {
-                // Depending on level, requirement for level is adjusted
-                if (level < 5)
+                // Depending on level, requirement for level is adjusted, when user reaches level 10 and above, exp requirements are increased
+                if (level < 10)
                 {
                     experienceRequiredForNextLevel = 10 * level;
                     UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
+
+                    if (character.exp > experienceRequiredForNextLevel) // Should the individual have more exp than the requirement, then they'll level up accordingly, this could happen if the user defeats a strong opponent
+                    {
+                        LevelUp(character);
+                    }
+
+                    Console.WriteLine(); // Spacing
                 }
-                else if (level > 10)
+                else if (level >= 10)
                 {
                     experienceRequiredForNextLevel = 100 * level;
                     UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
                 }
-
+                Console.WriteLine(); // Spacing to avoid overlaps
                 smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
                 Console.ReadKey(); // Register user input
                 Console.Clear(); // Clear the console to avoid overlapping
                 gameDashboard dash = new gameDashboard();
-                dash.dashboard((SomaliPirate)character); // Return to the user dashboard
+                dash.dashboard((Mage)character); // Return to the user dashboard
             }
 
 
