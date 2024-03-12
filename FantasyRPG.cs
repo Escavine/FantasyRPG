@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
@@ -151,8 +150,6 @@ namespace FantasyRPG
         public void CalculateExperienceForNextLevel(CharacterDefault character)
         {
             UIManager UI = new UIManager(); // Engage the UIManager for progress bars
-            Console.WriteLine(); // Spacing to stop overlapping
-            Console.WriteLine(); // Double spacing to stop overlapping
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine($"FantasyRPG: {name}'s Status Check - Required EXP for next Level");
             smoothPrinting.PrintLine("--------------------------------------------------");
@@ -160,25 +157,18 @@ namespace FantasyRPG
 
             if (character is Mage)
             {
-                // Depending on level, requirement for level is adjusted, when user reaches level 10 and above, exp requirements are increased
-                if (level < 10)
+                // Depending on level, requirement for level is adjusted
+                if (level < 5)
                 {
                     experienceRequiredForNextLevel = 10 * level;
                     UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
-
-                    if (character.exp > experienceRequiredForNextLevel) // Should the individual have more exp than the requirement, then they'll level up accordingly, this could happen if the user defeats a strong opponent
-                    {
-                        LevelUp(character);
-                    }
-
                     Console.WriteLine(); // Spacing
                 }
-                else if (level >= 10)
+                else if (level > 10)
                 {
                     experienceRequiredForNextLevel = 100 * level;
                     UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
                 }
-                Console.WriteLine(); // Spacing to avoid overlaps
                 smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
                 Console.ReadKey(); // Register user input
                 Console.Clear(); // Clear the console to avoid overlapping
@@ -188,30 +178,23 @@ namespace FantasyRPG
             }
             else if (character is SomaliPirate)
             {
-                // Depending on level, requirement for level is adjusted, when user reaches level 10 and above, exp requirements are increased
-                if (level < 10)
+                // Depending on level, requirement for level is adjusted
+                if (level < 5)
                 {
                     experienceRequiredForNextLevel = 10 * level;
                     UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
-
-                    if (character.exp > experienceRequiredForNextLevel) // Should the individual have more exp than the requirement, then they'll level up accordingly, this could happen if the user defeats a strong opponent
-                    {
-                        LevelUp(character);
-                    }
-
-                    Console.WriteLine(); // Spacing
                 }
-                else if (level >= 10)
+                else if (level > 10)
                 {
                     experienceRequiredForNextLevel = 100 * level;
                     UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
                 }
-                Console.WriteLine(); // Spacing to avoid overlaps
+
                 smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
                 Console.ReadKey(); // Register user input
                 Console.Clear(); // Clear the console to avoid overlapping
                 gameDashboard dash = new gameDashboard();
-                dash.dashboard((Mage)character); // Return to the user dashboard
+                dash.dashboard((SomaliPirate)character); // Return to the user dashboard
             }
 
 
@@ -223,31 +206,28 @@ namespace FantasyRPG
         {
             if (character is Mage)
             {
-                Console.WriteLine(); // Spacing
-                Console.WriteLine(); // Double spacing to avoid overlapping
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine($"FantasyRPG: Mage Level Up!");
                 smoothPrinting.PrintLine("--------------------------------------------------");
-                level++; // Increment the level
-                smoothPrinting.RapidPrint($"\n{name} has levelled up, you are now level {level}!");
+                level++;
+                Console.WriteLine(name + " has levelled up! " + " You are now level " + level);
                 CalculateExperienceForNextLevel((Mage)character);
 
             }
             else if (character is SomaliPirate)
             {
-                Console.WriteLine(); // Spacing
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine($"FantasyRPG: Pirate Level Up!");
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 level++;
-                smoothPrinting.RapidPrint($"\n{name} has levelled up! You are now level {level}");
+                Console.WriteLine(name + " has levelled up! " + " You are now level " + level);
                 CalculateExperienceForNextLevel((SomaliPirate)character);
             }
 
         }
 
         // Check if user has enough to level up
-        public void GainExperience(CharacterDefault character, float experiencePoints)
+        public void GainExperience(CharacterDefault character, int experiencePoints)
         {
             if (character is Mage)
             {
@@ -279,15 +259,14 @@ namespace FantasyRPG
     {
         public string name;
         public int specialAtkRecharge, currentMobHealth, maxMobHealth;
-        private readonly UIManager UI; // Progress bars and repeatable functions
-        private readonly SmoothConsole smoothPrinting; // Cleaner and neater output
+
 
         // Mobs can have different attack names and varying item drops, each associated with a rarity and damage value
-        public Dictionary<string, (int, string, string, string)> itemDrop; // First string defines the weapon name, second integer defines the weapon damage, thirs stirng defines the weapon rarity and fourth string defines the weapon type
+        public Dictionary<string, (int, string, string)> itemDrop; // First string defines the weapon name, second integer defines the weapon damage, thirs stirng defines the weapon rarity and fourth string defines the weapon type
         public Dictionary<string, int> normalAtkNames;
         public Dictionary<string, (int, string)> specialAtkNames;
 
-        public MobDefault(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
+        public MobDefault(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string)> _itemDrop) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
         {
             name = _name;
             normalAtkNames = _normalAtkNames;
@@ -296,134 +275,18 @@ namespace FantasyRPG
             specialAtkRecharge = 100;
             currentMobHealth = _currentMobHealth;
             maxMobHealth = _maxMobHealth;
-            UI = new UIManager();
-            smoothPrinting = new SmoothConsole();
+
         }
 
         public void displayMobStatus(MobDefault mob)
         {
+            UIManager UI = new UIManager(); // Displaying progress bar
+
             // Add parameters such as the mobs health etc.
             UI.DisplayProgressBar("Mob Health", mob.currentMobHealth, mob.maxMobHealth, 30);
             Console.WriteLine();
             Console.WriteLine(); // Double spacing to avoid overlapping
-        }
 
-        // Mob attack
-        public void mobAttack(MobDefault mob, CharacterDefault character, bool enemyTurn, Dictionary<string, int> normalAtkNames, Dictionary<string, int> specialAtkNames)
-        {
-
-            // List<(string attackName, int attackDamage)> normalAttacks = normalAtkNames.ToList();
-            // List<(string attackName, int attackDamage)> specialAttacks = specialAtkNames.ToList();
-
-
-            if (enemyTurn)
-            {
-                if (mob.specialAtkRecharge == 100)
-                {
-                    // Allow mob to use their special attack
-                }
-                else
-                {
-                    Random ran = new Random();
-                    int randomAttack = ran.Next(0, normalAtkNames.Count()); // Dynamic selection for the mob attacks
-
-                    normalAtkNames.ToList(); // Convert the attacks to a list
-
-                    var normalAttacks = normalAtkNames.ElementAtOrDefault(randomAttack); // Select the attack based on random index
-
-                    // foreach (var attack in normalAttacks)
-                    // {
-                        // smoothPrinting.RapidPrint($"{mob.name} has used {attack.attackName[randomAttack]} dealing {attack.attackDamage}");
-                        // character.currentHealth -= attack.attackDamage; // Linearly reduce health according to the damage given
-                    // }
-
-
-                }
-
-            }
-
-
-        }
-
-        public void mobDeath(MobDefault mob, CharacterDefault character) // Should a mob die, the user will be displayed with the following information
-        {
-            if (mob.currentMobHealth == 0)
-            {
-                Console.Clear();
-
-                smoothPrinting.PrintLine("--------------------------------------------------");
-                smoothPrinting.PrintLine($"FantasyRPG: Defeated {mob.name}");
-                smoothPrinting.PrintLine("--------------------------------------------------");
-
-                smoothPrinting.RapidPrint($"\n{mob.name} has been defeated by {character.name}\n");
-
-                smoothPrinting.RapidPrint("\nFinal battle stats\n");
-                UI.DisplayProgressBar("Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
-                Console.WriteLine(); // Spacing
-
-                UI.DisplayProgressBar("Mana", character.currentMana, character.maxMana, 30); // Display Mage's remaining mana
-                Console.WriteLine(); // Spacing
-
-                UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
-                Console.WriteLine(); // Spacing
-
-                smoothPrinting.RapidPrint($"\nRewards incoming...");
-
-                Random itemDropChance = new Random(); // Each mob class should have a dynamic integer for the item drop chance, this way it isn't the same drop rate for all mobs
-                int dropChance = itemDropChance.Next(0, 1); // Will be adjusted accordingly
-
-                if (dropChance == 0 || dropChance == 1)
-                {
-                    Console.WriteLine(); // Spacing
-                    Console.WriteLine(); // Double spacing to stop overlapping
-                    smoothPrinting.PrintLine("--------------------------------------------------");
-                    smoothPrinting.PrintLine($"FantasyRPG: You received a drop!");
-                    smoothPrinting.PrintLine("--------------------------------------------------");
-                    mob.dropItem(dropChance, character, mob, itemDrop); // Should the random number be zero, then the mob will drop an item
-                }
-
-                character.exp += 300; // User gains huge exp from defeating the dragon 
-                character.GainExperience(character, character.exp);
-
-            }
-
-        }
-
-        // If the user gets lucky, then they can get a mob drop, which can vary as it is RNG
-        public void dropItem(int dropChance, CharacterDefault character, MobDefault mob, Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop)
-        {
-            Random ran = new Random(); // Determine which item will be dropped
-            int randomWeapon = ran.Next(0, 6); // Generate a value between 0 to 5 (inclusive)
-            string userChoice;
-
-            itemDrop.ToList(); // Convert the item drops to a list
-            var drop = itemDrop.ElementAtOrDefault(randomWeapon); // Select the weapon based on random index
-
-            if (!string.IsNullOrEmpty(drop.Key))
-            {
-                Console.WriteLine(); // Spacing
-                smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received...\n\nItem Name: {drop.Key}\nDamage: {drop.Value.damage}\nRarity: {drop.Value.rarity}\nDescription: {drop.Value.weaponDescription}\nWeapon Type: {drop.Value.weaponType}\n\nWould you like to equip the following weapon/item? (1 for 'Yes' and any other key to store the item in your inventory)");
-                Console.WriteLine(); // Spacing
-                smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
-                userChoice = Console.ReadLine(); // Register user input
-
-                if (userChoice == "1")
-                {
-                    character.weapon.Clear(); // Remove the current weapon equipped by the user
-                    character.weapon.Add((drop.Key, drop.Value.damage, drop.Value.rarity, drop.Value.weaponType, drop.Value.weaponDescription));
-                }
-                else
-                {
-                    smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
-                }
-
-                character.currentInventory.Add((drop.Key, drop.Value.weaponDescription, drop.Value.rarity, drop.Value.damage)); // Add the item drop to the player's inventory
-            }
-            else
-            {
-                // Debugging measure (try, except)
-                smoothPrinting.RapidPrint("No weapon selected.");
-            }
         }
 
     }
@@ -433,7 +296,7 @@ namespace FantasyRPG
     {
         SmoothConsole smoothPrinting = new SmoothConsole();
 
-        public Crawler(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
+        public Crawler(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
         {
 
             // Default presets for a crawler, inherited from the mob default class
@@ -441,7 +304,6 @@ namespace FantasyRPG
             name = "Crawler";
             currentMobHealth = 20; // Crawlers are very weak creatures, and by default have 20 health
             maxMobHealth = 20;
-
 
             // Dictionary containing crawler attacks and their associated damage value
             Dictionary<string, int> normalAtkNames = new Dictionary<string, int>() // Preset name for all dragon's normal attacks
@@ -452,10 +314,10 @@ namespace FantasyRPG
             };
 
             // Dictionary that contains weapon name, damage, rarity and weapon type (item drops)
-            Dictionary<string, (int, string, string, string)> itemDrop = new Dictionary<string, (int, string, string, string)>()
+            Dictionary<string, (int, string, string)> itemDrop = new Dictionary<string, (int, string, string)>()
             {
-                { "Staff of Spite", (7, "(Common)", "Staff", "Not cool") },
-                { "Crawler's Revant", (10, "(Uncommon)", "Rapier/Sword", "Bad") },
+                { "Staff of Spite", (7, "(Common)", "Staff") },
+                { "Crawler's Revant", (10, "(Uncommon)", "Rapier/Sword") },
             };
 
             itemDrop = _itemDrop;
@@ -480,24 +342,31 @@ namespace FantasyRPG
         }
 
 
-        // public void crawlerDeath(CharacterDefault character, MobDefault mob) // If the crawler dies, then the user gains exp and has a chance of receiving an item drop
-        // {
-        // if (mobHealth == 0)
-        // {
-        // Random itemDropChance = new Random();
-        // int dropChance = itemDropChance.Next(1, 2); // 50% drop rate, as the mob is easy to defeat
-        // smoothPrinting.FastPrint("\nDragon has been successfully defeated!");
+        public void crawlerDeath(int mobHealth, int exp) // If the crawler dies, then the user gains exp and has a chance of receiving an item drop
+        {
+            if (mobHealth == 0)
+            {
+                Random itemDropChance = new Random();
+                int dropChance = itemDropChance.Next(1, 2); // 50% drop rate, as the mob is easy to defeat
+                smoothPrinting.FastPrint("\nDragon has been successfully defeated!");
 
-        // if (dropChance == 0)
-        // {
-        // mob.dropItem(dropChance, character, mob, itemDrop); // Should the random number be zero, then the mob will drop an item
-        // }
+                if (dropChance == 0)
+                {
+                    dropItem(mobHealth); // Should the random number be zero, then the mob will drop an item
+                }
 
-        // character.exp += 5; // User gets experience from the drop
-        // smoothPrinting.SlowPrint("User has gained " + character.exp + " experience points!");
+                exp += 5; // User gets experience from the drop
+                smoothPrinting.SlowPrint("User has gained " + exp + " experience points!");
 
-        // }
-        // }
+            }
+        }
+
+        public void dropItem(int dropChance)
+        {
+
+
+        }
+
 
     }
 
@@ -516,16 +385,16 @@ namespace FantasyRPG
                 { "Raging Tempest", 50 }
             };
 
-        // Dictionary that contains weapon name, damage, rarity, and weapon type (item drops)
-        Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop = new Dictionary<string, (int, string, string, string)>()
-        {
-            { "Frostfire Fang", (65, "Unique", "Staff", "Forged in the icy flames of the dragon's breath, this fang drips with frostfire, capable of freezing enemies in their tracks.") },
-            { "Serpent's Gaze", (50, "Unique", "Rapier/Sword", "Crafted from the scales of the ancient serpent, this gaze holds the power to petrify foes with a single glance.") },
-            { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword", "Tempered in the chaosfire of the dragon's lair, this greatsword burns with an insatiable hunger for destruction.") },
-            { "Nightshade Arc", (55, "Unique", "Bow", "Fashioned from the sinew of the nocturnal shadows, this bow strikes with deadly accuracy under the cover of darkness.") },
-            { "Aerith's Heirloom", (80, "Legendary", "Staff", "Once wielded by the legendary Aerith, this staff channels the primordial magic of creation itself, capable of reshaping reality.") },
-            { "Eucladian's Aura", (55, "Legendary", "Aura", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.") }
-        };
+        // Dictionary that contains weapon name, damage, rarity and weapon type (item drops)
+        Dictionary<string, (int damage, string rarity, string weaponType)> itemDrop = new Dictionary<string, (int, string, string)>()
+            {
+                { "Etherial Froststaff", (50, "Unique", "Staff") },
+                { "Nightfall Rapier", (50, "Unique", "Rapier/Sword") },
+                { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword") }, // OP item drops
+                { "Nightshade Arc", (55, "Unique", "Bow") },
+                { "Aerith's Heirloom", (80, "Legendary", "Staff") },
+                { "Eucladian's Aura", (55, "Legendary", "Aura") } // Should the individual get lucky, then they could potentially get an aura drop, this is only equipabble by knights, pirates, shadowwraths etc.
+            };
 
         Dictionary<string, (int damage, string magicType)> specialAtkNames = new Dictionary<string, (int, string)>() // Preset names for all dragon's special attacks
             {
@@ -534,7 +403,7 @@ namespace FantasyRPG
                 { "Rampant Flame Charge", (200, "Fire-Magic") } // Flame type ULT
             };
 
-        public Dragon(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
+        public Dragon(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
         {
             // Default presets for a dragon, inherited from the mob default class
             name = _name;
@@ -610,6 +479,72 @@ namespace FantasyRPG
 
         }
 
+        public void dragonDeath(string name, int mobHealth, int exp, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> currentInventory)
+        {
+            if (mobHealth == 0)
+            {
+                Random itemDropChance = new Random();
+                int dropChance = itemDropChance.Next(0, 10); // 20% drop rate, due to OP item drops
+                smoothPrinting.FastPrint($"\n{name} has successfully killed the dragon!");
+
+                if (dropChance == 0 || dropChance == 1)
+                {
+                    dropItem(dropChance, currentInventory); // Should the random number be zero, then the mob will drop an item
+                }
+
+                exp += 300; // User gains huge exp from defeating the dragon 
+
+            }
+
+        }
+
+        public void dropItem(int dropChance, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> currentInventory)
+        {
+            Random ran = new Random(); // Determine which item will be dropped
+            int item = ran.Next(0, 6); // Generate a value between 0 to 6
+
+            List<(string weaponName, (int damage, int rarity, int weaponType))> droppedWeapon;
+            itemDrop.ToList();
+
+
+            if (item == 0)
+            {
+
+            }
+            else if (item == 1)
+            {
+
+
+            }
+            else if (item == 2)
+            {
+
+
+            }
+            else if (item == 3)
+            {
+
+
+            }
+            else if (item == 4)
+            {
+
+
+
+            }
+            else if (item == 5)
+            {
+
+
+            }
+            else if (item == 6)
+            {
+
+
+            }
+
+
+        }
     }
 
 
@@ -777,30 +712,12 @@ namespace FantasyRPG
             {
                 if (mage.currentMana >= spell.manaRequirement)
                 {
-                    if (mob.currentMobHealth < spell.damage) // Check if the spell damage is more than the enemies health (in that case, set the enemies health to zero, to avoid game crash)
-                    {
-                        smoothPrinting.RapidPrint($"\n{mage.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
-                        mob.currentMobHealth = 0; // Set the enemies health to zero, to prevent game from crashing
-                        mage.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
-                        Console.ReadKey();
-                        Console.Clear();
-                        DisplayMageStatus(mage, mob, quickDisplay = true); // Return after attack
-                    }
-                    else
-                    {
-                        smoothPrinting.RapidPrint($"\n{mage.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
-                        mob.currentMobHealth -= spell.damage;
-                        mage.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
-                        Console.ReadKey();
-                        Console.Clear();
-                        DisplayMageStatus(mage, mob, quickDisplay = true); // Return after attack (TESTING)
-                    }
                     smoothPrinting.RapidPrint($"\n{mage.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
                     mob.currentMobHealth -= spell.damage;
                     mage.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
                     Console.ReadKey();
                     Console.Clear();
-                    DisplayMageStatus(mage, mob, quickDisplay = true); // Return after attack 
+                    DisplayMageStatus(mage, mob, quickDisplay = true); // Return after attack (TESTING)
                 }
                 else
                 {
@@ -849,9 +766,25 @@ namespace FantasyRPG
 
             if (mob.currentMobHealth == 0) // Check everytime if the mob has died
             {
-                mob.mobDeath(mob, mage); // Run the following method to display the relevant information
-                // gameDashboard dash = new gameDashboard();
-                // dash.dashboard(mage);
+                Console.Clear();
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.PrintLine($"FantasyRPG: Defeated {mob.name}");
+                smoothPrinting.PrintLine("--------------------------------------------------");
+
+                UI.DisplayProgressBar("Health", mage.currentHealth, mage.maxHealth, 30); // Display Mage's health
+                Console.WriteLine(); // Spacing
+
+                UI.DisplayProgressBar("Mana", currentMana, maxMana, 30); // Display Mage's remaining mana
+                Console.WriteLine(); // Spacing
+
+                UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
+                Console.WriteLine(); // Spacing
+
+                smoothPrinting.RapidPrint($"\n{mob.name} has been defeated by {mage.name}, rewards incoming...");
+                Console.ReadKey(); // Testing
+
+                gameDashboard dash = new gameDashboard();
+                dash.dashboard(mage);
             }
             else if (mage.currentHealth == 0) // Should the user die instead
             {
@@ -919,7 +852,7 @@ namespace FantasyRPG
                         numCount++; // Increment the value to display the other remaining choices
                     }
 
-                    smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
+                    Console.WriteLine("\nEnter a corresponding value: ");
                     userChoice = Convert.ToString(Console.ReadLine()); // Register Mage's choice
 
                     switch (userChoice)
@@ -1037,7 +970,7 @@ namespace FantasyRPG
                     }
 
                 }
-
+                
 
             }
 
@@ -2763,15 +2696,15 @@ namespace FantasyRPG
 
 
 
-            // Dictionary that contains weapon name, damage, rarity, and weapon type (item drops)
-            Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop = new Dictionary<string, (int, string, string, string)>()
+            // Dictionary that contains weapon name, damage, rarity and weapon type (item drops)
+            Dictionary<string, (int, string, string)> itemDrop = new Dictionary<string, (int, string, string)>()
             {
-                { "Frostfire Fang", (65, "Unique", "Staff", "Forged in the icy flames of the dragon's breath, this fang drips with frostfire, capable of freezing enemies in their tracks.") },
-                { "Serpent's Gaze", (50, "Unique", "Rapier/Sword", "Crafted from the scales of the ancient serpent, this gaze holds the power to petrify foes with a single glance.") },
-                { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword", "Tempered in the chaosfire of the dragon's lair, this greatsword burns with an insatiable hunger for destruction.") },
-                { "Nightshade Arc", (55, "Unique", "Bow", "Fashioned from the sinew of the nocturnal shadows, this bow strikes with deadly accuracy under the cover of darkness.") },
-                { "Aerith's Heirloom", (80, "Legendary", "Staff", "Once wielded by the legendary Aerith, this staff channels the primordial magic of creation itself, capable of reshaping reality.") },
-                { "Eucladian's Aura", (55, "Legendary", "Aura", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.") }
+                { "Etherial Froststaff", (50, "Unique", "Staff") },
+                { "Nightfall Rapier", (50, "Unique", "Rapier/Sword") },
+                { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword") }, // OP item drops
+                { "Nightshade Arc", (55, "Unique", "Bow") },
+                { "Aerith's Heirloom", (80, "Legendary", "Staff") },
+                { "Eucladian's Aura", (55, "Legendary", "Aura") } // Should the individual get lucky, then they could potentially get an aura drop, this is only equipabble by knights, pirates, shadowwraths etc.
             };
 
 
@@ -2969,8 +2902,7 @@ namespace FantasyRPG
             smoothPrinting.RapidPrint("\n4. Shop (N/A)\n");
             smoothPrinting.RapidPrint("\n5. NPC's Encountered (N/A)\n");
             smoothPrinting.RapidPrint("\n6. Character Status (N/A)\n");
-            smoothPrinting.RapidPrint("\n7. Check Inventory\n");
-            smoothPrinting.RapidPrint("\n8. Continents (N/A)\n");
+            smoothPrinting.RapidPrint("\n7. Continents (N/A)\n");
             smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
 
             userInput = Console.ReadLine(); // Register user input
@@ -3033,11 +2965,6 @@ namespace FantasyRPG
                     // Handle character status
                     break;
                 case "7":
-                    character.CheckInventory();
-                    UI.PromptReturnToDashboard();
-                    dashboard(character);
-                    break;
-                case "8":
                     // Future reference: Create a dictionary, and will unlock in an instance that the continent has been explore (i.e. with a Boolean function)
                     Console.Clear();
                     smoothPrinting.PrintLine("--------------------------------------------------");
@@ -3129,11 +3056,8 @@ namespace FantasyRPG
 public class UIManager // UIManager - a class that will allow for the display of progress bars, prompts etc.
 {
     SmoothConsole smoothPrinting = new SmoothConsole(); // Engage the smoothconsole class
-    public void DisplayProgressBar(string title, float currentValue, float maxValue, float barLength)
+    public void DisplayProgressBar(string title, float currentValue, int maxValue, int barLength)
     {
-        // Ensure currentValue does not exceed maxValue
-        currentValue = Math.Min(currentValue, maxValue);
-
         // Calculate the percentage
         double percentage = currentValue / maxValue;
 
@@ -3141,12 +3065,11 @@ public class UIManager // UIManager - a class that will allow for the display of
         int filledLength = (int)Math.Round(percentage * barLength);
 
         // Generate the progress bar
-        string progressBar = new string('█', filledLength) + new string(' ', (int)barLength - filledLength);
+        string progressBar = new string('█', filledLength) + new string(' ', barLength - filledLength);
 
         // Output the progress bar
         smoothPrinting.RapidPrint($"\n{title}: [{progressBar}] [{currentValue}/{maxValue}]");
     }
-
 
 
     public void PromptUserToContinue()
