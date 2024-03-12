@@ -1,8 +1,9 @@
-﻿using Microsoft.Win32.SafeHandles;
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
@@ -134,6 +135,359 @@ namespace FantasyRPG
             }
         }
 
+
+        // Combat System (All Classes)
+        public void CombatSystem(CharacterDefault character, MobDefault mob, bool quickDisplay)
+        {
+            // WIll be used to display the Mage Combat System header
+            void DisplayMageCombatSystemHeader()
+            {
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.PrintLine("FantasyRPG: Mage Combat System");
+                smoothPrinting.PrintLine("--------------------------------------------------");
+            }
+
+            void DisplayMageStatus(CharacterDefault character, MobDefault mob, bool quickDisplay) // Naturally this takes in the mage class and the given mob
+            {
+                bool userTurn, enemyTurn; // These boolean measures are to create the turn based dynamic for the game
+                UIManager UI = new UIManager(); // Engage the UI manager for progress bars
+
+                int? numCount = 1; // Will display the numeric choices for the Mage's options
+                string? userChoice;
+
+                string[] mageChoices = new string[] { "Attack", "Check Inventory", "Check Status", "Attempt Escape (WARNING: Low Chance)" }; // Array displaying the different Mage's options
+
+
+                if (mob.currentMobHealth == 0) // Check everytime if the mob has died
+                {
+                    mob.mobDeath(mob, character); // Run the following method to display the relevant information
+                                                  // gameDashboard dash = new gameDashboard();
+                                                  // dash.dashboard(mage);
+                }
+                else if (character.currentHealth == 0) // Should the user die instead
+                {
+                    string? userInput;
+
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine($"FantasyRPG: You have died by {mob.name}");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+
+                    smoothPrinting.RapidPrint("\nWould you like to go back to the Menu? ('1' for Yes, any other key for No)");
+                    userInput = Console.ReadLine();
+
+                    switch (userInput)
+                    {
+                        case "1":
+                            smoothPrinting.RapidPrint("\nYou will now be redirected back to the Menu...");
+                            userInput = null; // This is case measure to prevent the userInput value from already having a stored value, if the user reaches this point in the game again
+                            GameMenu redirectUserToMenu = new GameMenu();
+                            redirectUserToMenu.gameMenu(); // Redirect user to the game menu, if they enter the value '1'
+                            break;
+                        default:
+                            smoothPrinting.RapidPrint("\nConsole will now terminate, press any key to leave the game");
+                            Console.ReadKey();
+                            break;
+                    }
+
+
+                }
+                else
+                {
+                    if (quickDisplay == true)
+                    {
+                        DisplayMageCombatSystemHeader(); // Display the MCS (Mage Combat System Header)
+
+                        Console.WriteLine($"{character.name} - Mage Status");
+                        Console.WriteLine($"{mob.name} - Enemy");
+
+                        UI.DisplayProgressBar("Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
+                        Console.WriteLine(); // Spacing
+
+                        UI.DisplayProgressBar("Mana", character.currentMana, character.maxMana, 30); // Display Mage's remaining mana
+                        Console.WriteLine(); // Spacing
+                        UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
+                        Console.WriteLine(); // Spacing
+                        Console.WriteLine($"\nRemaining Healing Potions: {numOfPotionsInInventory}\n"); // Display Mage's remaining potions
+
+
+                        if (character.currentHealth <= 30) // Check if users health is low
+                        {
+                            smoothPrinting.RapidPrint("WARINING: Your health is critically low, consider using a health potion or a recovery spell.");
+                            Console.WriteLine(); // Spacing
+                        }
+
+                        if (character.currentMana <= 30) // Check if users mana levels are low
+                        {
+                            smoothPrinting.RapidPrint("Warning: Your mana is critically low. Consider using a mana potion or a recovery spell to replenish your mana reserves.");
+                            Console.WriteLine(); // Spacing
+                        }
+
+                        foreach (var choice in mageChoices)
+                        {
+                            Console.WriteLine($"\n{numCount}. {choice}");
+                            numCount++; // Increment the value to display the other remaining choices
+                        }
+
+                        smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
+                        userChoice = Convert.ToString(Console.ReadLine()); // Register Mage's choice
+
+                        switch (userChoice)
+                        {
+                            case "1":
+                                Console.Clear(); // Clear the console, to avoid overlapping
+                                MageSpellAttack(character, mob, userTurn = true, enemyTurn = false, quickDisplay);
+                                break;
+                            case "2":
+                                CheckInventory();
+                                smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
+                                Console.ReadKey(); // Register user's input
+                                Console.Clear(); // Clear the console to prevent confusion
+                                DisplayMageStatus(character, mob, quickDisplay = true); // Recurse back to the original function
+                                break;
+                            case "3":
+                                Console.Clear();
+                                CheckStatus(character); // Allow user to check their status (FUTURE REFERENCE: ALLOW FOR STATUS TO BE USED DURING COMBAT AND OUTSIDE OF COMBAT)
+                                break;
+                            case "4":
+                                // Generate a random value
+                                // Random ran = new Random(); 
+                                // ran.Next(0, 50);
+                                // For this stage, if the user gets a value such as (i.e. 1, 10, 12, 15) they will luckily escape, otherwise they'll be locked into combat and cannot attempt escape again.
+                                // Should they escape, they'll return to the Forest Of Mysteries
+                                smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.\n");
+                                smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
+                                Console.ReadKey();
+                                Console.Clear();
+                                DisplayMageStatus(character, mob, quickDisplay = true); // Recurse back
+                                break;
+                            default:
+                                smoothPrinting.RapidPrint("\nInvalid input, click any key to try again!");
+                                Console.ReadKey();
+                                Console.Clear(); // Clear the console after letting user read the error message
+                                DisplayMageStatus(character, mob, quickDisplay = true); // Recurse back
+                                break;
+                        }
+
+                    }
+                    else
+                    {
+                        DisplayMageCombatSystemHeader(); // Display the MCS (Mage Combat System Header)
+
+                        smoothPrinting.RapidPrint($"{character.name} - Mage Status\n");
+                        smoothPrinting.RapidPrint($"{mob.name} - Enemy\n");
+
+                        UI.DisplayProgressBar("Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
+                        Console.WriteLine(); // Spacing
+
+                        UI.DisplayProgressBar("Mana", currentMana, maxMana, 30); // Display Mage's remaining mana
+                        Console.WriteLine(); // Spacing
+
+                        UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
+                        Console.WriteLine(); // Spacing
+
+                        smoothPrinting.RapidPrint($"\nRemaining Healing Potions: {numOfPotionsInInventory}\n"); // Display Mage's remaining potions
+
+                        if (character.currentHealth <= 30) // Check if users health is low
+                        {
+                            smoothPrinting.RapidPrint("WARINING: Your health is critically low, consider using a health potion or a recovery spell.");
+                            Console.WriteLine(); // Spacing
+                        }
+
+                        if (character.currentMana <= 30) // Check if users mana levels are low
+                        {
+                            smoothPrinting.RapidPrint("Warning: Your mana is critically low. Consider using a mana potion or a recovery spell to replenish your mana reserves.");
+                            Console.WriteLine(); // Spacing
+                        }
+
+                        foreach (var choice in mageChoices)
+                        {
+                            smoothPrinting.RapidPrint($"\n{numCount}. {choice}\n");
+                            numCount++; // Increment the value to display the other remaining choices
+                        }
+
+                        smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
+                        userChoice = Convert.ToString(Console.ReadLine()); // Register Mage's choice
+
+                        switch (userChoice)
+                        {
+                            case "1":
+                                Console.Clear(); // Clear the console, to avoid overlapping
+                                MageSpellAttack(character, mob, userTurn = true, enemyTurn = false, quickDisplay);
+                                break;
+                            case "2":
+                                CheckInventory();
+                                smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
+                                Console.ReadKey(); // Register user's input
+                                Console.Clear(); // Clear the console to prevent confusion
+                                DisplayMageStatus(character, mob, quickDisplay = true); // Recurse back to the original function
+                                break;
+                            case "3":
+                                Console.Clear();
+                                CheckStatus(character); // Allow user to check their status (FUTURE REFERENCE: ALLOW FOR STATUS TO BE USED DURING COMBAT AND OUTSIDE OF COMBAT)
+                                break;
+                            case "4":
+                                // Generate a random value
+                                // Random ran = new Random(); 
+                                // ran.Next(0, 50);
+                                // For this stage, if the user gets a value such as (i.e. 1, 10, 12, 15) they will luckily escape, otherwise they'll be locked into combat and cannot attempt escape again.
+                                // Should they escape, they'll return to the Forest Of Mysteries
+                                smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.\n");
+                                smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
+                                Console.ReadKey();
+                                Console.Clear();
+                                DisplayMageStatus(character, mob, quickDisplay = true); // Recurse back
+                                break;
+                            default:
+                                smoothPrinting.RapidPrint("\nInvalid input, click any key to try again!");
+                                Console.ReadKey();
+                                Console.Clear(); // Clear the console after letting user read the error message
+                                DisplayMageStatus(character, mob, quickDisplay = true); // Recurse back
+                                break;
+                        }
+                    }
+
+                }
+
+            }
+
+            void MageSpellAttack(CharacterDefault character, MobDefault mob, bool userTurn, bool enemyTurn, bool quickDisplay) // Will load the Mage Combat System for fighting situations
+            {
+                UIManager UI = new UIManager(); // To display mana + health progress bar
+
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.PrintLine("FantasyRPG: Mage Combat System - Attack");
+                smoothPrinting.PrintLine("--------------------------------------------------");
+
+                string? userInput; // Register the user input in string format for input validation purposes
+                List<(string magicSpell, int damage, int manaRequirement)> chosenSpellForAttack = new List<(string magicSpell, int damage, int manaRequirement)>(); // Will be used to append the chosen spell to attack, and will be cleared through each iteration
+                int spellCount = 1; // Likewise with the chosen spell, this will also be cleared through each iteration to keep track of number of user spells
+
+                // magicSpecialties.ToList();
+
+                // for (int z = 0; z = magicSpecialties.Length; z++)
+                // {
+                // switch (magicSpecialties[z])
+                //{
+                // case "Fire":
+                // break;
+                // }
+
+                // }
+                smoothPrinting.RapidPrint($"{character.name} - Mage Status\n");
+                smoothPrinting.RapidPrint($"{mob.name} - Enemy\n");
+
+                // Display users mana and remaining health
+                UI.DisplayProgressBar("Health", currentHealth, maxHealth, 30);
+                Console.WriteLine(); // Spacing
+                UI.DisplayProgressBar("Mana", currentMana, maxMana, 30);
+                Console.WriteLine(); // Spacing
+                UI.DisplayProgressBar("Enemy Health", mob.currentMobHealth, mob.maxMobHealth, 30); // Display mob health
+                Console.WriteLine(); // Spacing
+
+                // Combat methods for the Mage class
+                foreach (var spell in ((Mage)character).magicSpells) // Display all spells currently avaliable to the Mage
+                {
+                    smoothPrinting.RapidPrint($"\n{spellCount}. Spell: {spell.magicSpell} - Damage: {spell.damage}\nMana Requirement: {spell.manaRequirement}\n");
+                    spellCount++;
+                }
+
+                // Register user input
+                smoothPrinting.RapidPrint("\nSelect a spell to attack (Enter '0' to return back): ");
+                userInput = Console.ReadLine();
+
+                int registeredInput = Int32.Parse(userInput); // Convert value to integer
+
+                // Check if the user input corresponds to a spell index
+                if (registeredInput > 0 && registeredInput <= ((Mage)character).magicSpells.Count())
+                {
+                    // Get the chosen spell based on the user's input
+                    var chosenSpell = ((Mage)character).magicSpells[registeredInput - 1];
+
+                    // Add the chosen spell to the list of spells for attack
+                    chosenSpellForAttack.Add((chosenSpell.magicSpell, chosenSpell.damage, chosenSpell.manaRequirement));
+                }
+                else if (registeredInput == 0)
+                {
+                    // User wants to return back, handle accordingly
+                    smoothPrinting.RapidPrint("\nYou will be redirected back to the Mage Combat System (MCS)");
+                    UI.PromptUserToContinue();
+                    DisplayMageStatus(character, mob, quickDisplay = true);
+                }
+                else
+                {
+                    // Invalid input, handle accordingly
+                    smoothPrinting.RapidPrint("\nInvalid input, please try again.");
+                    UI.PromptUserToContinue();
+                    MageSpellAttack(character, mob, userTurn, enemyTurn, quickDisplay);
+                }
+
+                foreach (var spell in chosenSpellForAttack)
+                {
+                    if (character.currentMana >= spell.manaRequirement)
+                    {
+                        if (mob.currentMobHealth < spell.damage) // Check if the spell damage is more than the enemies health (in that case, set the enemies health to zero, to avoid game crash)
+                        {
+                            smoothPrinting.RapidPrint($"\n{character.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
+                            mob.currentMobHealth = 0; // Set the enemies health to zero, to prevent game from crashing
+                            character.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
+                            Console.ReadKey();
+                            Console.Clear();
+                            DisplayMageStatus(character, mob, quickDisplay = true); // Return after attack
+                        }
+                        else
+                        {
+                            smoothPrinting.RapidPrint($"\n{character.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
+                            mob.currentMobHealth -= spell.damage;
+                            character.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
+                            Console.ReadKey();
+                            Console.Clear();
+                            DisplayMageStatus(character, mob, quickDisplay = true); // Return after attack (TESTING)
+                        }
+                        smoothPrinting.RapidPrint($"\n{character.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
+                        mob.currentMobHealth -= spell.damage;
+                        character.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
+                        Console.ReadKey();
+                        Console.Clear();
+                        DisplayMageStatus(character, mob, quickDisplay = true); // Return after attack 
+                    }
+                    else
+                    {
+                        smoothPrinting.RapidPrint("\nYou do not have enough mana to cast this spell.");
+                        Console.ReadKey();
+                        Console.Clear();
+                        MageSpellAttack(character, mob, userTurn, enemyTurn, quickDisplay = true); // Recurse back to the function, should the user wish to use an alternative spell
+                    }
+
+                }
+            }
+
+            // smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.\n");
+            // smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the MCS.");
+
+            // Console.ReadKey(); // Register user input
+            // Console.Clear(); // Clear the console to avoid overlapping
+            // DisplayMageStatus(mage, mob); // Return back (still in development)
+
+            // userInput = Convert.ToString(Console.ReadLine());
+
+
+            // Next steps: Create a function that will count the number of spells within the individuals 'mageSpell' list and make a switch case for it.
+
+
+
+            // chosenSpellForAttack.Add(magicSpells.); // Append the chosen spell to another variable
+
+            if (character is Mage)
+            {
+                DisplayMageCombatSystemHeader();
+                DisplayMageStatus(character, mob, quickDisplay); // Run the following function call
+            }
+
+
+        }
+
         // Used for recovery
         // public void Meditate()
         // {
@@ -150,6 +504,8 @@ namespace FantasyRPG
         public void CalculateExperienceForNextLevel(CharacterDefault character)
         {
             UIManager UI = new UIManager(); // Engage the UIManager for progress bars
+            Console.WriteLine(); // Spacing to stop overlapping
+            Console.WriteLine(); // Double spacing to stop overlapping
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine($"FantasyRPG: {name}'s Status Check - Required EXP for next Level");
             smoothPrinting.PrintLine("--------------------------------------------------");
@@ -157,18 +513,25 @@ namespace FantasyRPG
 
             if (character is Mage)
             {
-                // Depending on level, requirement for level is adjusted
-                if (level < 5)
+                // Depending on level, requirement for level is adjusted, when user reaches level 10 and above, exp requirements are increased
+                if (level < 10)
                 {
                     experienceRequiredForNextLevel = 10 * level;
                     UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
+
+                    if (character.exp > experienceRequiredForNextLevel) // Should the individual have more exp than the requirement, then they'll level up accordingly, this could happen if the user defeats a strong opponent
+                    {
+                        LevelUp(character);
+                    }
+
                     Console.WriteLine(); // Spacing
                 }
-                else if (level > 10)
+                else if (level >= 10)
                 {
                     experienceRequiredForNextLevel = 100 * level;
                     UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
                 }
+                Console.WriteLine(); // Spacing to avoid overlaps
                 smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
                 Console.ReadKey(); // Register user input
                 Console.Clear(); // Clear the console to avoid overlapping
@@ -178,23 +541,30 @@ namespace FantasyRPG
             }
             else if (character is SomaliPirate)
             {
-                // Depending on level, requirement for level is adjusted
-                if (level < 5)
+                // Depending on level, requirement for level is adjusted, when user reaches level 10 and above, exp requirements are increased
+                if (level < 10)
                 {
                     experienceRequiredForNextLevel = 10 * level;
                     UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
+
+                    if (character.exp > experienceRequiredForNextLevel) // Should the individual have more exp than the requirement, then they'll level up accordingly, this could happen if the user defeats a strong opponent
+                    {
+                        LevelUp(character);
+                    }
+
+                    Console.WriteLine(); // Spacing
                 }
-                else if (level > 10)
+                else if (level >= 10)
                 {
                     experienceRequiredForNextLevel = 100 * level;
                     UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
                 }
-
+                Console.WriteLine(); // Spacing to avoid overlaps
                 smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
                 Console.ReadKey(); // Register user input
                 Console.Clear(); // Clear the console to avoid overlapping
                 gameDashboard dash = new gameDashboard();
-                dash.dashboard((SomaliPirate)character); // Return to the user dashboard
+                dash.dashboard((Mage)character); // Return to the user dashboard
             }
 
 
@@ -206,28 +576,31 @@ namespace FantasyRPG
         {
             if (character is Mage)
             {
+                Console.WriteLine(); // Spacing
+                Console.WriteLine(); // Double spacing to avoid overlapping
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine($"FantasyRPG: Mage Level Up!");
                 smoothPrinting.PrintLine("--------------------------------------------------");
-                level++;
-                Console.WriteLine(name + " has levelled up! " + " You are now level " + level);
+                level++; // Increment the level
+                smoothPrinting.RapidPrint($"\n{name} has levelled up, you are now level {level}!");
                 CalculateExperienceForNextLevel((Mage)character);
 
             }
             else if (character is SomaliPirate)
             {
+                Console.WriteLine(); // Spacing
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine($"FantasyRPG: Pirate Level Up!");
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 level++;
-                Console.WriteLine(name + " has levelled up! " + " You are now level " + level);
+                smoothPrinting.RapidPrint($"\n{name} has levelled up! You are now level {level}");
                 CalculateExperienceForNextLevel((SomaliPirate)character);
             }
 
         }
 
         // Check if user has enough to level up
-        public void GainExperience(CharacterDefault character, int experiencePoints)
+        public void GainExperience(CharacterDefault character, float experiencePoints)
         {
             if (character is Mage)
             {
@@ -255,18 +628,19 @@ namespace FantasyRPG
 
     }
 
-    class MobDefault // Mob preset for the game
+    public class MobDefault // Mob preset for the game
     {
         public string name;
         public int specialAtkRecharge, currentMobHealth, maxMobHealth;
-
+        private readonly UIManager UI; // Progress bars and repeatable functions
+        private readonly SmoothConsole smoothPrinting; // Cleaner and neater output
 
         // Mobs can have different attack names and varying item drops, each associated with a rarity and damage value
-        public Dictionary<string, (int, string, string)> itemDrop; // First string defines the weapon name, second integer defines the weapon damage, thirs stirng defines the weapon rarity and fourth string defines the weapon type
+        public Dictionary<string, (int, string, string, string)> itemDrop; // First string defines the weapon name, second integer defines the weapon damage, thirs stirng defines the weapon rarity and fourth string defines the weapon type
         public Dictionary<string, int> normalAtkNames;
         public Dictionary<string, (int, string)> specialAtkNames;
 
-        public MobDefault(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string)> _itemDrop) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
+        public MobDefault(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
         {
             name = _name;
             normalAtkNames = _normalAtkNames;
@@ -275,18 +649,145 @@ namespace FantasyRPG
             specialAtkRecharge = 100;
             currentMobHealth = _currentMobHealth;
             maxMobHealth = _maxMobHealth;
-
+            UI = new UIManager();
+            smoothPrinting = new SmoothConsole();
         }
 
         public void displayMobStatus(MobDefault mob)
         {
-            UIManager UI = new UIManager(); // Displaying progress bar
-
             // Add parameters such as the mobs health etc.
             UI.DisplayProgressBar("Mob Health", mob.currentMobHealth, mob.maxMobHealth, 30);
             Console.WriteLine();
             Console.WriteLine(); // Double spacing to avoid overlapping
+        }
 
+        // Mob attack
+        public void mobAttack(MobDefault mob, CharacterDefault character, bool enemyTurn, Dictionary<string, int> normalAtkNames, Dictionary<string, int> specialAtkNames)
+        {
+
+            normalAtkNames.ToList();
+            specialAtkNames.ToList();
+
+
+            if (enemyTurn)
+            {
+                if (mob.specialAtkRecharge == 100)
+                {
+                    Random ran = new Random();
+                    int randomNormalAttack = ran.Next(0, normalAtkNames.Count()); // Dynamic selection for the mob attacks
+
+                    foreach (var chosenSpecialAtk in specialAtkNames)
+                    {
+                        // Allow mob to use their special attack
+                        smoothPrinting.RapidPrint($"\n{mob.name} has used {chosenSpecialAtk.Key} dealing {chosenSpecialAtk.Value}");
+                        character.currentHealth -= chosenSpecialAtk.Value; // Linearly reduce users health based on the damage done
+                        //
+                    }
+
+
+                }
+                else
+                {
+                    Random ran = new Random();
+                    int randomSpecialAttack = ran.Next(0, normalAtkNames.Count()); // Dynamic selection for the mob attacks
+
+                    normalAtkNames.ToList(); // Convert the attacks to a list
+
+                    // var normalAttacks = normalAtkNames.ElementAtOrDefault(randomAttack); // Select the attack based on random index
+
+                    // foreach (var attack in normalAttacks)
+                    // {
+                        // smoothPrinting.RapidPrint($"{mob.name} has used {attack.attackName[randomAttack]} dealing {attack.attackDamage}");
+                        // character.currentHealth -= attack.attackDamage; // Linearly reduce health according to the damage given
+                    // }
+
+
+                }
+
+            }
+
+
+        }
+
+        public void mobDeath(MobDefault mob, CharacterDefault character) // Should a mob die, the user will be displayed with the following information
+        {
+            if (mob.currentMobHealth == 0)
+            {
+                Console.Clear();
+
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.PrintLine($"FantasyRPG: Defeated {mob.name}");
+                smoothPrinting.PrintLine("--------------------------------------------------");
+
+                smoothPrinting.RapidPrint($"\n{mob.name} has been defeated by {character.name}\n");
+
+                smoothPrinting.RapidPrint("\nFinal battle stats\n");
+                UI.DisplayProgressBar("Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
+                Console.WriteLine(); // Spacing
+
+                UI.DisplayProgressBar("Mana", character.currentMana, character.maxMana, 30); // Display Mage's remaining mana
+                Console.WriteLine(); // Spacing
+
+                UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
+                Console.WriteLine(); // Spacing
+
+                smoothPrinting.RapidPrint($"\nRewards incoming...");
+
+                Random itemDropChance = new Random(); // Each mob class should have a dynamic integer for the item drop chance, this way it isn't the same drop rate for all mobs
+                int dropChance = itemDropChance.Next(0, 1); // Will be adjusted accordingly
+
+                if (dropChance == 0 || dropChance == 1)
+                {
+                    Console.WriteLine(); // Spacing
+                    Console.WriteLine(); // Double spacing to stop overlapping
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine($"FantasyRPG: You received a drop!");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    mob.dropItem(dropChance, character, mob, itemDrop); // Should the random number be zero, then the mob will drop an item
+                }
+
+                character.exp += 300; // User gains huge exp from defeating the dragon 
+                character.GainExperience(character, character.exp);
+
+            }
+
+        }
+
+        // If the user gets lucky, then they can get a mob drop, which can vary as it is RNG
+        public void dropItem(int dropChance, CharacterDefault character, MobDefault mob, Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop)
+        {
+            Random ran = new Random(); // Determine which item will be dropped
+            int randomWeapon = ran.Next(0, 6); // Generate a value between 0 to 5 (inclusive)
+            string userChoice;
+
+            itemDrop.ToList(); // Convert the item drops to a list
+            var drop = itemDrop.ElementAtOrDefault(randomWeapon); // Select the weapon based on random index
+
+            if (!string.IsNullOrEmpty(drop.Key))
+            {
+                Console.WriteLine(); // Spacing
+                smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {drop.Key}\nWould you like to equip this weapon? (1 for 'Yes' and any other key to store the item in your inventory)");
+                Console.WriteLine(); // Spacing
+                smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
+                userChoice = Console.ReadLine(); // Register user input
+
+                if (userChoice == "1")
+                {
+                    character.weapon.Clear(); // Remove the current weapon equipped by the user
+                    character.weapon.Add((drop.Key, drop.Value.damage, drop.Value.rarity, drop.Value.weaponType, drop.Value.weaponDescription));
+                }
+                else
+                {
+                    smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
+                }
+
+                character.currentInventory.Add((drop.Key, drop.Value.weaponDescription, drop.Value.rarity, drop.Value.damage)); // Add the item drop to the player's inventory
+            }
+            else
+            {
+                // Debugging measure (try, except)
+                smoothPrinting.RapidPrint("No weapon selected.");
+            }
         }
 
     }
@@ -296,7 +797,7 @@ namespace FantasyRPG
     {
         SmoothConsole smoothPrinting = new SmoothConsole();
 
-        public Crawler(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
+        public Crawler(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
         {
 
             // Default presets for a crawler, inherited from the mob default class
@@ -304,6 +805,7 @@ namespace FantasyRPG
             name = "Crawler";
             currentMobHealth = 20; // Crawlers are very weak creatures, and by default have 20 health
             maxMobHealth = 20;
+
 
             // Dictionary containing crawler attacks and their associated damage value
             Dictionary<string, int> normalAtkNames = new Dictionary<string, int>() // Preset name for all dragon's normal attacks
@@ -314,10 +816,10 @@ namespace FantasyRPG
             };
 
             // Dictionary that contains weapon name, damage, rarity and weapon type (item drops)
-            Dictionary<string, (int, string, string)> itemDrop = new Dictionary<string, (int, string, string)>()
+            Dictionary<string, (int, string, string, string)> itemDrop = new Dictionary<string, (int, string, string, string)>()
             {
-                { "Staff of Spite", (7, "(Common)", "Staff") },
-                { "Crawler's Revant", (10, "(Uncommon)", "Rapier/Sword") },
+                { "Staff of Spite", (7, "(Common)", "Staff", "Not cool") },
+                { "Crawler's Revant", (10, "(Uncommon)", "Rapier/Sword", "Bad") },
             };
 
             itemDrop = _itemDrop;
@@ -342,31 +844,24 @@ namespace FantasyRPG
         }
 
 
-        public void crawlerDeath(int mobHealth, int exp) // If the crawler dies, then the user gains exp and has a chance of receiving an item drop
-        {
-            if (mobHealth == 0)
-            {
-                Random itemDropChance = new Random();
-                int dropChance = itemDropChance.Next(1, 2); // 50% drop rate, as the mob is easy to defeat
-                smoothPrinting.FastPrint("\nDragon has been successfully defeated!");
+        // public void crawlerDeath(CharacterDefault character, MobDefault mob) // If the crawler dies, then the user gains exp and has a chance of receiving an item drop
+        // {
+        // if (mobHealth == 0)
+        // {
+        // Random itemDropChance = new Random();
+        // int dropChance = itemDropChance.Next(1, 2); // 50% drop rate, as the mob is easy to defeat
+        // smoothPrinting.FastPrint("\nDragon has been successfully defeated!");
 
-                if (dropChance == 0)
-                {
-                    dropItem(mobHealth); // Should the random number be zero, then the mob will drop an item
-                }
+        // if (dropChance == 0)
+        // {
+        // mob.dropItem(dropChance, character, mob, itemDrop); // Should the random number be zero, then the mob will drop an item
+        // }
 
-                exp += 5; // User gets experience from the drop
-                smoothPrinting.SlowPrint("User has gained " + exp + " experience points!");
+        // character.exp += 5; // User gets experience from the drop
+        // smoothPrinting.SlowPrint("User has gained " + character.exp + " experience points!");
 
-            }
-        }
-
-        public void dropItem(int dropChance)
-        {
-
-
-        }
-
+        // }
+        // }
 
     }
 
@@ -385,16 +880,16 @@ namespace FantasyRPG
                 { "Raging Tempest", 50 }
             };
 
-        // Dictionary that contains weapon name, damage, rarity and weapon type (item drops)
-        Dictionary<string, (int damage, string rarity, string weaponType)> itemDrop = new Dictionary<string, (int, string, string)>()
-            {
-                { "Etherial Froststaff", (50, "Unique", "Staff") },
-                { "Nightfall Rapier", (50, "Unique", "Rapier/Sword") },
-                { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword") }, // OP item drops
-                { "Nightshade Arc", (55, "Unique", "Bow") },
-                { "Aerith's Heirloom", (80, "Legendary", "Staff") },
-                { "Eucladian's Aura", (55, "Legendary", "Aura") } // Should the individual get lucky, then they could potentially get an aura drop, this is only equipabble by knights, pirates, shadowwraths etc.
-            };
+        // Dictionary that contains weapon name, damage, rarity, and weapon type (item drops)
+        Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop = new Dictionary<string, (int, string, string, string)>()
+        {
+            { "Frostfire Fang", (65, "Unique", "Staff", "Forged in the icy flames of the dragon's breath, this fang drips with frostfire, capable of freezing enemies in their tracks.") },
+            { "Serpent's Gaze", (50, "Unique", "Rapier/Sword", "Crafted from the scales of the ancient serpent, this gaze holds the power to petrify foes with a single glance.") },
+            { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword", "Tempered in the chaosfire of the dragon's lair, this greatsword burns with an insatiable hunger for destruction.") },
+            { "Nightshade Arc", (55, "Unique", "Bow", "Fashioned from the sinew of the nocturnal shadows, this bow strikes with deadly accuracy under the cover of darkness.") },
+            { "Aerith's Heirloom", (80, "Legendary", "Staff", "Once wielded by the legendary Aerith, this staff channels the primordial magic of creation itself, capable of reshaping reality.") },
+            { "Eucladian's Aura", (55, "Legendary", "Aura", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.") }
+        };
 
         Dictionary<string, (int damage, string magicType)> specialAtkNames = new Dictionary<string, (int, string)>() // Preset names for all dragon's special attacks
             {
@@ -403,7 +898,7 @@ namespace FantasyRPG
                 { "Rampant Flame Charge", (200, "Fire-Magic") } // Flame type ULT
             };
 
-        public Dragon(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
+        public Dragon(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
         {
             // Default presets for a dragon, inherited from the mob default class
             name = _name;
@@ -479,72 +974,6 @@ namespace FantasyRPG
 
         }
 
-        public void dragonDeath(string name, int mobHealth, int exp, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> currentInventory)
-        {
-            if (mobHealth == 0)
-            {
-                Random itemDropChance = new Random();
-                int dropChance = itemDropChance.Next(0, 10); // 20% drop rate, due to OP item drops
-                smoothPrinting.FastPrint($"\n{name} has successfully killed the dragon!");
-
-                if (dropChance == 0 || dropChance == 1)
-                {
-                    dropItem(dropChance, currentInventory); // Should the random number be zero, then the mob will drop an item
-                }
-
-                exp += 300; // User gains huge exp from defeating the dragon 
-
-            }
-
-        }
-
-        public void dropItem(int dropChance, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> currentInventory)
-        {
-            Random ran = new Random(); // Determine which item will be dropped
-            int item = ran.Next(0, 6); // Generate a value between 0 to 6
-
-            List<(string weaponName, (int damage, int rarity, int weaponType))> droppedWeapon;
-            itemDrop.ToList();
-
-
-            if (item == 0)
-            {
-
-            }
-            else if (item == 1)
-            {
-
-
-            }
-            else if (item == 2)
-            {
-
-
-            }
-            else if (item == 3)
-            {
-
-
-            }
-            else if (item == 4)
-            {
-
-
-
-            }
-            else if (item == 5)
-            {
-
-
-            }
-            else if (item == 6)
-            {
-
-
-            }
-
-
-        }
     }
 
 
@@ -629,353 +1058,12 @@ namespace FantasyRPG
         // exp += 0.3f;
         // }
 
-        // WIll be used to display the Mage Combat System header
-        public void DisplayMageCombatSystemHeader()
-        {
-            smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine("FantasyRPG: Mage Combat System");
-            smoothPrinting.PrintLine("--------------------------------------------------");
-        }
-
-        public void MageSpellAttack(Mage mage, MobDefault mob, bool userTurn, bool enemyTurn, bool quickDisplay) // Will load the Mage Combat System for fighting situations
-        {
-            UIManager UI = new UIManager(); // To display mana + health progress bar
-
-            smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine("FantasyRPG: Mage Combat System - Attack");
-            smoothPrinting.PrintLine("--------------------------------------------------");
-
-            string? userInput; // Register the user input in string format for input validation purposes
-            List<(string magicSpell, int damage, int manaRequirement)> chosenSpellForAttack = new List<(string magicSpell, int damage, int manaRequirement)>(); // Will be used to append the chosen spell to attack, and will be cleared through each iteration
-            int spellCount = 1; // Likewise with the chosen spell, this will also be cleared through each iteration to keep track of number of user spells
-
-            // magicSpecialties.ToList();
-
-            // for (int z = 0; z = magicSpecialties.Length; z++)
-            // {
-            // switch (magicSpecialties[z])
-            //{
-            // case "Fire":
-            // break;
-            // }
-
-            // }
-            smoothPrinting.RapidPrint($"{mage.name} - Mage Status\n");
-            smoothPrinting.RapidPrint($"{mob.name} - Enemy\n");
-
-            // Display users mana and remaining health
-            UI.DisplayProgressBar("Health", currentHealth, maxHealth, 30);
-            Console.WriteLine(); // Spacing
-            UI.DisplayProgressBar("Mana", currentMana, maxMana, 30);
-            Console.WriteLine(); // Spacing
-            UI.DisplayProgressBar("Enemy Health", mob.currentMobHealth, mob.maxMobHealth, 30); // Display mob health
-            Console.WriteLine(); // Spacing
-
-            // Combat methods for the Mage class
-            foreach (var spell in magicSpells) // Display all spells currently avaliable to the Mage
-            {
-                smoothPrinting.RapidPrint($"\n{spellCount}. Spell: {spell.magicSpell} - Damage: {spell.damage}\nMana Requirement: {spell.manaRequirement}\n");
-                spellCount++;
-            }
-
-            // Register user input
-            smoothPrinting.RapidPrint("\nSelect a spell to attack (Enter '0' to return back): ");
-            userInput = Console.ReadLine();
-
-            int registeredInput = Int32.Parse(userInput); // Convert value to integer
-
-            // Check if the user input corresponds to a spell index
-            if (registeredInput > 0 && registeredInput <= magicSpells.Count)
-            {
-                // Get the chosen spell based on the user's input
-                var chosenSpell = magicSpells[registeredInput - 1];
-
-                // Add the chosen spell to the list of spells for attack
-                chosenSpellForAttack.Add((chosenSpell.magicSpell, chosenSpell.damage, chosenSpell.manaRequirement));
-            }
-            else if (registeredInput == 0)
-            {
-                // User wants to return back, handle accordingly
-                smoothPrinting.RapidPrint("\nYou will be redirected back to the Mage Combat System (MCS)");
-                UI.PromptUserToContinue();
-                DisplayMageStatus(mage, mob, quickDisplay = true);
-            }
-            else
-            {
-                // Invalid input, handle accordingly
-                smoothPrinting.RapidPrint("\nInvalid input, please try again.");
-                UI.PromptUserToContinue();
-                MageSpellAttack(mage, mob, userTurn, enemyTurn, quickDisplay);
-            }
-
-            foreach (var spell in chosenSpellForAttack)
-            {
-                if (mage.currentMana >= spell.manaRequirement)
-                {
-                    smoothPrinting.RapidPrint($"\n{mage.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
-                    mob.currentMobHealth -= spell.damage;
-                    mage.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
-                    Console.ReadKey();
-                    Console.Clear();
-                    DisplayMageStatus(mage, mob, quickDisplay = true); // Return after attack (TESTING)
-                }
-                else
-                {
-                    smoothPrinting.RapidPrint("\nYou do not have enough mana to cast this spell.");
-                    Console.ReadKey();
-                    Console.Clear();
-                    MageSpellAttack(mage, mob, userTurn, enemyTurn, quickDisplay = true); // Recurse back to the function, should the user wish to use an alternative spell
-                }
-
-            }
-
-            // smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.\n");
-            // smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the MCS.");
-
-            // Console.ReadKey(); // Register user input
-            // Console.Clear(); // Clear the console to avoid overlapping
-            // DisplayMageStatus(mage, mob); // Return back (still in development)
-
-            // userInput = Convert.ToString(Console.ReadLine());
-
-
-            // Next steps: Create a function that will count the number of spells within the individuals 'mageSpell' list and make a switch case for it.
-
-
-
-            // chosenSpellForAttack.Add(magicSpells.); // Append the chosen spell to another variable
-
-
-        }
-
+  
         // public override void CheckStatus()
         // {
         // base.CheckStatus(cha);
         // }
 
-        public void DisplayMageStatus(Mage mage, MobDefault mob, bool quickDisplay) // Naturally this takes in the mage class and the given mob
-        {
-            bool userTurn, enemyTurn; // These boolean measures are to create the turn based dynamic for the game
-            UIManager UI = new UIManager(); // Engage the UI manager for progress bars
-
-            int? numCount = 1; // Will display the numeric choices for the Mage's options
-            string? userChoice;
-
-            string[] mageChoices = new string[] { "Attack", "Check Inventory", "Check Status", "Attempt Escape (WARNING: Low Chance)" }; // Array displaying the different Mage's options
-
-
-            if (mob.currentMobHealth == 0) // Check everytime if the mob has died
-            {
-                Console.Clear();
-                smoothPrinting.PrintLine("--------------------------------------------------");
-                smoothPrinting.PrintLine($"FantasyRPG: Defeated {mob.name}");
-                smoothPrinting.PrintLine("--------------------------------------------------");
-
-                UI.DisplayProgressBar("Health", mage.currentHealth, mage.maxHealth, 30); // Display Mage's health
-                Console.WriteLine(); // Spacing
-
-                UI.DisplayProgressBar("Mana", currentMana, maxMana, 30); // Display Mage's remaining mana
-                Console.WriteLine(); // Spacing
-
-                UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
-                Console.WriteLine(); // Spacing
-
-                smoothPrinting.RapidPrint($"\n{mob.name} has been defeated by {mage.name}, rewards incoming...");
-                Console.ReadKey(); // Testing
-
-                gameDashboard dash = new gameDashboard();
-                dash.dashboard(mage);
-            }
-            else if (mage.currentHealth == 0) // Should the user die instead
-            {
-                string? userInput;
-
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Red;
-                smoothPrinting.PrintLine("--------------------------------------------------");
-                smoothPrinting.PrintLine($"FantasyRPG: You have died by {mob.name}");
-                smoothPrinting.PrintLine("--------------------------------------------------");
-
-                smoothPrinting.RapidPrint("\nWould you like to go back to the Menu? ('1' for Yes, any other key for No)");
-                userInput = Console.ReadLine();
-
-                switch (userInput)
-                {
-                    case "1":
-                        smoothPrinting.RapidPrint("\nYou will now be redirected back to the Menu...");
-                        userInput = null; // This is case measure to prevent the userInput value from already having a stored value, if the user reaches this point in the game again
-                        GameMenu redirectUserToMenu = new GameMenu();
-                        redirectUserToMenu.gameMenu(); // Redirect user to the game menu, if they enter the value '1'
-                        break;
-                    default:
-                        smoothPrinting.RapidPrint("\nConsole will now terminate, press any key to leave the game");
-                        Console.ReadKey();
-                        break;
-                }
-
-
-            }
-            else
-            {
-                if (quickDisplay == true)
-                {
-                    DisplayMageCombatSystemHeader(); // Display the MCS (Mage Combat System Header)
-
-                    Console.WriteLine($"{mage.name} - Mage Status");
-                    Console.WriteLine($"{mob.name} - Enemy");
-
-                    UI.DisplayProgressBar("Health", mage.currentHealth, mage.maxHealth, 30); // Display Mage's health
-                    Console.WriteLine(); // Spacing
-
-                    UI.DisplayProgressBar("Mana", currentMana, maxMana, 30); // Display Mage's remaining mana
-                    Console.WriteLine(); // Spacing
-                    UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
-                    Console.WriteLine(); // Spacing
-                    Console.WriteLine($"\nRemaining Healing Potions: {numOfPotionsInInventory}\n"); // Display Mage's remaining potions
-
-
-                    if (mage.currentHealth <= 30) // Check if users health is low
-                    {
-                        smoothPrinting.RapidPrint("WARINING: Your health is critically low, consider using a health potion or a recovery spell.");
-                        Console.WriteLine(); // Spacing
-                    }
-
-                    if (mage.currentMana <= 30) // Check if users mana levels are low
-                    {
-                        smoothPrinting.RapidPrint("Warning: Your mana is critically low. Consider using a mana potion or a recovery spell to replenish your mana reserves.");
-                        Console.WriteLine(); // Spacing
-                    }
-
-                    foreach (var choice in mageChoices)
-                    {
-                        Console.WriteLine($"\n{numCount}. {choice}");
-                        numCount++; // Increment the value to display the other remaining choices
-                    }
-
-                    Console.WriteLine("\nEnter a corresponding value: ");
-                    userChoice = Convert.ToString(Console.ReadLine()); // Register Mage's choice
-
-                    switch (userChoice)
-                    {
-                        case "1":
-                            Console.Clear(); // Clear the console, to avoid overlapping
-                            MageSpellAttack(mage, mob, userTurn = true, enemyTurn = false, quickDisplay);
-                            break;
-                        case "2":
-                            CheckInventory();
-                            smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
-                            Console.ReadKey(); // Register user's input
-                            Console.Clear(); // Clear the console to prevent confusion
-                            DisplayMageStatus(mage, mob, quickDisplay = true); // Recurse back to the original function
-                            break;
-                        case "3":
-                            Console.Clear();
-                            CheckStatus(mage); // Allow user to check their status (FUTURE REFERENCE: ALLOW FOR STATUS TO BE USED DURING COMBAT AND OUTSIDE OF COMBAT)
-                            break;
-                        case "4":
-                            // Generate a random value
-                            // Random ran = new Random(); 
-                            // ran.Next(0, 50);
-                            // For this stage, if the user gets a value such as (i.e. 1, 10, 12, 15) they will luckily escape, otherwise they'll be locked into combat and cannot attempt escape again.
-                            // Should they escape, they'll return to the Forest Of Mysteries
-                            smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.\n");
-                            smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
-                            Console.ReadKey();
-                            Console.Clear();
-                            DisplayMageStatus(mage, mob, quickDisplay = true); // Recurse back
-                            break;
-                        default:
-                            smoothPrinting.RapidPrint("\nInvalid input, click any key to try again!");
-                            Console.ReadKey();
-                            Console.Clear(); // Clear the console after letting user read the error message
-                            DisplayMageStatus(mage, mob, quickDisplay = true); // Recurse back
-                            break;
-                    }
-
-                }
-                else
-                {
-                    DisplayMageCombatSystemHeader(); // Display the MCS (Mage Combat System Header)
-
-                    smoothPrinting.RapidPrint($"{mage.name} - Mage Status\n");
-                    smoothPrinting.RapidPrint($"{mob.name} - Enemy\n");
-
-                    UI.DisplayProgressBar("Health", mage.currentHealth, mage.maxHealth, 30); // Display Mage's health
-                    Console.WriteLine(); // Spacing
-
-                    UI.DisplayProgressBar("Mana", currentMana, maxMana, 30); // Display Mage's remaining mana
-                    Console.WriteLine(); // Spacing
-
-                    UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
-                    Console.WriteLine(); // Spacing
-
-                    smoothPrinting.RapidPrint($"\nRemaining Healing Potions: {numOfPotionsInInventory}\n"); // Display Mage's remaining potions
-
-                    if (mage.currentHealth <= 30) // Check if users health is low
-                    {
-                        smoothPrinting.RapidPrint("WARINING: Your health is critically low, consider using a health potion or a recovery spell.");
-                        Console.WriteLine(); // Spacing
-                    }
-
-                    if (mage.currentMana <= 30) // Check if users mana levels are low
-                    {
-                        smoothPrinting.RapidPrint("Warning: Your mana is critically low. Consider using a mana potion or a recovery spell to replenish your mana reserves.");
-                        Console.WriteLine(); // Spacing
-                    }
-
-                    foreach (var choice in mageChoices)
-                    {
-                        smoothPrinting.RapidPrint($"\n{numCount}. {choice}\n");
-                        numCount++; // Increment the value to display the other remaining choices
-                    }
-
-                    smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
-                    userChoice = Convert.ToString(Console.ReadLine()); // Register Mage's choice
-
-                    switch (userChoice)
-                    {
-                        case "1":
-                            Console.Clear(); // Clear the console, to avoid overlapping
-                            MageSpellAttack(mage, mob, userTurn = true, enemyTurn = false, quickDisplay);
-                            break;
-                        case "2":
-                            CheckInventory();
-                            smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
-                            Console.ReadKey(); // Register user's input
-                            Console.Clear(); // Clear the console to prevent confusion
-                            DisplayMageStatus(mage, mob, quickDisplay = true); // Recurse back to the original function
-                            break;
-                        case "3":
-                            Console.Clear();
-                            CheckStatus(mage); // Allow user to check their status (FUTURE REFERENCE: ALLOW FOR STATUS TO BE USED DURING COMBAT AND OUTSIDE OF COMBAT)
-                            break;
-                        case "4":
-                            // Generate a random value
-                            // Random ran = new Random(); 
-                            // ran.Next(0, 50);
-                            // For this stage, if the user gets a value such as (i.e. 1, 10, 12, 15) they will luckily escape, otherwise they'll be locked into combat and cannot attempt escape again.
-                            // Should they escape, they'll return to the Forest Of Mysteries
-                            smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.\n");
-                            smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
-                            Console.ReadKey();
-                            Console.Clear();
-                            DisplayMageStatus(mage, mob, quickDisplay = true); // Recurse back
-                            break;
-                        default:
-                            smoothPrinting.RapidPrint("\nInvalid input, click any key to try again!");
-                            Console.ReadKey();
-                            Console.Clear(); // Clear the console after letting user read the error message
-                            DisplayMageStatus(mage, mob, quickDisplay = true); // Recurse back
-                            break;
-                    }
-
-                }
-                
-
-            }
-
-
-        }
 
         public void MageTraining() // Might remove.
         {
@@ -1410,9 +1498,9 @@ namespace FantasyRPG
             int arcaniaGoldCoins = 100000;
 
             List<(string, int, int)> magicSpells = new List<(string, int, int)> {
-                ("Eucladian-Eye", 130, 30),
-                ("Developer's Wrath", 300, 70),
-                ("Cyclone Strike", 50, 30)
+                ("Eucladian-Eye", 200, 5),
+                ("Developer's Wrath", 300, 5),
+                ("Cyclone Strike", 50, 5)
              };
 
             List<(string itemName, string itemDescription, string itemRarity, int itemPower)> currentInventory = new List<(string, string, string, int)>
@@ -2606,9 +2694,10 @@ namespace FantasyRPG
             switch (firstSelection)
             {
                 case "1":
+                    // Check the users class, that way the correct combat system is initated for the battle
                     if (character is Mage)
                     {
-                        MageConfrontation((Mage)character);
+                        DragonConfrontation((Mage)character);
                     }
                     else if (character is SomaliPirate)
                     {
@@ -2632,7 +2721,7 @@ namespace FantasyRPG
             }
         }
 
-        private void MageConfrontation(Mage mage)
+        void DragonConfrontation(CharacterDefault character)
         {
             SmoothConsole smoothPrinting = new SmoothConsole();
             Console.Clear();
@@ -2641,7 +2730,7 @@ namespace FantasyRPG
             smoothPrinting.PrintLine("--------------------------------------------------");
 
             // Mage challenges the dragon
-            smoothPrinting.RapidPrint($"\n{mage.name}: \"Stop flying away, and face me at once!\"\n");
+            smoothPrinting.RapidPrint($"\n{character.name}: \"Stop flying away, and face me at once!\"\n");
 
             // The dragon responds with hostility
             smoothPrinting.RapidPrint("\nDragon: \"This mere mortal dares speak to me in such manner? So be it, you shall now face my wrath!\"\n");
@@ -2654,13 +2743,13 @@ namespace FantasyRPG
             smoothPrinting.RapidPrint("\nDragon: \"Mortal, you know not the gravity of your words. I am Windsom, the Guardian of these forests, and you have trespassed into my domain.\"\n");
 
             // {mage.name} expresses surprise at the dragon's name
-            smoothPrinting.RapidPrint($"\n{mage.name}: \"Windsom? Never heard that name before.\"\n");
+            smoothPrinting.RapidPrint($"\n{character.name}: \"Windsom? Never heard that name before.\"\n");
 
             // The character ponders whether the dragon knows about their summoning
             smoothPrinting.RapidPrint("\nMC's Thoughts: \"Perhaps he knows about why I've been summoned to this world...\"\n");
 
             // {mage.name} directly asks the dragon about their summoning
-            smoothPrinting.RapidPrint($"\n{mage.name}: \"Do you know why I've been summoned to this world?\"\n");
+            smoothPrinting.RapidPrint($"\n{character.name}: \"Do you know why I've been summoned to this world?\"\n");
 
             // The dragon responds cryptically, challenging the character to prove their worth
             smoothPrinting.RapidPrint("\nWindsom (The Guardian Dragon): \"Ah, the mysteries of summonings. Perhaps I do, perhaps I don't. But why should I reveal such knowledge to a mere mortal like you? Prove your worth, Mage. Defeat me in battle, and perhaps then, I shall consider sharing what I know.\"\n");
@@ -2696,15 +2785,15 @@ namespace FantasyRPG
 
 
 
-            // Dictionary that contains weapon name, damage, rarity and weapon type (item drops)
-            Dictionary<string, (int, string, string)> itemDrop = new Dictionary<string, (int, string, string)>()
+            // Dictionary that contains weapon name, damage, rarity, and weapon type (item drops)
+            Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop = new Dictionary<string, (int, string, string, string)>()
             {
-                { "Etherial Froststaff", (50, "Unique", "Staff") },
-                { "Nightfall Rapier", (50, "Unique", "Rapier/Sword") },
-                { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword") }, // OP item drops
-                { "Nightshade Arc", (55, "Unique", "Bow") },
-                { "Aerith's Heirloom", (80, "Legendary", "Staff") },
-                { "Eucladian's Aura", (55, "Legendary", "Aura") } // Should the individual get lucky, then they could potentially get an aura drop, this is only equipabble by knights, pirates, shadowwraths etc.
+                { "Frostfire Fang", (65, "Unique", "Staff", "Forged in the icy flames of the dragon's breath, this fang drips with frostfire, capable of freezing enemies in their tracks.") },
+                { "Serpent's Gaze", (50, "Unique", "Rapier/Sword", "Crafted from the scales of the ancient serpent, this gaze holds the power to petrify foes with a single glance.") },
+                { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword", "Tempered in the chaosfire of the dragon's lair, this greatsword burns with an insatiable hunger for destruction.") },
+                { "Nightshade Arc", (55, "Unique", "Bow", "Fashioned from the sinew of the nocturnal shadows, this bow strikes with deadly accuracy under the cover of darkness.") },
+                { "Aerith's Heirloom", (80, "Legendary", "Staff", "Once wielded by the legendary Aerith, this staff channels the primordial magic of creation itself, capable of reshaping reality.") },
+                { "Eucladian's Aura", (55, "Legendary", "Aura", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.") }
             };
 
 
@@ -2713,11 +2802,11 @@ namespace FantasyRPG
             Dragon windsom = new Dragon(dragonName, normalAtkNames, specialAtkNames, specialAtkRecharge, currentMobHealth, maxMobHealth, itemDrop);
 
             // Exert pressure based on mage's level
-            windsom.exertPressure(mage, windsom); // Pass mage and dragon class with relevant attributes and methods here
+            windsom.exertPressure(character, windsom); // Pass mage and dragon class with relevant attributes and methods here
             bool quickDisplay = false;
 
             // Engage the combat system
-            mage.DisplayMageStatus(mage, windsom, quickDisplay);
+            character.CombatSystem(character, windsom, quickDisplay);
         }
 
         private void SomaliPirateConfrontation(SomaliPirate pirate)
@@ -2902,7 +2991,8 @@ namespace FantasyRPG
             smoothPrinting.RapidPrint("\n4. Shop (N/A)\n");
             smoothPrinting.RapidPrint("\n5. NPC's Encountered (N/A)\n");
             smoothPrinting.RapidPrint("\n6. Character Status (N/A)\n");
-            smoothPrinting.RapidPrint("\n7. Continents (N/A)\n");
+            smoothPrinting.RapidPrint("\n7. Check Inventory\n");
+            smoothPrinting.RapidPrint("\n8. Continents (N/A)\n");
             smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
 
             userInput = Console.ReadLine(); // Register user input
@@ -2965,6 +3055,11 @@ namespace FantasyRPG
                     // Handle character status
                     break;
                 case "7":
+                    character.CheckInventory();
+                    UI.PromptReturnToDashboard();
+                    dashboard(character);
+                    break;
+                case "8":
                     // Future reference: Create a dictionary, and will unlock in an instance that the continent has been explore (i.e. with a Boolean function)
                     Console.Clear();
                     smoothPrinting.PrintLine("--------------------------------------------------");
@@ -3056,8 +3151,11 @@ namespace FantasyRPG
 public class UIManager // UIManager - a class that will allow for the display of progress bars, prompts etc.
 {
     SmoothConsole smoothPrinting = new SmoothConsole(); // Engage the smoothconsole class
-    public void DisplayProgressBar(string title, float currentValue, int maxValue, int barLength)
+    public void DisplayProgressBar(string title, float currentValue, float maxValue, float barLength)
     {
+        // Ensure currentValue does not exceed maxValue
+        currentValue = Math.Min(currentValue, maxValue);
+
         // Calculate the percentage
         double percentage = currentValue / maxValue;
 
@@ -3065,11 +3163,12 @@ public class UIManager // UIManager - a class that will allow for the display of
         int filledLength = (int)Math.Round(percentage * barLength);
 
         // Generate the progress bar
-        string progressBar = new string('█', filledLength) + new string(' ', barLength - filledLength);
+        string progressBar = new string('█', filledLength) + new string(' ', (int)barLength - filledLength);
 
         // Output the progress bar
         smoothPrinting.RapidPrint($"\n{title}: [{progressBar}] [{currentValue}/{maxValue}]");
     }
+
 
 
     public void PromptUserToContinue()
