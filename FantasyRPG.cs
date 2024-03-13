@@ -207,10 +207,14 @@ namespace FantasyRPG
 
                         UI.DisplayProgressBar("Mana", character.currentMana, character.maxMana, 30); // Display Mage's remaining mana
                         Console.WriteLine(); // Spacing
+
                         UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
                         Console.WriteLine(); // Spacing
-                        Console.WriteLine($"\nRemaining Healing Potions: {numOfPotionsInInventory}\n"); // Display Mage's remaining potions
 
+                        UI.DisplayProgressBar("Enemy ULT (%):", mob.specialAtkRecharge, 100, 30); // Display enemies special attack recharge
+                        Console.WriteLine(); // Spacing
+
+                        Console.WriteLine($"\nRemaining Healing Potions: {numOfPotionsInInventory}"); // Display Mage's remaining potions
 
                         if (character.currentHealth <= 30) // Check if users health is low
                         {
@@ -285,6 +289,9 @@ namespace FantasyRPG
                         Console.WriteLine(); // Spacing
 
                         UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
+                        Console.WriteLine(); // Spacing
+
+                        UI.DisplayProgressBar("Enemy ULT (%):", mob.specialAtkRecharge, 100, 30); // Display enemies special attack recharge
                         Console.WriteLine(); // Spacing
 
                         smoothPrinting.RapidPrint($"\nRemaining Healing Potions: {numOfPotionsInInventory}\n"); // Display Mage's remaining potions
@@ -378,10 +385,8 @@ namespace FantasyRPG
                 smoothPrinting.RapidPrint($"{character.name} - Mage Status\n");
                 smoothPrinting.RapidPrint($"{mob.name} - Enemy\n");
 
-                // Display users mana and remaining health
-                UI.DisplayProgressBar("Health", currentHealth, maxHealth, 30);
                 Console.WriteLine(); // Spacing
-                UI.DisplayProgressBar("Mana", currentMana, maxMana, 30);
+                UI.DisplayProgressBar($"{character.name}'s Mana", currentMana, maxMana, 30);
                 Console.WriteLine(); // Spacing
                 UI.DisplayProgressBar("Enemy Health", mob.currentMobHealth, mob.maxMobHealth, 30); // Display mob health
                 Console.WriteLine(); // Spacing
@@ -427,6 +432,7 @@ namespace FantasyRPG
                 {
                     if (character.currentMana >= spell.manaRequirement)
                     {
+                        // Check for this condition first
                         if (mob.currentMobHealth < spell.damage) // Check if the spell damage is more than the enemies health (in that case, set the enemies health to zero, to avoid game crash)
                         {
                             smoothPrinting.RapidPrint($"\n{character.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
@@ -434,18 +440,22 @@ namespace FantasyRPG
                             character.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
                             Console.ReadKey();
                             Console.Clear();
-                            enemyTurn = true; // Turn this true as the users turn has been used
-                            mob.mobAttack(mob, character, enemyTurn); // Enemies turn to attack
+                            DisplayMageStatus(character, mob, quickDisplay = true); // Return after final blow
                         }
+                        // Otherwise...
                         else
-                        {
+                        { 
                             smoothPrinting.RapidPrint($"\n{character.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
                             mob.currentMobHealth -= spell.damage;
                             character.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
                             Console.ReadKey();
                             Console.Clear();
-                            DisplayMageStatus(character, mob, quickDisplay = true); // Return after attack (TESTING)
+                            enemyTurn = true; // Turn this true as the users turn has been used
+                            mob.mobAttack(mob, character, enemyTurn); // Enemies turn to attack
                         }
+
+
+
                     }
                     else
                     {
@@ -704,19 +714,20 @@ namespace FantasyRPG
                 else if (mob.specialAtkRecharge == 100)
                 {
                     Random ran = new Random();
-                    int randomSpecialAttack = ran.Next(0, normalAtkNames.Count()); // Dynamic selection for the mob attacks
+                    int randomSpecialAttack = ran.Next(0, specialAtkNames.Count()); // Dynamic selection for the mob attacks
 
-                    normalAtkNames.ToList(); // Convert the attacks to a list
+                    specialAtkNames.ToList(); // Convert the attacks to a list
 
-                    // var normalAttacks = normalAtkNames.ElementAtOrDefault(randomAttack); // Select the attack based on random index
-
-                    // foreach (var attack in normalAttacks)
-                    // {
-                    // smoothPrinting.RapidPrint($"{mob.name} has used {attack.attackName[randomAttack]} dealing {attack.attackDamage}");
-                    // character.currentHealth -= attack.attackDamage; // Linearly reduce health according to the damage given
-                    // }
-
-
+                    foreach (var chosenSpecialAtk in mob.specialAtkNames)
+                    {
+                        smoothPrinting.RapidPrint($"\n{mob.name} has used {chosenSpecialAtk.Key} deaing {chosenSpecialAtk.Value.damage} damage.");
+                        character.currentHealth -= chosenSpecialAtk.Value.damage; // Linearly reduce users health based on the damage done
+                        specialAtkRecharge = 0; // Reset the special attack recharge counter, once used
+                        enemyTurn = false; // Enemy turn has been used, so reset this case
+                        Console.WriteLine(); // Spacing
+                        UI.PromptUserToContinue(); // Prompt the user to continue
+                        character.CombatSystem(character, mob, quickDisplay); // Return to the combat system, after the damage has been dealt by the enemy
+                    }
                 }
                 else
                 {
@@ -2723,7 +2734,7 @@ namespace FantasyRPG
                     }
                     else if (character is SomaliPirate)
                     {
-                        SomaliPirateConfrontation((SomaliPirate)character);
+                        DragonConfrontation((SomaliPirate)character);
                     }
                     break;
                 case "2":
@@ -2807,8 +2818,6 @@ namespace FantasyRPG
                 { "Rampant Flame Charge", (200, "Fire-Magic") }
             };
 
-
-
             // Dictionary that contains weapon name, damage, rarity, and weapon type (item drops)
             Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop = new Dictionary<string, (int, string, string, string)>()
             {
@@ -2821,7 +2830,6 @@ namespace FantasyRPG
             };
 
 
-
             // Create a new instance of the dragon for combat
             Dragon windsom = new Dragon(dragonName, normalAtkNames, specialAtkNames, specialAtkRecharge, currentMobHealth, maxMobHealth, itemDrop);
 
@@ -2831,11 +2839,6 @@ namespace FantasyRPG
 
             // Engage the combat system
             character.CombatSystem(character, windsom, quickDisplay);
-        }
-
-        private void SomaliPirateConfrontation(SomaliPirate pirate)
-        {
-            // Handle confrontation logic for Somali Pirate
         }
 
     }
