@@ -434,7 +434,9 @@ namespace FantasyRPG
                             character.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
                             Console.ReadKey();
                             Console.Clear();
-                            DisplayMageStatus(character, mob, quickDisplay = true); // Return after attack
+                            enemyTurn = true;
+                            mob.mobAttack(mob, character, enemyTurn); // Enemies turn to attack
+                            // DisplayMageStatus(character, mob, quickDisplay = true); // Return after attack
                         }
                         else
                         {
@@ -570,7 +572,7 @@ namespace FantasyRPG
 
         }
 
-        // Should the condiition be met
+        // Should the condition be met
         public void LevelUp(CharacterDefault character)
         {
             if (character is Mage)
@@ -636,10 +638,10 @@ namespace FantasyRPG
 
         // Mobs can have different attack names and varying item drops, each associated with a rarity and damage value
         public Dictionary<string, (int, string, string, string)> itemDrop; // First string defines the weapon name, second integer defines the weapon damage, thirs stirng defines the weapon rarity and fourth string defines the weapon type
-        public Dictionary<string, int> normalAtkNames;
-        public Dictionary<string, (int, string)> specialAtkNames;
+        public Dictionary<string, (int damage, string magicType)> normalAtkNames;
+        public Dictionary<string, (int damage, string magicType)> specialAtkNames;
 
-        public MobDefault(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
+        public MobDefault(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string attackName)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
         {
             name = _name;
             normalAtkNames = _normalAtkNames;
@@ -660,32 +662,51 @@ namespace FantasyRPG
             Console.WriteLine(); // Double spacing to avoid overlapping
         }
 
-        // Mob attack
-        public void mobAttack(MobDefault mob, CharacterDefault character, bool enemyTurn, Dictionary<string, int> normalAtkNames, Dictionary<string, int> specialAtkNames)
+        public void mobAttackHeader(MobDefault mob)
         {
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine($"FantasyRPG: {mob.name}'s Attack");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+        }
 
-            normalAtkNames.ToList();
-            specialAtkNames.ToList();
+        // Mob attack
+        public void mobAttack(MobDefault mob, CharacterDefault character, bool enemyTurn)
+        {
+            bool quickDisplay = true;
+            mob.normalAtkNames.ToList();
+            mob.specialAtkNames.ToList();
 
+            mobAttackHeader(mob); // Display the header, to let the user know that it's the mob's turn to attack
 
+            // Display users status
+            Console.WriteLine($"{character.name} - Mage Status");
+            Console.WriteLine($"{mob.name} - Enemy");
+
+            UI.DisplayProgressBar("Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
+            Console.WriteLine(); // Spacing
+
+            UI.DisplayProgressBar("Mana", character.currentMana, character.maxMana, 30); // Display Mage's remaining mana
+            Console.WriteLine(); // Spacing
+
+            displayMobStatus(mob); // Display the mob's status as well
             if (enemyTurn)
             {
-                if (mob.specialAtkRecharge == 100)
+                if (mob.specialAtkRecharge != 100)
                 {
                     Random ran = new Random();
                     int randomNormalAttack = ran.Next(0, normalAtkNames.Count()); // Dynamic selection for the mob attacks
 
-                    foreach (var chosenSpecialAtk in specialAtkNames)
+                    foreach (var chosenNormalAtk in mob.normalAtkNames)
                     {
                         // Allow mob to use their special attack
-                        smoothPrinting.RapidPrint($"\n{mob.name} has used {chosenSpecialAtk.Key} dealing {chosenSpecialAtk.Value}");
-                        character.currentHealth -= chosenSpecialAtk.Value; // Linearly reduce users health based on the damage done
-                        //
+                        smoothPrinting.RapidPrint($"\n{mob.name} has used {chosenNormalAtk.Key} dealing {chosenNormalAtk.Value}");
+                        character.currentHealth -= chosenNormalAtk.Value.damage; // Linearly reduce users health based on the damage done
+                        enemyTurn = false; // Enemy turn has been used, so reset this case
+                        UI.PromptUserToContinue(); // Prompt the user to continue
+                        character.CombatSystem(character, mob, quickDisplay); // Return to the combat system, after the damage has been dealt by the enemy
                     }
-
-
                 }
-                else
+                else if (mob.specialAtkRecharge == 100)
                 {
                     Random ran = new Random();
                     int randomSpecialAttack = ran.Next(0, normalAtkNames.Count()); // Dynamic selection for the mob attacks
@@ -701,6 +722,11 @@ namespace FantasyRPG
                     // }
 
 
+                }
+                else
+                {
+                    smoothPrinting.RapidPrint("\nError with mob, please check the code and ensure that there's a fix made immediately!");
+                    Console.ReadKey();
                 }
 
             }
@@ -829,18 +855,18 @@ namespace FantasyRPG
         }
 
 
-        public void crawlerNormalAtk(int health)
-        {
-            Random rd = new Random();
-            List<string> attackNames = normalAtkNames.Keys.ToList(); // Get all attack names
+        // public void crawlerNormalAtk(int health)
+        // {
+           //  Random rd = new Random();
+            // List<string> attackNames = normalAtkNames.Keys.ToList(); // Get all attack names
 
-            int randomIndex = rd.Next(0, attackNames.Count); // Generate a random index
+            // int randomIndex = rd.Next(0, attackNames.Count); // Generate a random index
 
-            string randomAttackName = attackNames[randomIndex]; // Get a random attack name
-            int damage = normalAtkNames[randomAttackName]; // Get the damage associated with the attack
+            // string randomAttackName = attackNames[randomIndex]; // Get a random attack name
+            // int damage = normalAtkNames[randomAttackName]; // Get the damage associated with the attack
 
-            smoothPrinting.FastPrint("Crawler has used " + randomAttackName + " dealing " + damage + " damage.\n");
-        }
+            // smoothPrinting.FastPrint("Crawler has used " + randomAttackName + " dealing " + damage + " damage.\n");
+        // }
 
 
         // public void crawlerDeath(CharacterDefault character, MobDefault mob) // If the crawler dies, then the user gains exp and has a chance of receiving an item drop
@@ -905,6 +931,7 @@ namespace FantasyRPG
             maxMobHealth = _maxMobHealth;
             normalAtkNames = _normalAtkNames;
             specialAtkNames = _specialAtkNames;
+            specialAtkRecharge = 0; // Preset
             itemDrop = _itemDrop;
             UIManager UI = new UIManager();
         }
