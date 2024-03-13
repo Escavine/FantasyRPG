@@ -125,12 +125,12 @@ namespace FantasyRPG
                     }
                     break;
                 default:
-                    smoothPrinting.RapidPrint("You will now be redirected back to the dashboard.");
-                    smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
+                    smoothPrinting.RapidPrint("\nYou will now return to the dashboard.");
                     Console.ReadKey(); // Register user input
                     Console.Clear(); // Clear the console to avoid overlapping
                     gameDashboard dash = new gameDashboard();
-                    dash.dashboard(character); // Return to the user dashboard
+                    dash.dashboard(character);
+
                     break;
             }
         }
@@ -155,7 +155,7 @@ namespace FantasyRPG
                 int? numCount = 1; // Will display the numeric choices for the Mage's options
                 string? userChoice;
 
-                string[] mageChoices = new string[] { "Attack", "Check Inventory", "Check Status", "Attempt Escape (WARNING: Low Chance)" }; // Array displaying the different Mage's options
+                string[] mageChoices = new string[] { "Attack", "Check Inventory", "Attempt Escape (WARNING: Low Chance)" }; // Array displaying the different Mage's options
 
 
                 if (mob.currentMobHealth == 0) // Check everytime if the mob has died
@@ -166,31 +166,6 @@ namespace FantasyRPG
                 }
                 else if (character.currentHealth == 0) // Should the user die instead
                 {
-                    string? userInput;
-
-                    Console.Clear();
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    smoothPrinting.PrintLine("--------------------------------------------------");
-                    smoothPrinting.PrintLine($"FantasyRPG: You have died by {mob.name}");
-                    smoothPrinting.PrintLine("--------------------------------------------------");
-
-                    smoothPrinting.RapidPrint("\nWould you like to go back to the Menu? ('1' for Yes, any other key for No)");
-                    userInput = Console.ReadLine();
-
-                    switch (userInput)
-                    {
-                        case "1":
-                            smoothPrinting.RapidPrint("\nYou will now be redirected back to the Menu...");
-                            userInput = null; // This is case measure to prevent the userInput value from already having a stored value, if the user reaches this point in the game again
-                            GameMenu redirectUserToMenu = new GameMenu();
-                            redirectUserToMenu.gameMenu(); // Redirect user to the game menu, if they enter the value '1'
-                            break;
-                        default:
-                            smoothPrinting.RapidPrint("\nConsole will now terminate, press any key to leave the game");
-                            Console.ReadKey();
-                            break;
-                    }
-
 
                 }
                 else
@@ -202,29 +177,29 @@ namespace FantasyRPG
                         Console.WriteLine($"{character.name} - Mage Status");
                         Console.WriteLine($"{mob.name} - Enemy");
 
-                        UI.DisplayProgressBar("Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
+                        UI.DisplayProgressBar($"{character.name}'s Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
                         Console.WriteLine(); // Spacing
 
-                        UI.DisplayProgressBar("Mana", character.currentMana, character.maxMana, 30); // Display Mage's remaining mana
+                        UI.DisplayProgressBar($"{character.name}'s Mana", character.currentMana, character.maxMana, 30); // Display Mage's remaining mana
                         Console.WriteLine(); // Spacing
 
-                        UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
+                        UI.DisplayProgressBar($"{mob.name}'s Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
                         Console.WriteLine(); // Spacing
 
-                        UI.DisplayProgressBar("Enemy ULT (%):", mob.specialAtkRecharge, 100, 30); // Display enemies special attack recharge
+                        UI.DisplayProgressBar($"{mob.name} ULT (%):", mob.specialAtkRecharge, 100, 30); // Display enemies special attack recharge
                         Console.WriteLine(); // Spacing
 
                         Console.WriteLine($"\nRemaining Healing Potions: {numOfPotionsInInventory}"); // Display Mage's remaining potions
 
                         if (character.currentHealth <= 30) // Check if users health is low
                         {
-                            smoothPrinting.RapidPrint("WARINING: Your health is critically low, consider using a health potion or a recovery spell.");
+                            smoothPrinting.RapidPrint("\nWarning: Your health is critically low, consider using a health potion or a recovery spell.");
                             Console.WriteLine(); // Spacing
                         }
 
                         if (character.currentMana <= 30) // Check if users mana levels are low
                         {
-                            smoothPrinting.RapidPrint("Warning: Your mana is critically low. Consider using a mana potion or a recovery spell to replenish your mana reserves.");
+                            smoothPrinting.RapidPrint("\nWarning: Your mana is critically low. Consider using a mana potion or a recovery spell to replenish your mana reserves.");
                             Console.WriteLine(); // Spacing
                         }
 
@@ -251,20 +226,30 @@ namespace FantasyRPG
                                 DisplayMageStatus(character, mob, quickDisplay = true); // Recurse back to the original function
                                 break;
                             case "3":
-                                Console.Clear();
-                                CheckStatus(character); // Allow user to check their status (FUTURE REFERENCE: ALLOW FOR STATUS TO BE USED DURING COMBAT AND OUTSIDE OF COMBAT)
-                                break;
-                            case "4":
                                 // Generate a random value
-                                // Random ran = new Random(); 
-                                // ran.Next(0, 50);
+                                Random ran = new Random(); 
+                                int generatedValue = ran.Next(0, 1); // Testing, will be readjusted
                                 // For this stage, if the user gets a value such as (i.e. 1, 10, 12, 15) they will luckily escape, otherwise they'll be locked into combat and cannot attempt escape again.
-                                // Should they escape, they'll return to the Forest Of Mysteries
-                                smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.\n");
-                                smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
-                                Console.ReadKey();
-                                Console.Clear();
-                                DisplayMageStatus(character, mob, quickDisplay = true); // Recurse back
+
+
+                                // Should the generated value be between the following ranges, then the user will escape
+                                if (generatedValue == 0 || generatedValue == 1)
+                                {
+                                    smoothPrinting.RapidPrint($"\nYou have successfully escaped the grasp of {mob.name}.");
+                                    ForestOfMysteries returnToForest = new ForestOfMysteries();
+
+                                    // Future reference: change this to return to wherever the user was intially, (i.e. if they were in the infinite dungeon, then return them to the dashboard)
+                                    returnToForest.forestOfMysteries(character); // Return to the forest, should the user be lucky
+                                }
+                                // Otherwise...
+                                else
+                                {
+                                    enemyTurn = true; // Should the user fail to escape, then the mob will attack the user out of their foolishness
+                                    smoothPrinting.RapidPrint("\nYou have failed to escape!");
+                                    Console.ReadKey();
+                                    Console.Clear(); // Clear the console
+                                    mob.mobAttack(mob, character, enemyTurn); // Mob initates attack
+                                }
                                 break;
                             default:
                                 smoothPrinting.RapidPrint("\nInvalid input, click any key to try again!");
@@ -282,16 +267,16 @@ namespace FantasyRPG
                         smoothPrinting.RapidPrint($"{character.name} - Mage Status\n");
                         smoothPrinting.RapidPrint($"{mob.name} - Enemy\n");
 
-                        UI.DisplayProgressBar("Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
+                        UI.DisplayProgressBar($"{character.name}'s Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
                         Console.WriteLine(); // Spacing
 
-                        UI.DisplayProgressBar("Mana", currentMana, maxMana, 30); // Display Mage's remaining mana
+                        UI.DisplayProgressBar($"{character.name}'s Mana", character.currentMana, character.maxMana, 30); // Display Mage's remaining mana
                         Console.WriteLine(); // Spacing
 
-                        UI.DisplayProgressBar("Enemy Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
+                        UI.DisplayProgressBar($"{mob.name}'s Health:", mob.currentMobHealth, mob.maxMobHealth, 30); // Display enemies health
                         Console.WriteLine(); // Spacing
 
-                        UI.DisplayProgressBar("Enemy ULT (%):", mob.specialAtkRecharge, 100, 30); // Display enemies special attack recharge
+                        UI.DisplayProgressBar($"{mob.name}'s ULT (%):", mob.specialAtkRecharge, 100, 30); // Display enemies special attack recharge
                         Console.WriteLine(); // Spacing
 
                         smoothPrinting.RapidPrint($"\nRemaining Healing Potions: {numOfPotionsInInventory}\n"); // Display Mage's remaining potions
@@ -331,20 +316,33 @@ namespace FantasyRPG
                                 DisplayMageStatus(character, mob, quickDisplay = true); // Recurse back to the original function
                                 break;
                             case "3":
-                                Console.Clear();
-                                CheckStatus(character); // Allow user to check their status (FUTURE REFERENCE: ALLOW FOR STATUS TO BE USED DURING COMBAT AND OUTSIDE OF COMBAT)
-                                break;
-                            case "4":
                                 // Generate a random value
-                                // Random ran = new Random(); 
-                                // ran.Next(0, 50);
+                                Random ran = new Random();
+                                int generatedValue = ran.Next(0, 1); // Testing, will be readjusted
                                 // For this stage, if the user gets a value such as (i.e. 1, 10, 12, 15) they will luckily escape, otherwise they'll be locked into combat and cannot attempt escape again.
-                                // Should they escape, they'll return to the Forest Of Mysteries
-                                smoothPrinting.RapidPrint("\nThis feature is currently in development, so you'll be redirected back to the M.C.S (Mage Combat System) Menu.\n");
-                                smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
-                                Console.ReadKey();
-                                Console.Clear();
-                                DisplayMageStatus(character, mob, quickDisplay = true); // Recurse back
+
+
+                                // Should the generated value be between the following ranges, then the user will escape
+                                if (generatedValue == 0 || generatedValue == 1)
+                                {
+                                    smoothPrinting.RapidPrint($"\nYou have successfully escaped the grasp of {mob.name}.");
+                                    Console.ReadKey(); // Read user input
+                                    Console.Clear(); // Clear the console
+
+                                    ForestOfMysteries returnToForest = new ForestOfMysteries();
+
+                                    // Future reference: change this to return to wherever the user was intially, (i.e. if they were in the infinite dungeon, then return them to the dashboard)
+                                    returnToForest.forestOfMysteries(character); // Return to the forest, should the user be lucky
+                                }
+                                // Otherwise...
+                                else
+                                {
+                                    enemyTurn = true; // Should the user fail to escape, then the mob will attack the user out of their foolishness
+                                    smoothPrinting.RapidPrint("\nYou have failed to escape!");
+                                    Console.ReadKey();
+                                    Console.Clear(); // Clear the console
+                                    mob.mobAttack(mob, character, enemyTurn); // Mob initates attack
+                                }
                                 break;
                             default:
                                 smoothPrinting.RapidPrint("\nInvalid input, click any key to try again!");
@@ -383,12 +381,12 @@ namespace FantasyRPG
 
                 // }
                 smoothPrinting.RapidPrint($"{character.name} - Mage Status\n");
-                smoothPrinting.RapidPrint($"{mob.name} - Enemy\n");
+                smoothPrinting.RapidPrint($"{mob.name} - Enemy");
 
                 Console.WriteLine(); // Spacing
                 UI.DisplayProgressBar($"{character.name}'s Mana", currentMana, maxMana, 30);
                 Console.WriteLine(); // Spacing
-                UI.DisplayProgressBar("Enemy Health", mob.currentMobHealth, mob.maxMobHealth, 30); // Display mob health
+                UI.DisplayProgressBar($"{mob.name}'s Health", mob.currentMobHealth, mob.maxMobHealth, 30); // Display mob health
                 Console.WriteLine(); // Spacing
 
                 // Combat methods for the Mage class
@@ -502,6 +500,35 @@ namespace FantasyRPG
         // Console.WriteLine("+20 health");
         // Console.WriteLine("+20 mana");
         // }
+
+
+        public void CharacterDeath(CharacterDefault character, MobDefault mob) // If the user dies, then this function will run
+        {
+            string? userInput;
+
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Red;
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine($"FantasyRPG: You have died by {mob.name}");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+
+            smoothPrinting.RapidPrint("\nWould you like to go back to the Menu? ('1' for Yes, any other key for No)");
+            userInput = Console.ReadLine();
+
+            switch (userInput)
+            {
+                case "1":
+                    smoothPrinting.RapidPrint("\nYou will now be redirected back to the Menu...");
+                    userInput = null; // This is case measure to prevent the userInput value from already having a stored value, if the user reaches this point in the game again
+                    GameMenu redirectUserToMenu = new GameMenu();
+                    redirectUserToMenu.gameMenu(); // Redirect user to the game menu, if they enter the value '1'
+                    break;
+                default:
+                    smoothPrinting.RapidPrint("\nConsole will now terminate, press any key to leave the game");
+                    Console.ReadKey();
+                    break;
+            }
+        }
 
 
         // Levelling methods 
@@ -685,10 +712,7 @@ namespace FantasyRPG
             Console.WriteLine($"{character.name} - Mage Status");
             Console.WriteLine($"{mob.name} - Enemy");
 
-            UI.DisplayProgressBar("Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
-            Console.WriteLine(); // Spacing
-
-            UI.DisplayProgressBar("Mana", character.currentMana, character.maxMana, 30); // Display Mage's remaining mana
+            UI.DisplayProgressBar($"{character.name}'s Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
             Console.WriteLine(); // Spacing
 
             displayMobStatus(mob); // Display the mob's status as well
@@ -702,7 +726,7 @@ namespace FantasyRPG
                     foreach (var chosenNormalAtk in mob.normalAtkNames)
                     {
                         // Allow mob to use their special attack
-                        smoothPrinting.RapidPrint($"\n{mob.name} has used {chosenNormalAtk.Key} dealing {chosenNormalAtk.Value.damage} damage.");
+                        smoothPrinting.RapidPrint($"{mob.name} has used {chosenNormalAtk.Key} dealing {chosenNormalAtk.Value.damage} damage.");
                         character.currentHealth -= chosenNormalAtk.Value.damage; // Linearly reduce users health based on the damage done
                         mob.specialAtkRecharge += 20; // Mob's special charge increases by 20% per attack
                         enemyTurn = false; // Enemy turn has been used, so reset this case
@@ -720,6 +744,16 @@ namespace FantasyRPG
 
                     foreach (var chosenSpecialAtk in mob.specialAtkNames)
                     {
+                        if (chosenSpecialAtk.Value.damage > character.currentHealth) // Check if the mob's attack does more damage than the users current health
+                        {
+                            smoothPrinting.RapidPrint($"\n{mob.name} has used {chosenSpecialAtk.Key} deaing {chosenSpecialAtk.Value.damage} damage.");
+                            character.currentHealth = 0; // Set the users health to zero, to avoid game crashing
+                            specialAtkRecharge = 0; // Reset the special attack recharge counter, once used
+                            enemyTurn = false; // Enemy turn has been used, so reset this case
+                            Console.WriteLine(); // Spacing
+                            UI.PromptUserToContinue(); // Prompt the user to continue
+                            character.CombatSystem(character, mob, quickDisplay); // Return to the combat system, after the damage has been dealt by the enemy
+                        }
                         smoothPrinting.RapidPrint($"\n{mob.name} has used {chosenSpecialAtk.Key} deaing {chosenSpecialAtk.Value.damage} damage.");
                         character.currentHealth -= chosenSpecialAtk.Value.damage; // Linearly reduce users health based on the damage done
                         specialAtkRecharge = 0; // Reset the special attack recharge counter, once used
@@ -797,7 +831,7 @@ namespace FantasyRPG
             if (!string.IsNullOrEmpty(drop.Key))
             {
                 Console.WriteLine(); // Spacing
-                smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received...\n\nItem Name: {drop.Key}\nDamage: {drop.Value.damage}\nItem Description: {drop.Value.weaponDescription}\nWeapon Description: {drop.Value.weaponType}\n\nWould you like to equip this weapon? (1 for 'Yes' and any other key to store the item in your inventory)");
+                smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received...\n\nItem Name: {drop.Key}\nDamage: {drop.Value.damage}\nRarity: {drop.Value.rarity}\nItem Description: {drop.Value.weaponDescription}\nWeapon Type: {drop.Value.weaponType}\n\nWould you like to equip this weapon? (1 for 'Yes' and any other key to store the item in your inventory)");
                 Console.WriteLine(); // Spacing
                 smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
                 userChoice = Console.ReadLine(); // Register user input
@@ -1531,8 +1565,8 @@ namespace FantasyRPG
             int arcaniaGoldCoins = 100000;
 
             List<(string, int, int)> magicSpells = new List<(string, int, int)> {
-                ("Eucladian-Eye", 200, 5),
-                ("Developer's Wrath", 300, 5),
+                ("Lucerian's Wrath", 350, 5),
+                ("Umbral Surge", 120, 5),
                 ("Cyclone Strike", 50, 5)
              };
 
@@ -2703,7 +2737,7 @@ namespace FantasyRPG
 
 
             smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine("Forest of Mysteries");
+            smoothPrinting.PrintLine("FantasyRPG: Forest of Mysteries");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
             if (remainingAttempts == 3)
@@ -2719,8 +2753,8 @@ namespace FantasyRPG
             Console.WriteLine("\n[Available Commands:]");
             smoothPrinting.PrintLine("\n1. Fight: Confront the Dragon (TESTING)");
             smoothPrinting.PrintLine("\n2. North: Move northward along the path (N/A)");
-            smoothPrinting.PrintLine("\n3. Inventory: View your current inventory of items (N/A)");
-            smoothPrinting.PrintLine("\n4. Help: Display a list of available commands (N/A)");
+            smoothPrinting.PrintLine("\n3. Inventory: View your current inventory of items");
+            smoothPrinting.PrintLine("\n4. Help: Display a list of available commands");
             smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
             string firstSelection = Convert.ToString(Console.ReadLine());
 
@@ -2744,6 +2778,18 @@ namespace FantasyRPG
                     character.CheckInventory();
                     UI.PromptUserToContinue();
                     forestOfMysteries(character, remainingAttempts - 1); // Recurse to avoid breaking program haha
+                    break;
+                case "4":
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("FantasyRPG: Available Commands");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+
+                    smoothPrinting.RapidPrint("\nEnter the value '1' if you want to get closer to the dragon\n");
+                    smoothPrinting.RapidPrint("\nEnter the value '2' if you want to go northwards\n");
+                    smoothPrinting.RapidPrint("\nEnter the value '3' to check your inventory");
+                    Console.WriteLine(); // Spacing
+                    UI.PromptUserToContinue();
+                    forestOfMysteries(character, remainingAttempts); // Return the user back to the scenario
                     break;
                 default:
                     Console.WriteLine("\nInvalid input, please try again");
@@ -3102,13 +3148,13 @@ namespace FantasyRPG
                 default:
                     if (string.IsNullOrEmpty(userInput))
                     {
-                        smoothPrinting.RapidPrint("Invalid input, please try again.");
+                        smoothPrinting.RapidPrint("\nInvalid input, please try again.");
                         Console.ReadKey(); // Allow user to see error message
                         dashboard(character); // Due to lack of functionality, return user back to the dashboard
                     }
                     else
                     {
-                        smoothPrinting.RapidPrint("Invalid input, please try again.");
+                        smoothPrinting.RapidPrint("\nInvalid input, please try again.");
                         Console.ReadKey(); // Allow user to see error message
                         dashboard(character); // Due to lack of functionality, return user back to the dashboard
                     }
