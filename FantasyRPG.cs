@@ -149,6 +149,7 @@ namespace FantasyRPG
 
             void DisplayMageStatus(CharacterDefault character, MobDefault mob, bool quickDisplay) // Naturally this takes in the mage class and the given mob
             {
+                Console.ResetColor();
                 bool userTurn, enemyTurn; // These boolean measures are to create the turn based dynamic for the game
                 UIManager UI = new UIManager(); // Engage the UI manager for progress bars
 
@@ -227,12 +228,12 @@ namespace FantasyRPG
                             case "3":
                                 // Generate a random value
                                 Random ran = new Random(); 
-                                int generatedValue = ran.Next(0, 1); // Testing, will be readjusted
+                                int generatedValue = ran.Next(0, 5); // Testing, will be readjusted
                                 // For this stage, if the user gets a value such as (i.e. 1, 10, 12, 15) they will luckily escape, otherwise they'll be locked into combat and cannot attempt escape again.
 
 
                                 // Should the generated value be between the following ranges, then the user will escape
-                                if (generatedValue == 0 || generatedValue == 1)
+                                if (generatedValue == 1)
                                 {
                                     smoothPrinting.RapidPrint($"\nYou have successfully escaped the grasp of {mob.name}.");
                                     ForestOfMysteries returnToForest = new ForestOfMysteries();
@@ -743,7 +744,7 @@ namespace FantasyRPG
                         {
                             // Allow mob to use their special attack
                             smoothPrinting.RapidPrint($"{mob.name} has used {chosenNormalAtk.Key} dealing {chosenNormalAtk.Value.damage} damage.");
-                            character.currentHealth = chosenNormalAtk.Value.damage; // Linearly reduce the users health based on mob attack damage
+                            character.currentHealth -= chosenNormalAtk.Value.damage; // Linearly reduce the users health based on mob attack damage
                             mob.specialAtkRecharge += 20; // Mob's special charge increases by 20% per attack
                             enemyTurn = false; // Enemy turn has been used, so reset this case
                             Console.WriteLine(); // Spacing
