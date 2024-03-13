@@ -725,14 +725,30 @@ namespace FantasyRPG
 
                     foreach (var chosenNormalAtk in mob.normalAtkNames)
                     {
-                        // Allow mob to use their special attack
-                        smoothPrinting.RapidPrint($"{mob.name} has used {chosenNormalAtk.Key} dealing {chosenNormalAtk.Value.damage} damage.");
-                        character.currentHealth -= chosenNormalAtk.Value.damage; // Linearly reduce users health based on the damage done
-                        mob.specialAtkRecharge += 20; // Mob's special charge increases by 20% per attack
-                        enemyTurn = false; // Enemy turn has been used, so reset this case
-                        Console.WriteLine(); // Spacing
-                        UI.PromptUserToContinue(); // Prompt the user to continue
-                        character.CombatSystem(character, mob, quickDisplay); // Return to the combat system, after the damage has been dealt by the enemy
+                        if (chosenNormalAtk.Value.damage > character.currentHealth) // Check if the mob's attack does more damage than the users current health
+                        {
+                            // Allow mob to use their special attack
+                            smoothPrinting.RapidPrint($"{mob.name} has used {chosenNormalAtk.Key} dealing {chosenNormalAtk.Value.damage} damage.");
+                            character.currentHealth = 0; // Set the users health to zero to prevent game from crashing
+                            mob.specialAtkRecharge += 20; // Mob's special charge increases by 20% per attack
+                            enemyTurn = false; // Enemy turn has been used, so reset this case
+                            Console.WriteLine(); // Spacing
+                            UI.PromptUserToContinue(); // Prompt the user to continue
+                            character.CombatSystem(character, mob, quickDisplay); // Return to the combat system, after the damage has been dealt by the enemy
+                        }
+                        else if (chosenNormalAtk.Value.damage < character.currentHealth) // Otherwise...
+                        {
+                            // Allow mob to use their special attack
+                            smoothPrinting.RapidPrint($"{mob.name} has used {chosenNormalAtk.Key} dealing {chosenNormalAtk.Value.damage} damage.");
+                            character.currentHealth = chosenNormalAtk.Value.damage; // Linearly reduce the users health based on mob attack damage
+                            mob.specialAtkRecharge += 20; // Mob's special charge increases by 20% per attack
+                            enemyTurn = false; // Enemy turn has been used, so reset this case
+                            Console.WriteLine(); // Spacing
+                            UI.PromptUserToContinue(); // Prompt the user to continue
+                            character.CombatSystem(character, mob, quickDisplay); // Return to the combat system, after the damage has been dealt by the enemy
+
+                        }
+
                     }
                 }
                 else if (mob.specialAtkRecharge == 100)
@@ -754,13 +770,16 @@ namespace FantasyRPG
                             UI.PromptUserToContinue(); // Prompt the user to continue
                             character.CombatSystem(character, mob, quickDisplay); // Return to the combat system, after the damage has been dealt by the enemy
                         }
-                        smoothPrinting.RapidPrint($"\n{mob.name} has used {chosenSpecialAtk.Key} deaing {chosenSpecialAtk.Value.damage} damage.");
-                        character.currentHealth -= chosenSpecialAtk.Value.damage; // Linearly reduce users health based on the damage done
-                        specialAtkRecharge = 0; // Reset the special attack recharge counter, once used
-                        enemyTurn = false; // Enemy turn has been used, so reset this case
-                        Console.WriteLine(); // Spacing
-                        UI.PromptUserToContinue(); // Prompt the user to continue
-                        character.CombatSystem(character, mob, quickDisplay); // Return to the combat system, after the damage has been dealt by the enemy
+                        else if (chosenSpecialAtk.Value.damage < character.currentHealth) // Otherwise...
+                        {
+                            smoothPrinting.RapidPrint($"\n{mob.name} has used {chosenSpecialAtk.Key} deaing {chosenSpecialAtk.Value.damage} damage.");
+                            character.currentHealth -= chosenSpecialAtk.Value.damage; // Linearly reduce users health based on the damage done
+                            specialAtkRecharge = 0; // Reset the special attack recharge counter, once used
+                            enemyTurn = false; // Enemy turn has been used, so reset this case
+                            Console.WriteLine(); // Spacing
+                            UI.PromptUserToContinue(); // Prompt the user to continue
+                            character.CombatSystem(character, mob, quickDisplay); // Return to the combat system, after the damage has been dealt by the enemy
+                        }
                     }
                 }
                 else
