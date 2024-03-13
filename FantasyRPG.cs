@@ -161,12 +161,11 @@ namespace FantasyRPG
                 if (mob.currentMobHealth == 0) // Check everytime if the mob has died
                 {
                     mob.mobDeath(mob, character); // Run the following method to display the relevant information
-                                                  // gameDashboard dash = new gameDashboard();
-                                                  // dash.dashboard(mage);
+                                               
                 }
                 else if (character.currentHealth == 0) // Should the user die instead
                 {
-
+                    character.CharacterDeath(character, mob); 
                 }
                 else
                 {
@@ -512,7 +511,8 @@ namespace FantasyRPG
             smoothPrinting.PrintLine($"FantasyRPG: You have died by {mob.name}");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
-            smoothPrinting.RapidPrint("\nWould you like to go back to the Menu? ('1' for Yes, any other key for No)");
+            smoothPrinting.SlowPrint("\nYou have died...\n");
+            smoothPrinting.SlowPrint("\nWould you like to go back to the Menu? ('1' for Yes, any other key for No): ");
             userInput = Console.ReadLine();
 
             switch (userInput)
@@ -520,12 +520,15 @@ namespace FantasyRPG
                 case "1":
                     smoothPrinting.RapidPrint("\nYou will now be redirected back to the Menu...");
                     userInput = null; // This is case measure to prevent the userInput value from already having a stored value, if the user reaches this point in the game again
+                    Console.Clear(); // Clear the console
+                    Console.ResetColor(); // Reset console color
                     GameMenu redirectUserToMenu = new GameMenu();
                     redirectUserToMenu.gameMenu(); // Redirect user to the game menu, if they enter the value '1'
                     break;
                 default:
-                    smoothPrinting.RapidPrint("\nConsole will now terminate, press any key to leave the game");
+                    smoothPrinting.RapidPrint("\nConsole will now terminate, press any key to leave the game.");
                     Console.ReadKey();
+                    Environment.Exit(1); // Exit the game forcefully, after user input
                     break;
             }
         }
