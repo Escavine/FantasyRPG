@@ -1,4 +1,4 @@
-using Microsoft.Win32.SafeHandles;
+﻿using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -481,7 +481,6 @@ namespace FantasyRPG
 
             if (character is Mage)
             {
-                DisplayMageCombatSystemHeader();
                 DisplayMageStatus(character, mob, quickDisplay); // Run the following function call
             }
 
@@ -697,8 +696,8 @@ namespace FantasyRPG
 
                     // foreach (var attack in normalAttacks)
                     // {
-                        // smoothPrinting.RapidPrint($"{mob.name} has used {attack.attackName[randomAttack]} dealing {attack.attackDamage}");
-                        // character.currentHealth -= attack.attackDamage; // Linearly reduce health according to the damage given
+                    // smoothPrinting.RapidPrint($"{mob.name} has used {attack.attackName[randomAttack]} dealing {attack.attackDamage}");
+                    // character.currentHealth -= attack.attackDamage; // Linearly reduce health according to the damage given
                     // }
 
 
@@ -766,7 +765,7 @@ namespace FantasyRPG
             if (!string.IsNullOrEmpty(drop.Key))
             {
                 Console.WriteLine(); // Spacing
-                smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received {drop.Key}\nWould you like to equip this weapon? (1 for 'Yes' and any other key to store the item in your inventory)");
+                smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received...\n\nItem Name: {drop.Key}\nDamage: {drop.Value.damage}\nItem Description: {drop.Value.weaponDescription}\nWeapon Description: {drop.Value.weaponType}\n\nWould you like to equip this weapon? (1 for 'Yes' and any other key to store the item in your inventory)");
                 Console.WriteLine(); // Spacing
                 smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
                 userChoice = Console.ReadLine(); // Register user input
@@ -1058,7 +1057,7 @@ namespace FantasyRPG
         // exp += 0.3f;
         // }
 
-  
+
         // public override void CheckStatus()
         // {
         // base.CheckStatus(cha);
