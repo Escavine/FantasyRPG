@@ -434,9 +434,8 @@ namespace FantasyRPG
                             character.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
                             Console.ReadKey();
                             Console.Clear();
-                            enemyTurn = true;
+                            enemyTurn = true; // Turn this true as the users turn has been used
                             mob.mobAttack(mob, character, enemyTurn); // Enemies turn to attack
-                            // DisplayMageStatus(character, mob, quickDisplay = true); // Return after attack
                         }
                         else
                         {
@@ -447,12 +446,6 @@ namespace FantasyRPG
                             Console.Clear();
                             DisplayMageStatus(character, mob, quickDisplay = true); // Return after attack (TESTING)
                         }
-                        smoothPrinting.RapidPrint($"\n{character.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
-                        mob.currentMobHealth -= spell.damage;
-                        character.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
-                        Console.ReadKey();
-                        Console.Clear();
-                        DisplayMageStatus(character, mob, quickDisplay = true); // Return after attack 
                     }
                     else
                     {
@@ -699,9 +692,11 @@ namespace FantasyRPG
                     foreach (var chosenNormalAtk in mob.normalAtkNames)
                     {
                         // Allow mob to use their special attack
-                        smoothPrinting.RapidPrint($"\n{mob.name} has used {chosenNormalAtk.Key} dealing {chosenNormalAtk.Value}");
+                        smoothPrinting.RapidPrint($"\n{mob.name} has used {chosenNormalAtk.Key} dealing {chosenNormalAtk.Value.damage} damage.");
                         character.currentHealth -= chosenNormalAtk.Value.damage; // Linearly reduce users health based on the damage done
+                        mob.specialAtkRecharge += 20; // Mob's special charge increases by 20% per attack
                         enemyTurn = false; // Enemy turn has been used, so reset this case
+                        Console.WriteLine(); // Spacing
                         UI.PromptUserToContinue(); // Prompt the user to continue
                         character.CombatSystem(character, mob, quickDisplay); // Return to the combat system, after the damage has been dealt by the enemy
                     }
