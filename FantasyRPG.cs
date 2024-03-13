@@ -637,11 +637,11 @@ namespace FantasyRPG
         private readonly SmoothConsole smoothPrinting; // Cleaner and neater output
 
         // Mobs can have different attack names and varying item drops, each associated with a rarity and damage value
-        public Dictionary<string, (int, string, string, string)> itemDrop; // First string defines the weapon name, second integer defines the weapon damage, thirs stirng defines the weapon rarity and fourth string defines the weapon type
+        public Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> itemDrop; // First string defines the weapon name, second integer defines the weapon damage, thirs stirng defines the weapon rarity and fourth string defines the weapon type
         public Dictionary<string, (int damage, string magicType)> normalAtkNames;
         public Dictionary<string, (int damage, string magicType)> specialAtkNames;
 
-        public MobDefault(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string attackName)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
+        public MobDefault(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
         {
             name = _name;
             normalAtkNames = _normalAtkNames;
@@ -821,8 +821,9 @@ namespace FantasyRPG
     class Crawler : MobDefault // Crawler class
     {
         SmoothConsole smoothPrinting = new SmoothConsole();
+        public Dictionary<string, (int damage, string magicType)> _normalAtkNames;
 
-        public Crawler(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
+        public Crawler(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
         {
 
             // Default presets for a crawler, inherited from the mob default class
@@ -848,7 +849,7 @@ namespace FantasyRPG
             };
 
             itemDrop = _itemDrop;
-            normalAtkNames = _normalAtkNames;
+            // normalAtkNames = _normalAtkNames;
 
 
             // Future reference: Add a condition to insert the item into the users inventory, the user has a choice to accept/decline, should they decline, the weapon gets discareded into parts which can be used to refine other weapons
@@ -898,11 +899,11 @@ namespace FantasyRPG
 
 
         // Dictionary containing dragon attacks and their associated damage value
-        Dictionary<string, int> normalAtkNames = new Dictionary<string, int>() // Preset names for all dragon's normal attacks
+        Dictionary<string, (int damage, string magicType)> normalAtkNames = new Dictionary<string, (int damage, string magicType)>() // Preset names for all dragon's normal attacks
             {
-                { "Dragon's Claw", 30 },
-                { "Dragon's Breath", 40 },
-                { "Raging Tempest", 50 }
+                {"Dragon's Claw", (30, "Dragon-Magic")},
+                {"Dragon's Breath", (40, "Dragon-Magic")},
+                {"Raging Tempest", (50, "Dragon-Magic")}
             };
 
         // Dictionary that contains weapon name, damage, rarity, and weapon type (item drops)
@@ -923,7 +924,7 @@ namespace FantasyRPG
                 { "Rampant Flame Charge", (200, "Fire-Magic") } // Flame type ULT
             };
 
-        public Dragon(string _name, Dictionary<string, int> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
+        public Dragon(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
         {
             // Default presets for a dragon, inherited from the mob default class
             name = _name;
@@ -964,41 +965,41 @@ namespace FantasyRPG
 
         }
 
-        public void dragonNormalAtk(int health)
-        {
-            Random rd = new Random();
-            List<string> attackNames = normalAtkNames.Keys.ToList(); // Get all attack names
+        // public void dragonNormalAtk(int health)
+        // {
+            // Random rd = new Random();
+            // List<string> attackNames = normalAtkNames.Keys.ToList(); // Get all attack names
 
-            int randomIndex = rd.Next(0, attackNames.Count); // Generate a random index
+            // int randomIndex = rd.Next(0, attackNames.Count); // Generate a random index
 
-            string randomAttackName = attackNames[randomIndex]; // Get a random attack name
-            int damage = normalAtkNames[randomAttackName]; // Get the damage associated with the attack
+            // string randomAttackName = attackNames[randomIndex]; // Get a random attack name
+            // int damage = normalAtkNames[randomAttackName]; // Get the damage associated with the attack
 
-            smoothPrinting.FastPrint("Dragon has used " + randomAttackName + " dealing " + damage + " damage.\n");
-            health = health - damage; // Return the difference by reducing users health, based on damage inflicted
-        }
+            // smoothPrinting.FastPrint("Dragon has used " + randomAttackName + " dealing " + damage + " damage.\n");
+            // health = health - damage; // Return the difference by reducing users health, based on damage inflicted
+        // }
 
 
-        public void dragonSpecialAtk() // If the dragons special attack recharge reaches 100%, then this will be activated
-        {
-            Random rd = new Random();
+        // public void dragonSpecialAtk() // If the dragons special attack recharge reaches 100%, then this will be activated
+        // {
+            // Random rd = new Random();
 
-            List<string> attackNames = specialAtkNames.Keys.ToList(); // Get all attack names
-            int randomIndex = rd.Next(0, attackNames.Count); // Generate a random index
+            // List<string> attackNames = specialAtkNames.Keys.ToList(); // Get all attack names
+            // int randomIndex = rd.Next(0, attackNames.Count); // Generate a random index
 
-            string randomAttackName = attackNames[randomIndex]; // Get a random attack name
-            int damage = normalAtkNames[randomAttackName]; // Get the damage associated with the attack
+            // string randomAttackName = attackNames[randomIndex]; // Get a random attack name
+            // int damage = normalAtkNames[randomAttackName]; // Get the damage associated with the attack
 
-            if (specialAtkRecharge == 100) // Should the dragon's special attack recharge reach 100%, then it'll use its special ability, dealing high levels of damage, it also increases its health
-            {
-                smoothPrinting.SlowPrint("\nDragon ULT");
-                smoothPrinting.SlowPrint("\nDragon has used " + randomAttackName + " and has dealt " + damage + "\n");
-                smoothPrinting.RapidPrint("\nDragon has recovered +20 health");
-                currentMobHealth = currentMobHealth + 20; // Slight health regen
-                specialAtkRecharge = 0; // The special attack has been used by this point, so therefore it should be set to zero.
-            }
+            // if (specialAtkRecharge == 100) // Should the dragon's special attack recharge reach 100%, then it'll use its special ability, dealing high levels of damage, it also increases its health
+            // {
+                // smoothPrinting.SlowPrint("\nDragon ULT");
+                // smoothPrinting.SlowPrint("\nDragon has used " + randomAttackName + " and has dealt " + damage + "\n");
+                // smoothPrinting.RapidPrint("\nDragon has recovered +20 health");
+                // currentMobHealth = currentMobHealth + 20; // Slight health regen
+                // specialAtkRecharge = 0; // The special attack has been used by this point, so therefore it should be set to zero.
+            // }
 
-        }
+        // }
 
     }
 
@@ -2795,13 +2796,15 @@ namespace FantasyRPG
             int maxMobHealth = 350;
 
 
-            Dictionary<string, int> normalAtkNames = new Dictionary<string, int>()
+            // Dictionary containing dragon attacks and their associated damage value
+            Dictionary<string, (int damage, string magicType)> normalAtkNames = new Dictionary<string, (int damage, string magicType)>() // Preset names for all dragon's normal attacks
             {
-                { "Dragon's Claw", 30 },
-                { "Dragon's Breath", 40 },
-                { "Raging Tempest", 50 }
+                {"Dragon's Claw", (30, "Dragon-Magic")},
+                {"Dragon's Breath", (40, "Dragon-Magic")},
+                {"Raging Tempest", (50, "Dragon-Magic")}
             };
 
+            // Dictionary containing dragon attacks and their associated damage value
             Dictionary<string, (int, string)> specialAtkNames = new Dictionary<string, (int, string)>()
             {
                 { "Arcane Nexus", (100, "Eucladian-Magic") },
