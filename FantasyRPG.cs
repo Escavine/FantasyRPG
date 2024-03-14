@@ -2780,7 +2780,7 @@ namespace FantasyRPG
 
 
             Console.WriteLine("\n[Available Commands:]");
-            smoothPrinting.PrintLine("\n1. Fight: Confront the Dragon (TESTING)");
+            smoothPrinting.PrintLine("\n1. Approach: Get closer to the Dragon");
             smoothPrinting.PrintLine("\n2. North: Move northward along the path (N/A)");
             smoothPrinting.PrintLine("\n3. Inventory: View your current inventory of items");
             smoothPrinting.PrintLine("\n4. Help: Display a list of available commands");
@@ -2829,13 +2829,81 @@ namespace FantasyRPG
             }
         }
 
+
+        void NorthDirection(CharacterDefault character)
+        {
+            
+        }
+
         void DragonConfrontation(CharacterDefault character)
         {
+            string? userDecision;
             SmoothConsole smoothPrinting = new SmoothConsole();
             Console.Clear();
             smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine("Forest of Mysteries: Confronting the Dragon");
+            smoothPrinting.PrintLine("Forest of Mysteries: Approaching the Dragon");
             smoothPrinting.PrintLine("--------------------------------------------------");
+
+
+            smoothPrinting.RapidPrint("\nAs your curiosity overwhelms you, you inch closer to the colossal Dragon, its scales gleaming in the sunlight.");
+
+            smoothPrinting.RapidPrint("\nTo avoid detection, you stealthily maneuver through the dense foliage, blending into the shadows as you track the Dragon's every movement.");
+
+            smoothPrinting.RapidPrint("\nHeart pounding, you crouch behind the thick bushes, feeling the earth tremble beneath you with each beat of the Dragon's wings.");
+
+            smoothPrinting.RapidPrint("\nWith bated breath, you watch as the Dragon takes flight, its majestic form soaring into the vast expanse of the sky.");
+
+            smoothPrinting.RapidPrint("\nEager to uncover its secrets, you remain hidden, determined to unveil the mysteries that lie beyond the horizon.");
+
+            smoothPrinting.RapidPrint("\nAs you keep approaching closer to the dragon, you accidentaly slip and a noticeable thud can be heard from the nearby forest dwellers.");
+
+            smoothPrinting.RapidPrint("\nWhat do you do? ");
+
+            smoothPrinting.RapidPrint("\n1. Stay hidden in the shadows and carefully study the dragon's behavior");
+            smoothPrinting.RapidPrint("\n2. Quietly retreat to a safer distance and reassess your strategy");
+            smoothPrinting.RapidPrint("\n3. Approach the dragon cautiously, hoping to establish communication and avoid conflict");
+            smoothPrinting.RapidPrint("\n4. Ready your weapon and prepare to engage the dragon in combat");
+
+            smoothPrinting.RapidPrint("\nEnter your decision: ");
+            userDecision = Console.ReadLine(); // Register the user input
+
+            switch (userDecision)
+            {
+                case "1":
+                    smoothPrinting.RapidPrint("\nYou remain hidden, observing the dragon's every move with intense focus. You analyze its behavior, searching for any weaknesses or patterns.");
+                    smoothPrinting.RapidPrint("\nTime seems to slow as you study the majestic creature, hoping to gain valuable insights that could aid you in your quest.");
+
+                    // Add further narrative or actions here
+                    break;
+
+                case "2":
+                    smoothPrinting.RapidPrint("\nWith a cautious step backward, you retreat to a safer distance, allowing yourself a moment to catch your breath and collect your thoughts.");
+                    smoothPrinting.RapidPrint("\nThe decision to retreat buys you precious time to reconsider your approach, weighing the risks and rewards of engaging the dragon.");
+
+                    // Handle the action of retreating
+                    break;
+
+                case "3":
+                    smoothPrinting.RapidPrint("\nSummoning all your courage, you approach the dragon with cautious steps, your hands held up in a gesture of peace.");
+                    smoothPrinting.RapidPrint("\nYour heart pounds in your chest as you attempt to establish communication with the magnificent creature, hoping to avoid a violent confrontation.");
+
+                    // Proceed with the action of approaching the dragon
+                    break;
+
+                case "4":
+                    smoothPrinting.RapidPrint("\nWith determination in your eyes, you ready your weapon, prepared to confront the dragon head-on in a battle for survival.");
+                    smoothPrinting.RapidPrint("\nYour grip tightens around the hilt of your weapon as adrenaline courses through your veins, fueling your resolve to emerge victorious.");
+
+                    // Engage in combat with the dragon
+                    break;
+
+                default:
+                    smoothPrinting.RapidPrint("\nYour indecision leaves you paralyzed, unable to take action. The dragon's gaze narrows, sensing your hesitation.");
+
+                    // Handle any other input
+                    break;
+            }
+
 
             // Mage challenges the dragon
             smoothPrinting.RapidPrint($"\n{character.name}: \"Stop flying away, and face me at once!\"\n");
