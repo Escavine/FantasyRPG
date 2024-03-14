@@ -695,6 +695,38 @@ namespace FantasyRPG
             smoothPrinting = new SmoothConsole();
         }
 
+        // Method for spawning a specific mob based on the context (i.e. if a dragon is encountered, then spawn a dragon)
+        public void MobSpawn(MobDefault mob)
+        {
+            // Spawn the specified mob type
+            switch (mob)
+            {
+                case Dragon _:
+                    // Spawn a dragon
+                    Dragon dragon = new Dragon("Dragon", 350, 350, mob.normalAtkNames, mob.specialAtkNames, 0, mob.itemDrop, 12, 25);
+                    mob = dragon;
+                    break;
+                case AnotherMobType _:
+                    // Spawn another type of mob (replace with your mob class and parameters)
+                    break;
+                case AnotherMobType2 _:
+                    // Spawn another type of mob (replace with your mob class and parameters)
+                    break;
+                default:
+                    // Handle unexpected mob type
+                    break;
+            }
+
+            // Now you can use the spawned mob object
+        }
+
+        // Infinite dungeon method
+        public void InfiniteDungeon()
+        {
+            // Insert logic for the dungeon here
+            // It's quite similar to mob spawning, only difference is that the switch case takes in a random value
+        }
+
         public void displayMobStatus(MobDefault mob)
         {
             // Add parameters such as the mobs health etc.
@@ -899,11 +931,6 @@ namespace FantasyRPG
 
     class Crawler : MobDefault // Crawler class
     {
-        private readonly SmoothConsole smoothPrinting;
-
-
-        public Dictionary<string, (int damage, string magicType)> _normalAtkNames;
-
         // Dictionary containing crawler attacks and their associated damage value
         Dictionary<string, int> normalAtkNames = new Dictionary<string, int>() // Preset name for all dragon's normal attacks
             {
