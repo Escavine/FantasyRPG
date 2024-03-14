@@ -433,7 +433,7 @@ namespace FantasyRPG
                         // Check for this condition first
                         if (mob.currentMobHealth < spell.damage) // Check if the spell damage is more than the enemies health (in that case, set the enemies health to zero, to avoid game crash)
                         {
-                            smoothPrinting.RapidPrint($"\n{character.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
+                            smoothPrinting.RapidPrint($"\n{character.name} has casted {spell.magicSpell}, dealing {(int)spell.damage + (damageBoost.damage * 0.3)} damage to {mob.name}.");
                             mob.currentMobHealth = 0; // Set the enemies health to zero, to prevent game from crashing
                             character.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
                             Console.ReadKey();
@@ -442,14 +442,18 @@ namespace FantasyRPG
                         }
                         // Otherwise...
                         else
-                        { 
-                            smoothPrinting.RapidPrint($"\n{character.name} has casted {spell.magicSpell}, dealing {spell.damage} damage to {mob.name}.");
-                            mob.currentMobHealth -= spell.damage;
-                            character.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
-                            Console.ReadKey();
-                            Console.Clear();
-                            enemyTurn = true; // Turn this true as the users turn has been used
-                            mob.mobAttack(mob, character, enemyTurn); // Enemies turn to attack
+                        {
+                            foreach (var damageBoost in weapon) // The weapon will enable further damage with the encompassing spell used
+                            {
+                                smoothPrinting.RapidPrint($"\n{character.name} has casted {spell.magicSpell}, dealing {(int)spell.damage + (damageBoost.damage * 0.3)} damage to {mob.name}.");
+                                mob.currentMobHealth -= (int)((spell.damage + damageBoost.damage) * 0.3); // Ensure the mob health remains integer, as to avoid game crashing
+                                character.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
+                                Console.ReadKey();
+                                Console.Clear();
+                                enemyTurn = true; // Turn this true as the users turn has been used
+                                mob.mobAttack(mob, character, enemyTurn); // Enemies turn to attack
+                            }
+
                         }
 
 
@@ -877,6 +881,8 @@ namespace FantasyRPG
                 smoothPrinting.RapidPrint("No weapon selected.");
             }
         }
+
+
 
     }
 
