@@ -696,20 +696,26 @@ namespace FantasyRPG
         }
 
         // Method for spawning a specific mob based on the context (i.e. if a dragon is encountered, then spawn a dragon)
-        public void MobSpawn(MobDefault mob)
+        public void MobSpawn(MobDefault mob, CharacterDefault character)
         {
+            bool quickDisplay = false; // This is for combat convienience, if this is true, then all options are displayed quickly
+
             // Spawn the specified mob type
             switch (mob)
             {
                 case Dragon _:
                     // Spawn a dragon
-                    Dragon dragon = new Dragon("Dragon", 350, 350, mob.normalAtkNames, mob.specialAtkNames, 0, mob.itemDrop, 12, 25);
-                    mob = dragon;
+
+                    // 1/20 chance of dropping a item
+                    Dragon dragon = new Dragon(mob.name, mob.currentMobHealth, mob.maxMobHealth, mob.normalAtkNames, mob.specialAtkNames, mob.maxMobHealth, mob.itemDrop, mob.expDrop, mob.dropChance, mob.mobLevel);
+                    character.CombatSystem(character, mob, quickDisplay);
                     break;
-                case AnotherMobType _:
+
+                case Crawler _:
+                    Crawler crawler = new Crawler(mob.name, mob.normalAtkNames, mob.specialAtkNames, mob.specialAtkRecharge, mob.currentMobHealth, mob.maxMobHealth, mob.itemDrop, mob.expDrop, mob.dropChance, mob.mobLevel); ;
                     // Spawn another type of mob (replace with your mob class and parameters)
                     break;
-                case AnotherMobType2 _:
+                // case AnotherMobType2 _:
                     // Spawn another type of mob (replace with your mob class and parameters)
                     break;
                 default:
@@ -947,7 +953,7 @@ namespace FantasyRPG
             };
 
         
-        public Crawler(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string, string, string)> _itemDrop, int _expDrop, int _dropChance, int mobLevel) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop, _expDrop, _dropChance, _mobLevel)
+        public Crawler(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> _itemDrop, int _expDrop, int _dropChance, int _mobLevel) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop, _expDrop, _dropChance, _mobLevel)
         {
             // Default presets for a crawler, inherited from the mob default class
             name = "Crawler";
@@ -2795,24 +2801,33 @@ namespace FantasyRPG
         bool completedFirstScenario = false; // This is a measure to see if the user has completed this scenario in the Forest of Mysteries, should this be the case, they'll no longer see this scenario when exploring the forest
         string? firstSelection;
 
+        private readonly UIManager UI;
+        private readonly SmoothConsole smoothPrinting;
+
+
+        public ForestOfMysteries()
+        {
+            UI = new UIManager();
+            smoothPrinting = new SmoothConsole();
+        }
+
         public void forestOfMysteries(CharacterDefault character, int remainingAttempts = 3)
         {
-            UIManager UI = new UIManager();
-            SmoothConsole smoothPrinting = new SmoothConsole();
-
-
-
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine("FantasyRPG: Forest of Mysteries");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
-            if (remainingAttempts == 3)
+
+            if (completedFirstScenario == false)
             {
-                smoothPrinting.RapidPrint(oneTimeFixedScenario + "\n");
-            }
-            else
-            {
-                Console.WriteLine(oneTimeFixedScenario + "\n");
+                if (remainingAttempts == 3)
+                {
+                    smoothPrinting.RapidPrint(oneTimeFixedScenario + "\n");
+                }
+                else
+                {
+                    Console.WriteLine(oneTimeFixedScenario + "\n");
+                }
             }
 
 
@@ -2878,147 +2893,162 @@ namespace FantasyRPG
             SmoothConsole smoothPrinting = new SmoothConsole();
             Console.Clear();
             smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine("Forest of Mysteries: Approaching the Dragon");
+            smoothPrinting.PrintLine("FantasyRPG: Forest of Mysteries - Approaching the Dragon");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
-
             smoothPrinting.RapidPrint("\nAs your curiosity overwhelms you, you inch closer to the colossal Dragon, its scales gleaming in the sunlight.");
-
             smoothPrinting.RapidPrint("\nTo avoid detection, you stealthily maneuver through the dense foliage, blending into the shadows as you track the Dragon's every movement.");
+            smoothPrinting.RapidPrint(" Heart pounding, you crouch behind the thick bushes, feeling the earth tremble beneath you with each beat of the Dragon's wings.\n\n");
+            smoothPrinting.RapidPrint("With bated breath, you watch as the Dragon takes flight, its majestic form soaring into the vast expanse of the sky.");
+            smoothPrinting.RapidPrint(" Eager to uncover its secrets, you remain hidden, determined to unveil the mysteries that lie beyond the horizon.");
+            smoothPrinting.RapidPrint(" As you keep approaching closer to the dragon, you accidentally slip, and a noticeable thud can be heard from the nearby forest dwellers.\n");
 
-            smoothPrinting.RapidPrint("\nHeart pounding, you crouch behind the thick bushes, feeling the earth tremble beneath you with each beat of the Dragon's wings.");
+            smoothPrinting.RapidPrint("\nWhat do you do?\n");
 
-            smoothPrinting.RapidPrint("\nWith bated breath, you watch as the Dragon takes flight, its majestic form soaring into the vast expanse of the sky.");
+            smoothPrinting.RapidPrint("\n1. Keep Exploring: Stay hidden in the shadows and carefully study the dragon's behavior\n");
+            smoothPrinting.RapidPrint("\n2. Retreat: Quietly retreat to a safer distance and return back to your original position\n");
+            smoothPrinting.RapidPrint("\n3. Combat: Ready your weapon and prepare to engage the dragon in combat\n");
 
-            smoothPrinting.RapidPrint("\nEager to uncover its secrets, you remain hidden, determined to unveil the mysteries that lie beyond the horizon.");
-
-            smoothPrinting.RapidPrint("\nAs you keep approaching closer to the dragon, you accidentaly slip and a noticeable thud can be heard from the nearby forest dwellers.");
-
-            smoothPrinting.RapidPrint("\nWhat do you do? ");
-
-            smoothPrinting.RapidPrint("\n1. Stay hidden in the shadows and carefully study the dragon's behavior");
-            smoothPrinting.RapidPrint("\n2. Quietly retreat to a safer distance and reassess your strategy");
-            smoothPrinting.RapidPrint("\n3. Approach the dragon cautiously, hoping to establish communication and avoid conflict");
-            smoothPrinting.RapidPrint("\n4. Ready your weapon and prepare to engage the dragon in combat");
-
-            smoothPrinting.RapidPrint("\nEnter your decision: ");
+            smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
             userDecision = Console.ReadLine(); // Register the user input
 
             switch (userDecision)
             {
                 case "1":
-                    smoothPrinting.RapidPrint("\nYou remain hidden, observing the dragon's every move with intense focus. You analyze its behavior, searching for any weaknesses or patterns.");
-                    smoothPrinting.RapidPrint("\nTime seems to slow as you study the majestic creature, hoping to gain valuable insights that could aid you in your quest.");
+                    Console.Clear();
 
-                    // Add further narrative or actions here
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("FantasyRPG: Forest of Mysteries - Approaching the Dragon");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+
+                    smoothPrinting.RapidPrint("\nYou remain hidden, observing the dragon's every move with intense focus. You analyze its behavior, searching for any weaknesses or patterns.");
+                    smoothPrinting.RapidPrint("\nTime seems to slow as you study the dragon, hoping to gain valuable insights that could aid you in perhaps finding out why you've been summoned to the world.");
+
+                    smoothPrinting.RapidPrint("\nYou notice that the dragon immediately starts flying away at a really fast pace, in hopes to keep up, you attempt to start running in order to close the distance and " +
+                        "keep in range of the dragon.");
+
+                    smoothPrinting.RapidPrint("\nThe dragon rapidly halts its movements, it feels as if time has frozen with how intense the situation has now become. The dragon comes down, inching every second closer to you...");
+                    Console.WriteLine();
+                    UI.PromptUserToContinue();
+                    dragonCombat();
+
                     break;
 
                 case "2":
+                    Console.Clear();
+
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+                    smoothPrinting.PrintLine("FantasyRPG: Forest of Mysteries - Retreat");
+                    smoothPrinting.PrintLine("--------------------------------------------------");
+
                     smoothPrinting.RapidPrint("\nWith a cautious step backward, you retreat to a safer distance, allowing yourself a moment to catch your breath and collect your thoughts.");
-                    smoothPrinting.RapidPrint("\nThe decision to retreat buys you precious time to reconsider your approach, weighing the risks and rewards of engaging the dragon.");
+                    smoothPrinting.RapidPrint("\nThe decision to retreat buys you precious time to reconsider your choices, tracing back the path you took, in order to get back to where you orignally were.");
+                    smoothPrinting.RapidPrint("\nSlowly but surely, you finally make your way back.");
+                    Console.WriteLine();
+                    UI.PromptUserToContinue();
 
-                    // Handle the action of retreating
+                    int remainingAttempts = 3;
+                    forestOfMysteries(character, remainingAttempts); // Recurse back to the original point
+
                     break;
-
                 case "3":
-                    smoothPrinting.RapidPrint("\nSummoning all your courage, you approach the dragon with cautious steps, your hands held up in a gesture of peace.");
-                    smoothPrinting.RapidPrint("\nYour heart pounds in your chest as you attempt to establish communication with the magnificent creature, hoping to avoid a violent confrontation.");
-
-                    // Proceed with the action of approaching the dragon
-                    break;
-
-                case "4":
+                    // Engage in combat with the dragon
                     smoothPrinting.RapidPrint("\nWith determination in your eyes, you ready your weapon, prepared to confront the dragon head-on in a battle for survival.");
                     smoothPrinting.RapidPrint("\nYour grip tightens around the hilt of your weapon as adrenaline courses through your veins, fueling your resolve to emerge victorious.");
-
-                    // Engage in combat with the dragon
                     break;
 
                 default:
-                    smoothPrinting.RapidPrint("\nYour indecision leaves you paralyzed, unable to take action. The dragon's gaze narrows, sensing your hesitation.");
-
-                    // Handle any other input
+                    smoothPrinting.RapidPrint("\nYour indecision leaves you paralyzed, unable to take action. The dragon's gaze narrows, sensing your hesitation and immediately screeches, scaring all the nearby dwellers, leaving only yourself and the dragon.");
+                    Console.WriteLine();
+                    UI.PromptUserToContinue();
+                    dragonCombat(); // Engage combat as the user is caught
                     break;
             }
 
 
-            // Mage challenges the dragon
-            smoothPrinting.RapidPrint($"\n{character.name}: \"Stop flying away, and face me at once!\"\n");
 
-            // The dragon responds with hostility
-            smoothPrinting.RapidPrint("\nDragon: \"This mere mortal dares speak to me in such manner? So be it, you shall now face my wrath!\"\n");
+            void dragonCombat() // A function that engages the fight between the MC and the dragon
+            {
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.PrintLine("Forest of Mysteries");
+                smoothPrinting.PrintLine("--------------------------------------------------");
 
-            // The realization that the dragon can speak surprises the character
-            // However, it's too late to retract their actions
-            smoothPrinting.RapidPrint("\n*You are taken aback to hear that the Dragon can speak, though it's come to a point in time where you cannot take back your actions*\n");
+                // The dragon introduces itself as Windsom, the Guardian of the forests
+                smoothPrinting.RapidPrint("\nDragon: \"I am Windsom, the Guardian of these forests, and you have trespassed into my domain, Mortal.\"\n");
 
-            // The dragon introduces itself as Windsom, the Guardian of the forests
-            smoothPrinting.RapidPrint("\nDragon: \"Mortal, you know not the gravity of your words. I am Windsom, the Guardian of these forests, and you have trespassed into my domain.\"\n");
+                smoothPrinting.RapidPrint("\n*You are taken aback to hear that the Dragon can speak, though it's come to a point in time where you cannot take back your actions*\n");
 
-            // {mage.name} expresses surprise at the dragon's name
-            smoothPrinting.RapidPrint($"\n{character.name}: \"Windsom? Never heard that name before.\"\n");
+                // {mage.name} expresses surprise at the dragon's name
+                smoothPrinting.RapidPrint($"\n{character.name}: \"Windsom? Never heard that name before.\"\n");
 
-            // The character ponders whether the dragon knows about their summoning
-            smoothPrinting.RapidPrint("\nMC's Thoughts: \"Perhaps he knows about why I've been summoned to this world...\"\n");
+                // The character ponders whether the dragon knows about their summoning
+                smoothPrinting.RapidPrint("\nMC's Thoughts: \"Perhaps he knows about why I've been summoned to this world...\"\n");
 
-            // {mage.name} directly asks the dragon about their summoning
-            smoothPrinting.RapidPrint($"\n{character.name}: \"Do you know why I've been summoned to this world?\"\n");
+                // {mage.name} directly asks the dragon about their summoning
+                smoothPrinting.RapidPrint($"\n{character.name}: \"Do you know why I've been summoned to this world?\"\n");
 
-            // The dragon responds cryptically, challenging the character to prove their worth
-            smoothPrinting.RapidPrint("\nWindsom (The Guardian Dragon): \"Ah, the mysteries of summonings. Perhaps I do, perhaps I don't. But why should I reveal such knowledge to a mere mortal like you? Prove your worth, Mage. Defeat me in battle, and perhaps then, I shall consider sharing what I know.\"\n");
-
-
-            smoothPrinting.RapidPrint("\n*Windsom slowly sets down into the forest, it's wings shuddering the leaves, crushing branches and any other obstacle that gets in its way, setting the stage for battle*\n");
-
-            // Prompt the user to engage in combat
-            smoothPrinting.RapidPrint("\nAre you ready to engage in combat? Press any key to start.");
-            Console.ReadKey(); // Wait for user input
-            Console.Clear(); // Clear the console to prepare for combat
+                // The dragon responds cryptically, challenging the character to prove their worth
+                smoothPrinting.RapidPrint("\nWindsom (The Guardian Dragon): \"Ah, the mysteries of summonings. Perhaps I do, perhaps I don't. But why should I reveal such knowledge to a mere mortal like you? Prove your worth, Mage. Defeat me in battle, and perhaps then, I shall consider sharing what I know.\"\n");
 
 
-            string dragonName = "Windsom";
-            int specialAtkRecharge = 100;
-            int currentMobHealth = 350;
-            int maxMobHealth = 350;
+                smoothPrinting.RapidPrint("\n*Windsom slowly sets down into the forest, it's wings shuddering the leaves, crushing branches and any other obstacle that gets in its way, setting the stage for battle*\n");
+
+                // Prompt the user to engage in combat
+                smoothPrinting.RapidPrint("\nAre you ready to engage in combat? Press any key to start.");
+                Console.ReadKey(); // Wait for user input
+                Console.Clear(); // Clear the console to prepare for combat
+
+                Dragon windsom = null;
+
+                // Spawn the dragon
+                windsom.MobSpawn(windsom, character);
+            }
+
+
+
+            // string dragonName = "Windsom";
+            // int specialAtkRecharge = 100;
+            // int currentMobHealth = 350;
+            // int maxMobHealth = 350;
 
 
             // Dictionary containing dragon attacks and their associated damage value
-            Dictionary<string, (int damage, string magicType)> normalAtkNames = new Dictionary<string, (int damage, string magicType)>() // Preset names for all dragon's normal attacks
-            {
-                {"Dragon's Claw", (30, "Dragon-Magic")},
-                {"Dragon's Breath", (40, "Dragon-Magic")},
-                {"Raging Tempest", (50, "Dragon-Magic")}
-            };
+            // Dictionary<string, (int damage, string magicType)> normalAtkNames = new Dictionary<string, (int damage, string magicType)>() // Preset names for all dragon's normal attacks
+            // {
+                // {"Dragon's Claw", (30, "Dragon-Magic")},
+                // {"Dragon's Breath", (40, "Dragon-Magic")},
+                // {"Raging Tempest", (50, "Dragon-Magic")}
+            // };
 
             // Dictionary containing dragon attacks and their associated damage value
-            Dictionary<string, (int, string)> specialAtkNames = new Dictionary<string, (int, string)>()
-            {
-                { "Arcane Nexus", (100, "Eucladian-Magic") },
-                { "Umbral Charge", (120, "Dark-Magic") },
-                { "Rampant Flame Charge", (200, "Fire-Magic") }
-            };
+            // Dictionary<string, (int, string)> specialAtkNames = new Dictionary<string, (int, string)>()
+            // {
+                // { "Arcane Nexus", (100, "Eucladian-Magic") },
+                // { "Umbral Charge", (120, "Dark-Magic") },
+                // { "Rampant Flame Charge", (200, "Fire-Magic") }
+            // };
 
             // Dictionary that contains weapon name, damage, rarity, and weapon type (item drops)
-            Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop = new Dictionary<string, (int, string, string, string)>()
-            {
-                { "Frostfire Fang", (65, "Unique", "Staff", "Forged in the icy flames of the dragon's breath, this fang drips with frostfire, capable of freezing enemies in their tracks.") },
-                { "Serpent's Gaze", (50, "Unique", "Rapier/Sword", "Crafted from the scales of the ancient serpent, this gaze holds the power to petrify foes with a single glance.") },
-                { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword", "Tempered in the chaosfire of the dragon's lair, this greatsword burns with an insatiable hunger for destruction.") },
-                { "Nightshade Arc", (55, "Unique", "Bow", "Fashioned from the sinew of the nocturnal shadows, this bow strikes with deadly accuracy under the cover of darkness.") },
-                { "Aerith's Heirloom", (80, "Legendary", "Staff", "Once wielded by the legendary Aerith, this staff channels the primordial magic of creation itself, capable of reshaping reality.") },
-                { "Eucladian's Aura", (55, "Legendary", "Aura", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.") }
-            };
+            // Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop = new Dictionary<string, (int, string, string, string)>()
+            // {
+                // { "Frostfire Fang", (65, "Unique", "Staff", "Forged in the icy flames of the dragon's breath, this fang drips with frostfire, capable of freezing enemies in their tracks.") },
+                // { "Serpent's Gaze", (50, "Unique", "Rapier/Sword", "Crafted from the scales of the ancient serpent, this gaze holds the power to petrify foes with a single glance.") },
+                // { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword", "Tempered in the chaosfire of the dragon's lair, this greatsword burns with an insatiable hunger for destruction.") },
+                // { "Nightshade Arc", (55, "Unique", "Bow", "Fashioned from the sinew of the nocturnal shadows, this bow strikes with deadly accuracy under the cover of darkness.") },
+                // { "Aerith's Heirloom", (80, "Legendary", "Staff", "Once wielded by the legendary Aerith, this staff channels the primordial magic of creation itself, capable of reshaping reality.") },
+                // { "Eucladian's Aura", (55, "Legendary", "Aura", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.") }
+            // };
 
 
             // Create a new instance of the dragon for combat
-            Dragon windsom = new Dragon(dragonName, normalAtkNames, specialAtkNames, specialAtkRecharge, currentMobHealth, maxMobHealth, itemDrop);
+            // Dragon windsom = new Dragon(dragonName, normalAtkNames, specialAtkNames, specialAtkRecharge, currentMobHealth, maxMobHealth, itemDrop);
 
             // Exert pressure based on mage's level
-            windsom.exertPressure(character, windsom); // Pass mage and dragon class with relevant attributes and methods here
-            bool quickDisplay = false;
+            // windsom.exertPressure(character, windsom); // Pass mage and dragon class with relevant attributes and methods here
+            // bool quickDisplay = false;
 
             // Engage the combat system
-            character.CombatSystem(character, windsom, quickDisplay);
+            // character.CombatSystem(character, windsom, quickDisplay);
         }
 
     }
