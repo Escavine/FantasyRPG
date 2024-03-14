@@ -670,7 +670,7 @@ namespace FantasyRPG
     public class MobDefault // Mob preset for the game
     {
         public string name;
-        public int specialAtkRecharge, currentMobHealth, maxMobHealth;
+        public int specialAtkRecharge, currentMobHealth, maxMobHealth, expDrop, dropChance;
         private readonly UIManager UI; // Progress bars and repeatable functions
         private readonly SmoothConsole smoothPrinting; // Cleaner and neater output
 
@@ -679,7 +679,7 @@ namespace FantasyRPG
         public Dictionary<string, (int damage, string magicType)> normalAtkNames;
         public Dictionary<string, (int damage, string magicType)> specialAtkNames;
 
-        public MobDefault(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
+        public MobDefault(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop, int _expDrop, int _dropChance) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
         {
             name = _name;
             normalAtkNames = _normalAtkNames;
@@ -688,6 +688,8 @@ namespace FantasyRPG
             specialAtkRecharge = 100;
             currentMobHealth = _currentMobHealth;
             maxMobHealth = _maxMobHealth;
+            expDrop = _expDrop;
+            dropChance = _dropChance;
             UI = new UIManager();
             smoothPrinting = new SmoothConsole();
         }
@@ -825,6 +827,8 @@ namespace FantasyRPG
 
                 smoothPrinting.RapidPrint($"\nRewards incoming...");
 
+
+
                 Random itemDropChance = new Random(); // Each mob class should have a dynamic integer for the item drop chance, this way it isn't the same drop rate for all mobs
                 int dropChance = itemDropChance.Next(0, 1); // Will be adjusted accordingly
 
@@ -838,8 +842,10 @@ namespace FantasyRPG
                     mob.dropItem(dropChance, character, mob, itemDrop); // Should the random number be zero, then the mob will drop an item
                 }
 
-                character.exp += 300; // User gains huge exp from defeating the dragon 
-                character.GainExperience(character, character.exp);
+                smoothPrinting.RapidPrint($"\nYou received {mob.expDrop} EXP!"); // Display the received EXP to the user
+                character.exp += mob.expDrop; // Update the accumulated EXP for the user
+                character.GainExperience(character, character.exp); // Check the user level and level up when needed
+
 
             }
 
