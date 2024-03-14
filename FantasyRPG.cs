@@ -433,12 +433,15 @@ namespace FantasyRPG
                         // Check for this condition first
                         if (mob.currentMobHealth < spell.damage) // Check if the spell damage is more than the enemies health (in that case, set the enemies health to zero, to avoid game crash)
                         {
-                            smoothPrinting.RapidPrint($"\n{character.name} has casted {spell.magicSpell}, dealing {(int)spell.damage + (damageBoost.damage * 0.3)} damage to {mob.name}.");
-                            mob.currentMobHealth = 0; // Set the enemies health to zero, to prevent game from crashing
-                            character.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
-                            Console.ReadKey();
-                            Console.Clear();
-                            DisplayMageStatus(character, mob, quickDisplay = true); // Return after final blow
+                            foreach (var damageBoost in weapon)
+                            {
+                                smoothPrinting.RapidPrint($"\n{character.name} has casted {spell.magicSpell}, dealing {(int)spell.damage + (damageBoost.damage * 0.3)} damage to {mob.name}.");
+                                mob.currentMobHealth = 0; // Set the enemies health to zero, to prevent game from crashing
+                                character.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
+                                Console.ReadKey();
+                                Console.Clear();
+                                DisplayMageStatus(character, mob, quickDisplay = true); // Return after final blow
+                            }
                         }
                         // Otherwise...
                         else
@@ -455,9 +458,6 @@ namespace FantasyRPG
                             }
 
                         }
-
-
-
                     }
                     else
                     {
