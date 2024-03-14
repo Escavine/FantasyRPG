@@ -670,7 +670,7 @@ namespace FantasyRPG
     public class MobDefault // Mob preset for the game
     {
         public string name;
-        public int specialAtkRecharge, currentMobHealth, maxMobHealth, expDrop, dropChance;
+        public int specialAtkRecharge, currentMobHealth, maxMobHealth, expDrop, dropChance, mobLevel;
         private readonly UIManager UI; // Progress bars and repeatable functions
         private readonly SmoothConsole smoothPrinting; // Cleaner and neater output
 
@@ -679,7 +679,7 @@ namespace FantasyRPG
         public Dictionary<string, (int damage, string magicType)> normalAtkNames;
         public Dictionary<string, (int damage, string magicType)> specialAtkNames;
 
-        public MobDefault(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop, int _expDrop, int _dropChance) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
+        public MobDefault(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> _itemDrop, int _expDrop, int _dropChance, int _mobLevel) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
         {
             name = _name;
             normalAtkNames = _normalAtkNames;
@@ -688,6 +688,7 @@ namespace FantasyRPG
             specialAtkRecharge = 100;
             currentMobHealth = _currentMobHealth;
             maxMobHealth = _maxMobHealth;
+            mobLevel = _mobLevel;
             expDrop = _expDrop;
             dropChance = _dropChance;
             UI = new UIManager();
@@ -702,7 +703,7 @@ namespace FantasyRPG
             Console.WriteLine(); // Double spacing to avoid overlapping
         }
 
-        public void mobAttackHeader(MobDefault mob)
+        public void mobAttackHeader(MobDefault mob) // For when the mob's turn is active
         {
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine($"FantasyRPG: {mob.name}'s Attack");
@@ -772,6 +773,9 @@ namespace FantasyRPG
                     {
                         if (chosenSpecialAtk.Value.damage > character.currentHealth) // Check if the mob's attack does more damage than the users current health
                         {
+                            UI.DisplayProgressBar("ULT Charge:", mob.specialAtkRecharge, 100, 30);
+                            smoothPrinting.RapidPrint("\nSpecial Attack");
+
                             smoothPrinting.RapidPrint($"\n{mob.name} has used {chosenSpecialAtk.Key} deaing {chosenSpecialAtk.Value.damage} damage.");
                             character.currentHealth = 0; // Set the users health to zero, to avoid game crashing
                             specialAtkRecharge = 0; // Reset the special attack recharge counter, once used
@@ -830,9 +834,9 @@ namespace FantasyRPG
 
 
                 Random itemDropChance = new Random(); // Each mob class should have a dynamic integer for the item drop chance, this way it isn't the same drop rate for all mobs
-                int dropChance = itemDropChance.Next(0, 1); // Will be adjusted accordingly
+                int dropChance = itemDropChance.Next(0, mob.dropChance); // Drop chance ranges depending on the mob
 
-                if (dropChance == 0 || dropChance == 1)
+                if (dropChance == 0 || dropChance == 1) // Random chance of item drop
                 {
                     Console.WriteLine(); // Spacing
                     Console.WriteLine(); // Double spacing to stop overlapping
@@ -895,39 +899,37 @@ namespace FantasyRPG
 
     class Crawler : MobDefault // Crawler class
     {
-        SmoothConsole smoothPrinting = new SmoothConsole();
+        private readonly SmoothConsole smoothPrinting;
+
+
         public Dictionary<string, (int damage, string magicType)> _normalAtkNames;
 
-        public Crawler(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int, string, string, string)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
-        {
-
-            // Default presets for a crawler, inherited from the mob default class
-
-            name = "Crawler";
-            currentMobHealth = 20; // Crawlers are very weak creatures, and by default have 20 health
-            maxMobHealth = 20;
-
-
-            // Dictionary containing crawler attacks and their associated damage value
-            Dictionary<string, int> normalAtkNames = new Dictionary<string, int>() // Preset name for all dragon's normal attacks
+        // Dictionary containing crawler attacks and their associated damage value
+        Dictionary<string, int> normalAtkNames = new Dictionary<string, int>() // Preset name for all dragon's normal attacks
             {
                 { "Crawler's Scratch", 5 },
                 { "Crawler's Screech", 10 },
                 { "Crawler's Bite", 3 }
             };
 
-            // Dictionary that contains weapon name, damage, rarity and weapon type (item drops)
-            Dictionary<string, (int, string, string, string)> itemDrop = new Dictionary<string, (int, string, string, string)>()
+        // Dictionary that contains weapon name, damage, rarity and weapon type (item drops)
+        Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop = new Dictionary<string, (int, string, string, string)>()
             {
-                { "Staff of Spite", (7, "(Common)", "Staff", "Not cool") },
-                { "Crawler's Revant", (10, "(Uncommon)", "Rapier/Sword", "Bad") },
+                { "Staff of Spite", (9, "Common", "Staff", "The emotion of the Crawler once it perishes, nothing but spite, wishing that it could finish you should it have been alive.") },
+                { "Crawler's Revant", (15, "Uncommon", "Rapier/Sword", "A fairly rusty rapier that looks like it hasn't been used in a long time, perhaps could make good scraps for a better sword.") },
             };
 
-            itemDrop = _itemDrop;
-            // normalAtkNames = _normalAtkNames;
-
-
-            // Future reference: Add a condition to insert the item into the users inventory, the user has a choice to accept/decline, should they decline, the weapon gets discareded into parts which can be used to refine other weapons
+        
+        public Crawler(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string, string, string)> _itemDrop, int _expDrop, int _dropChance, int mobLevel) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop, _expDrop, _dropChance, _mobLevel)
+        {
+            // Default presets for a crawler, inherited from the mob default class
+            name = "Crawler";
+            currentMobHealth = 35; // Crawlers have '35' HP by default, as they are small and weak
+            maxMobHealth = 20;
+            expDrop = 30; // Each Crawler drops '30' EXP
+            dropChance = 3; // Drop chance for items isn't that low, as it is a weak creature
+            mobLevel = 5;
+            
         }
 
 
@@ -966,23 +968,26 @@ namespace FantasyRPG
 
     }
 
-    class Dragon : MobDefault // Dragon class
+    class Dragon : MobDefault
     {
-        SmoothConsole smoothPrinting = new SmoothConsole();
-        string name;
-        int currentMobHealth, maxMobHealth = 350;
+        private readonly UIManager UI;
+        private readonly SmoothConsole smoothPrinting;
 
+        private readonly Dictionary<string, (int damage, string magicType)> normalAtkNames = new Dictionary<string, (int damage, string magicType)>()
+        {
+            {"Dragon's Claw", (30, "Dragon-Magic")},
+            {"Dragon's Breath", (40, "Dragon-Magic")},
+            {"Raging Tempest", (50, "Dragon-Magic")}
+        };
 
-        // Dictionary containing dragon attacks and their associated damage value
-        Dictionary<string, (int damage, string magicType)> normalAtkNames = new Dictionary<string, (int damage, string magicType)>() // Preset names for all dragon's normal attacks
-            {
-                {"Dragon's Claw", (30, "Dragon-Magic")},
-                {"Dragon's Breath", (40, "Dragon-Magic")},
-                {"Raging Tempest", (50, "Dragon-Magic")}
-            };
+        private readonly Dictionary<string, (int damage, string magicType)> specialAtkNames = new Dictionary<string, (int damage, string magicType)>()
+        {
+            { "Arcane Nexus", (100, "Eucladian-Magic")},
+            { "Umbral Charge", (120, "Dark-Magic")},
+            { "Rampant Flame Charge", (200, "Fire-Magic") }
+        };
 
-        // Dictionary that contains weapon name, damage, rarity, and weapon type (item drops)
-        Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop = new Dictionary<string, (int, string, string, string)>()
+        private readonly Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> itemDrop = new Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)>()
         {
             { "Frostfire Fang", (65, "Unique", "Staff", "Forged in the icy flames of the dragon's breath, this fang drips with frostfire, capable of freezing enemies in their tracks.") },
             { "Serpent's Gaze", (50, "Unique", "Rapier/Sword", "Crafted from the scales of the ancient serpent, this gaze holds the power to petrify foes with a single glance.") },
@@ -992,25 +997,19 @@ namespace FantasyRPG
             { "Eucladian's Aura", (55, "Legendary", "Aura", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.") }
         };
 
-        Dictionary<string, (int damage, string magicType)> specialAtkNames = new Dictionary<string, (int, string)>() // Preset names for all dragon's special attacks
-            {
-                { "Arcane Nexus", (100, "Eucladian-Magic")}, // Eucladian type ULT
-                { "Umbral Charge", (120, "Dark-Magic")}, // Dark type ULT
-                { "Rampant Flame Charge", (200, "Fire-Magic") } // Flame type ULT
-            };
-
-        public Dragon(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> _itemDrop) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop)
+        public Dragon(string _name, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> _itemDrop, int _expDrop, int _dropChance, int _mobLevel) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop, _expDrop, _dropChance, _mobLevel)
         {
-            // Default presets for a dragon, inherited from the mob default class
             name = _name;
-            currentMobHealth = _currentMobHealth; // Dragons have 350HP by default
-            maxMobHealth = _maxMobHealth;
-            normalAtkNames = _normalAtkNames;
-            specialAtkNames = _specialAtkNames;
-            specialAtkRecharge = 0; // Preset
-            itemDrop = _itemDrop;
-            UIManager UI = new UIManager();
+            currentMobHealth = 350;
+            maxMobHealth = 350;
+            specialAtkRecharge = 0;
+            dropChance = 12; // Low chance for item drop
+            mobLevel = 25;
+            expDrop = 300; // Dragon drops 300 EXP by default
+            UI = new UIManager();
+            smoothPrinting = new SmoothConsole();
         }
+
 
         // Future reference: Create different types of dragons that have weaknesses (i.e. water dragons, shadow dragons etc)
 
@@ -1018,7 +1017,7 @@ namespace FantasyRPG
         {
             if (character.level <= 10) // Should the users level be below level 10, then the dragon will exert pressure to the individual, reducing their attack value.
             {
-                UIManager UI = new UIManager();
+                
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine("FantasyRPG: Dragon Race - Exerting Pressure");
                 smoothPrinting.PrintLine("--------------------------------------------------");
@@ -1033,10 +1032,15 @@ namespace FantasyRPG
 
                 smoothPrinting.RapidPrint("\nYour attack damage is reduced as the overwhelming presence of Windsom weighs heavily upon you.\n");
 
+                smoothPrinting.RapidPrint("\nDue to your weakened state, your weapon does less damage.");
+
+                // Future reference: Add a part where the individuals weapon does less damage
+
                 UI.PromptUserToContinue();
                 Console.ResetColor(); // Reset Console Colour
-
             }
+
+
 
         }
 
