@@ -546,65 +546,36 @@ namespace FantasyRPG
             Console.WriteLine(); // Spacing to stop overlapping
             Console.WriteLine(); // Double spacing to stop overlapping
             smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine($"FantasyRPG: {name}'s Status Check - Required EXP for next Level");
+            smoothPrinting.PrintLine($"FantasyRPG: {character.name}'s Status Check - Required EXP for next Level");
             smoothPrinting.PrintLine("--------------------------------------------------");
 
 
-            if (character is Mage)
+            // Depending on level, requirement for level is adjusted, when user reaches level 10 and above, exp requirements are increased
+            if (level < 10)
             {
-                // Depending on level, requirement for level is adjusted, when user reaches level 10 and above, exp requirements are increased
-                if (level < 10)
+                experienceRequiredForNextLevel = 10 * level;
+                UI.DisplayProgressBar($"Experience required for Level {character.level + 1}", exp, experienceRequiredForNextLevel, 30);
+
+                if (character.exp > character.experienceRequiredForNextLevel) // Should the individual have more exp than the requirement, then they'll level up accordingly, this could happen if the user defeats a strong opponent
                 {
-                    experienceRequiredForNextLevel = 10 * level;
-                    UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
-
-                    if (character.exp > experienceRequiredForNextLevel) // Should the individual have more exp than the requirement, then they'll level up accordingly, this could happen if the user defeats a strong opponent
-                    {
-                        LevelUp(character);
-                    }
-
-                    Console.WriteLine(); // Spacing
+                    LevelUp(character);
                 }
-                else if (level >= 10)
-                {
-                    experienceRequiredForNextLevel = 100 * level;
-                    UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
-                }
-                Console.WriteLine(); // Spacing to avoid overlaps
-                smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
-                Console.ReadKey(); // Register user input
-                Console.Clear(); // Clear the console to avoid overlapping
-                gameDashboard dash = new gameDashboard();
-                dash.dashboard((Mage)character); // Return to the user dashboard
 
+                Console.WriteLine(); // Spacing
             }
-            else if (character is SomaliPirate)
+            else if (level >= 10)
             {
-                // Depending on level, requirement for level is adjusted, when user reaches level 10 and above, exp requirements are increased
-                if (level < 10)
-                {
-                    experienceRequiredForNextLevel = 10 * level;
-                    UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
-
-                    if (character.exp > experienceRequiredForNextLevel) // Should the individual have more exp than the requirement, then they'll level up accordingly, this could happen if the user defeats a strong opponent
-                    {
-                        LevelUp(character);
-                    }
-
-                    Console.WriteLine(); // Spacing
-                }
-                else if (level >= 10)
-                {
-                    experienceRequiredForNextLevel = 100 * level;
-                    UI.DisplayProgressBar($"Experience required for Level {level + 1}", exp, experienceRequiredForNextLevel, 30);
-                }
-                Console.WriteLine(); // Spacing to avoid overlaps
-                smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
-                Console.ReadKey(); // Register user input
-                Console.Clear(); // Clear the console to avoid overlapping
-                gameDashboard dash = new gameDashboard();
-                dash.dashboard((Mage)character); // Return to the user dashboard
+                experienceRequiredForNextLevel = 100 * level;
+                UI.DisplayProgressBar($"Experience required for Level {character.level + 1}", exp, experienceRequiredForNextLevel, 30);
             }
+            Console.WriteLine(); // Spacing to avoid overlaps
+            smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to return back to the dashboard.");
+            Console.ReadKey(); // Register user input
+            Console.Clear(); // Clear the console to avoid overlapping
+            gameDashboard dash = new gameDashboard();
+            dash.dashboard((Mage)character); // Return to the user dashboard
+
+            
 
 
 
@@ -621,7 +592,7 @@ namespace FantasyRPG
                 smoothPrinting.PrintLine($"FantasyRPG: Mage Level Up!");
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 level++; // Increment the level
-                smoothPrinting.RapidPrint($"\n{name} has levelled up, you are now level {level}!");
+                smoothPrinting.RapidPrint($"\n{character.name} has levelled up, you are now level {character.level}!");
                 CalculateExperienceForNextLevel((Mage)character);
 
             }
@@ -641,26 +612,13 @@ namespace FantasyRPG
         // Check if user has enough to level up
         public void GainExperience(CharacterDefault character, float experiencePoints)
         {
-            if (character is Mage)
+            character.exp += experiencePoints;
+
+            // Check if the character should level up
+            if (character.exp >= character.experienceRequiredForNextLevel)
             {
-                exp += experiencePoints;
-
-                // Check if the character should level up
-                if (exp >= experienceRequiredForNextLevel)
-                {
-                    LevelUp((Mage)character);
-                }
-
-            }
-            else if (character is SomaliPirate)
-            {
-                exp += experiencePoints;
-
-                // Check if the character should level up
-                if (exp >= experienceRequiredForNextLevel)
-                {
-                    LevelUp((SomaliPirate)character);
-                }
+                character.exp = 0; // Reset experience points
+                LevelUp((Mage)character);
             }
 
         }
@@ -669,43 +627,54 @@ namespace FantasyRPG
 
     public class MobSpawner
     {
-        private CharacterDefault playerCharacter;
-        private MobType mobType;
+        private readonly CharacterDefault playerCharacter;
+        private readonly MobType mobType;
+        private readonly SmoothConsole smoothPrinting;
 
         public MobSpawner(CharacterDefault character, MobType type)
         {
-            playerCharacter = character;
+            playerCharacter = character ?? throw new ArgumentNullException(nameof(character));
             mobType = type;
+            smoothPrinting = new SmoothConsole();
         }
 
-        public void MobSpawn()
+        public void MobSpawn(MobDefault mob)
         {
-            bool quickDisplay = false;
+            if (mob == null)
+            {
+                throw new ArgumentNullException(nameof(mob));
+            }
 
+            bool quickDisplay = false;
 
             switch (mobType)
             {
                 case MobType.Dragon:
-
+                    Dragon dragon = new Dragon(mob.name, mob.currentMobHealth, mob.maxMobHealth, mob.normalAtkNames, mob.specialAtkNames, mob.specialAtkRecharge, mob.itemDrop, mob.expDrop, mob.dropChance, mob.mobLevel);
+                    playerCharacter.CombatSystem(playerCharacter, dragon, quickDisplay);
                     break;
 
                 case MobType.Crawler:
+                    // Handle Crawler instantiation
+                    break;
+
+                case MobType.Wolf:
+                    Wolf wolf = new Wolf("Wolf", mob.currentMobHealth, mob.maxMobHealth, mob.normalAtkNames, mob.specialAtkNames, mob.specialAtkRecharge, mob.itemDrop, mob.expDrop, mob.dropChance, mob.mobLevel);
+                    playerCharacter.CombatSystem(playerCharacter, wolf, quickDisplay);
                     break;
 
                 default:
-
+                    smoothPrinting.RapidPrint("\nUnknown mob type, please check the code.");
                     break;
-
-
-
             }
         }
-
     }
+
 
     public enum MobType // Current mob types in the game
     {
         Dragon,
+        Wolf,
         Crawler
     }
 
@@ -727,7 +696,7 @@ namespace FantasyRPG
             normalAtkNames = _normalAtkNames;
             specialAtkNames = _specialAtkNames;
             itemDrop = _itemDrop; // Mobs have a chance to drop a random item once they die
-            specialAtkRecharge = 100;
+            specialAtkRecharge = 0;
             currentMobHealth = _currentMobHealth;
             maxMobHealth = _maxMobHealth;
             mobLevel = _mobLevel;
@@ -735,25 +704,6 @@ namespace FantasyRPG
             dropChance = _dropChance;
             UI = new UIManager();
             smoothPrinting = new SmoothConsole();
-        }
-
-
-        // Method to get normal attack names dictionary
-        public Dictionary<string, (int damage, string magicType)> GetNormalAttackNames()
-        {
-            return normalAtkNames;
-        }
-
-        // Method to get special attack names dictionary
-        public Dictionary<string, (int damage, string magicType)> GetSpecialAttackNames()
-        {
-            return specialAtkNames;
-        }
-
-        // Method to get item drops
-        public Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> GetItemDrops()
-        {
-            return itemDrop;
         }
 
 
@@ -1058,7 +1008,36 @@ namespace FantasyRPG
 
     }
 
-    class Dragon : MobDefault
+    public class Wolf : MobDefault
+    {
+        private readonly UIManager UI;
+        private readonly SmoothConsole smoothPrinting;
+
+
+        private readonly Dictionary<string, (int damage, string magicType)> normalAtkNames = new Dictionary<string, (int damage, string magicType)>()
+        {
+            {"Scratch", (5, "Normal")},
+            {"Bite", (8, "Normal")},
+            {"Hounding Tempest", (10, "Wind-Magic")}
+        };
+
+        private readonly Dictionary<string, (int damage, string magicType)> specialAtkNames = new Dictionary<string, (int damage, string magicType)>()
+        {
+            { "Pack Ambush", (25, "Normal")},
+            { "Howl", (20, "Sound-Magic")},
+            { "Bloody Rage", (15, "Fire-Magic") }
+        };
+
+
+        public Wolf(string _name, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> _itemDrop, int _expDrop, int _dropChance, int _mobLevel) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop, _expDrop, _dropChance, _mobLevel)
+        {
+            UI = new UIManager();
+            smoothPrinting = new SmoothConsole();
+        }
+
+    }
+
+    public class Dragon : MobDefault
     {
         private readonly UIManager UI;
         private readonly SmoothConsole smoothPrinting;
@@ -1089,13 +1068,14 @@ namespace FantasyRPG
 
         public Dragon(string _name, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> _itemDrop, int _expDrop, int _dropChance, int _mobLevel) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop, _expDrop, _dropChance, _mobLevel)
         {
-            name = _name;
-            currentMobHealth = 350;
-            maxMobHealth = 350;
-            specialAtkRecharge = 0;
-            dropChance = 12; // Low chance for item drop
-            mobLevel = 25;
-            expDrop = 300; // Dragon drops 300 EXP by default
+            // name = _name;
+            // currentMobHealth = 350;
+            // maxMobHealth = 350;
+            // specialAtkRecharge = 0;
+            // dropChance = 12; // Low chance for item drop
+            // mobLevel = 25;
+            // expDrop = 300; // Dragon drops 300 EXP by default
+
             UI = new UIManager();
             smoothPrinting = new SmoothConsole();
         }
@@ -2898,18 +2878,11 @@ namespace FantasyRPG
             switch (firstSelection)
             {
                 case "1":
-                    // Check the users class, that way the correct combat system is initated for the battle
-                    if (character is Mage)
-                    {
-                        DragonConfrontation((Mage)character);
-                    }
-                    else if (character is SomaliPirate)
-                    {
-                        DragonConfrontation((SomaliPirate)character);
-                    }
+                    DragonConfrontation(character);
                     break;
                 case "2":
                     // Move northward
+                    NorthDirection(character);
                     break;
                 case "3":
                     character.CheckInventory();
@@ -2938,8 +2911,54 @@ namespace FantasyRPG
         }
 
 
-        void NorthDirection(CharacterDefault character)
+        public void NorthDirection(CharacterDefault character)
         {
+            Random random = new Random();
+            int generatedValue = random.Next(1, 4); // Increase range to account for additional mob types
+
+            if (generatedValue == 1)
+            {
+                smoothPrinting.PrintLine("--------------------------------------------------");
+                smoothPrinting.PrintLine("FantasyRPG: Wolf mob encounter!");
+                smoothPrinting.PrintLine("--------------------------------------------------");
+
+                smoothPrinting.RapidPrint("\nYou have encountered a wild wolf, one that is showing hostility, you have no choice but to fight to the battle of death!");
+
+                Console.WriteLine(); // Spacing
+                UI.PromptUserToContinue();
+
+                // Create an instance of the Wolf class (or whatever represents your wolf mob)
+
+                Dictionary<string, (int damage, string magicType)> normalAtkNames = new Dictionary<string, (int damage, string magicType)>()
+                {
+                    {"Scratch", (5, "Normal")},
+                    {"Bite", (8, "Normal")},
+                    {"Hounding Tempest", (10, "Wind-Magic")}
+                };
+
+                Dictionary<string, (int damage, string magicType)> specialAtkNames = new Dictionary<string, (int damage, string magicType)>()
+                {
+                    { "Pack Ambush", (25, "Normal")},
+                    { "Howl", (20, "Sound-Magic")},
+                    { "Bloody Rage", (15, "Fire-Magic") }
+                };
+
+                Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop = new Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)>()
+                {
+                    { "Sharp Fang", (20, "Common", "Sword", "A sharp fang torn from the jaws of a wolf, suitable for close combat.") },
+                    { "Howler's Claw", (25, "Rare", "Rapier", "A claw imbued with the power of the alpha wolf, capable of rending through armor.") },
+                };
+
+                MobType wolfType = new MobType();
+
+                Wolf wolf = new Wolf("Wolf", 30, 30, normalAtkNames, specialAtkNames, 0, itemDrop, 25, 3, 3); // Assuming you have a Wolf class defined
+
+                // Create a MobSpawner object passing the player character and the wolf instance
+                MobSpawner mobSpawner = new MobSpawner(character, wolfType); // Pass null or remove the unnecessary parameter
+
+                // Spawn the wolf using MobSpawn method
+                mobSpawner.MobSpawn(wolf);
+            }
             
         }
 
@@ -2986,7 +3005,7 @@ namespace FantasyRPG
                     smoothPrinting.RapidPrint("\nThe dragon rapidly halts its movements, it feels as if time has frozen with how intense the situation has now become. The dragon comes down, inching every second closer to you...");
                     Console.WriteLine();
                     UI.PromptUserToContinue();
-                    dragonCombat();
+                    dragonCombat(character);
 
                     break;
 
@@ -3017,13 +3036,13 @@ namespace FantasyRPG
                     smoothPrinting.RapidPrint("\nYour indecision leaves you paralyzed, unable to take action. The dragon's gaze narrows, sensing your hesitation and immediately screeches, scaring all the nearby dwellers, leaving only yourself and the dragon.");
                     Console.WriteLine();
                     UI.PromptUserToContinue();
-                    dragonCombat(); // Engage combat as the user is caught
+                    dragonCombat(character); // Engage combat as the user is caught
                     break;
             }
 
 
 
-            void dragonCombat() // A function that engages the fight between the MC and the dragon
+            void dragonCombat(CharacterDefault character) // A function that engages the fight between the MC and the dragon
             {
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine("Forest of Mysteries");
@@ -3054,9 +3073,56 @@ namespace FantasyRPG
                 Console.ReadKey(); // Wait for user input
                 Console.Clear(); // Clear the console to prepare for combat
 
+                // Instantiate a MobType object if necessary
+                MobType dragonType = new MobType();
 
-                // Spawn the dragon
+                // Dictionary containing normal attack names and their associated damage and magic type
+                Dictionary<string, (int damage, string magicType)> normalAtkNames = new Dictionary<string, (int damage, string magicType)>()
+                {
+                    { "Dragon's Claw", (30, "Dragon-Magic") },
+                    { "Dragon's Breath", (40, "Dragon-Magic") },
+                    { "Raging Tempest", (50, "Dragon-Magic") }
+                };
+
+                // Dictionary containing special attack names and their associated damage and magic type
+                Dictionary<string, (int damage, string magicType)> specialAtkNames = new Dictionary<string, (int damage, string magicType)>()
+                {
+                    { "Arcane Nexus", (100, "Eucladian-Magic") },
+                    { "Umbral Charge", (120, "Dark-Magic") },
+                    { "Rampant Flame Charge", (200, "Fire-Magic") }
+                };
+
+                // Dictionary containing item names and their associated damage, rarity, weapon type, and description
+                Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop = new Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)>()
+                {
+                    { "Frostfire Fang", (65, "Unique", "Staff", "Forged in the icy flames of the dragon's breath, this fang drips with frostfire, capable of freezing enemies in their tracks.") },
+                    { "Serpent's Gaze", (50, "Unique", "Rapier/Sword", "Crafted from the scales of the ancient serpent, this gaze holds the power to petrify foes with a single glance.") },
+                    { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword", "Tempered in the chaosfire of the dragon's lair, this greatsword burns with an insatiable hunger for destruction.") },
+                    { "Nightshade Arc", (55, "Unique", "Bow", "Fashioned from the sinew of the nocturnal shadows, this bow strikes with deadly accuracy under the cover of darkness.") },
+                    { "Aerith's Heirloom", (80, "Legendary", "Staff", "Once wielded by the legendary Aerith, this staff channels the primordial magic of creation itself, capable of reshaping reality.") },
+                    { "Eucladian's Aura", (55, "Legendary", "Aura", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.") }
+                };
+
+                Dragon dragon = new Dragon(
+                    "Windsom",  // Name
+                    350,        // Current health
+                    350,        // Maximum health
+                    normalAtkNames,    // Normal attack names dictionary
+                    specialAtkNames,   // Special attack names dictionary
+                    0,        // Special attack recharge percentage
+                    itemDrop,   // Item drop dictionary
+                    300,        // Experience points drop
+                    12,         // Drop chance
+                    25          // Mob level
+                );
+                // Create a MobSpawner object passing character and dragonType
+                MobSpawner mobSpawner = new MobSpawner(character, dragonType);
+
+                // Spawn the dragon using MobSpawn method
+                mobSpawner.MobSpawn(dragon);
+
             }
+
 
 
 
@@ -3069,28 +3135,28 @@ namespace FantasyRPG
             // Dictionary containing dragon attacks and their associated damage value
             // Dictionary<string, (int damage, string magicType)> normalAtkNames = new Dictionary<string, (int damage, string magicType)>() // Preset names for all dragon's normal attacks
             // {
-                // {"Dragon's Claw", (30, "Dragon-Magic")},
-                // {"Dragon's Breath", (40, "Dragon-Magic")},
-                // {"Raging Tempest", (50, "Dragon-Magic")}
+            // {"Dragon's Claw", (30, "Dragon-Magic")},
+            // {"Dragon's Breath", (40, "Dragon-Magic")},
+            // {"Raging Tempest", (50, "Dragon-Magic")}
             //};
 
             // Dictionary containing dragon attacks and their associated damage value
             // Dictionary<string, (int, string)> specialAtkNames = new Dictionary<string, (int, string)>()
             // {
-                // { "Arcane Nexus", (100, "Eucladian-Magic") },
-                // { "Umbral Charge", (120, "Dark-Magic") },
-                // { "Rampant Flame Charge", (200, "Fire-Magic") }
+            // { "Arcane Nexus", (100, "Eucladian-Magic") },
+            // { "Umbral Charge", (120, "Dark-Magic") },
+            // { "Rampant Flame Charge", (200, "Fire-Magic") }
             // };
 
             // Dictionary that contains weapon name, damage, rarity, and weapon type (item drops)
             // Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop = new Dictionary<string, (int, string, string, string)>()
             // {
-                // { "Frostfire Fang", (65, "Unique", "Staff", "Forged in the icy flames of the dragon's breath, this fang drips with frostfire, capable of freezing enemies in their tracks.") },
-                // { "Serpent's Gaze", (50, "Unique", "Rapier/Sword", "Crafted from the scales of the ancient serpent, this gaze holds the power to petrify foes with a single glance.") },
-                // { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword", "Tempered in the chaosfire of the dragon's lair, this greatsword burns with an insatiable hunger for destruction.") },
-                // { "Nightshade Arc", (55, "Unique", "Bow", "Fashioned from the sinew of the nocturnal shadows, this bow strikes with deadly accuracy under the cover of darkness.") },
-                // { "Aerith's Heirloom", (80, "Legendary", "Staff", "Once wielded by the legendary Aerith, this staff channels the primordial magic of creation itself, capable of reshaping reality.") },
-                // { "Eucladian's Aura", (55, "Legendary", "Aura", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.") }
+            // { "Frostfire Fang", (65, "Unique", "Staff", "Forged in the icy flames of the dragon's breath, this fang drips with frostfire, capable of freezing enemies in their tracks.") },
+            // { "Serpent's Gaze", (50, "Unique", "Rapier/Sword", "Crafted from the scales of the ancient serpent, this gaze holds the power to petrify foes with a single glance.") },
+            // { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword", "Tempered in the chaosfire of the dragon's lair, this greatsword burns with an insatiable hunger for destruction.") },
+            // { "Nightshade Arc", (55, "Unique", "Bow", "Fashioned from the sinew of the nocturnal shadows, this bow strikes with deadly accuracy under the cover of darkness.") },
+            // { "Aerith's Heirloom", (80, "Legendary", "Staff", "Once wielded by the legendary Aerith, this staff channels the primordial magic of creation itself, capable of reshaping reality.") },
+            // { "Eucladian's Aura", (55, "Legendary", "Aura", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.") }
             // };
 
 
