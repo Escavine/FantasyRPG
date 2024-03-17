@@ -667,6 +667,48 @@ namespace FantasyRPG
 
     }
 
+    public class MobSpawner
+    {
+        private CharacterDefault playerCharacter;
+        private MobType mobType;
+
+        public MobSpawner(CharacterDefault character, MobType type)
+        {
+            playerCharacter = character;
+            mobType = type;
+        }
+
+        public void MobSpawn()
+        {
+            bool quickDisplay = false;
+
+
+            switch (mobType)
+            {
+                case MobType.Dragon:
+
+                    break;
+
+                case MobType.Crawler:
+                    break;
+
+                default:
+
+                    break;
+
+
+
+            }
+        }
+
+    }
+
+    public enum MobType // Current mob types in the game
+    {
+        Dragon,
+        Crawler
+    }
+
     public class MobDefault // Mob preset for the game
     {
         public string name;
@@ -675,9 +717,9 @@ namespace FantasyRPG
         private readonly SmoothConsole smoothPrinting; // Cleaner and neater output
 
         // Mobs can have different attack names and varying item drops, each associated with a rarity and damage value
-        public Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> itemDrop; // First string defines the weapon name, second integer defines the weapon damage, thirs stirng defines the weapon rarity and fourth string defines the weapon type
-        public Dictionary<string, (int damage, string magicType)> normalAtkNames;
-        public Dictionary<string, (int damage, string magicType)> specialAtkNames;
+        public Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> itemDrop { get; } // First string defines the weapon name, second integer defines the weapon damage, thirs stirng defines the weapon rarity and fourth string defines the weapon type
+        public Dictionary<string, (int damage, string magicType)> normalAtkNames { get; }
+        public Dictionary<string, (int damage, string magicType)> specialAtkNames { get; }
 
         public MobDefault(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> _itemDrop, int _expDrop, int _dropChance, int _mobLevel) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
         {
@@ -695,36 +737,51 @@ namespace FantasyRPG
             smoothPrinting = new SmoothConsole();
         }
 
-        // Method for spawning a specific mob based on the context (i.e. if a dragon is encountered, then spawn a dragon)
-        public void MobSpawn(MobDefault mob, CharacterDefault character)
+
+        // Method to get normal attack names dictionary
+        public Dictionary<string, (int damage, string magicType)> GetNormalAttackNames()
         {
-            bool quickDisplay = false; // This is for combat convienience, if this is true, then all options are displayed quickly
+            return normalAtkNames;
+        }
 
-            // Spawn the specified mob type
-            switch (mob)
-            {
-                case Dragon _:
+        // Method to get special attack names dictionary
+        public Dictionary<string, (int damage, string magicType)> GetSpecialAttackNames()
+        {
+            return specialAtkNames;
+        }
+
+        // Method to get item drops
+        public Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> GetItemDrops()
+        {
+            return itemDrop;
+        }
+
+
+        // Method for spawning a specific mob based on the context (i.e. if a dragon is encountered, then spawn a dragon)
+        // public void MobSpawn(CharacterDefault character)
+        // {
+            // bool quickDisplay = false; // This is for combat convenience, if this is true, then all options are displayed quickly
+
+            // Spawn the specified mob type based on the value of the mob variable
+            // switch (mob)
+            // {
+                // case Dragon _:
                     // Spawn a dragon
-
-                    // 1/20 chance of dropping a item
-                    Dragon dragon = new Dragon(mob.name, mob.currentMobHealth, mob.maxMobHealth, mob.normalAtkNames, mob.specialAtkNames, mob.maxMobHealth, mob.itemDrop, mob.expDrop, mob.dropChance, mob.mobLevel);
-                    character.CombatSystem(character, mob, quickDisplay);
-                    break;
-
-                case Crawler _:
-                    Crawler crawler = new Crawler(mob.name, mob.normalAtkNames, mob.specialAtkNames, mob.specialAtkRecharge, mob.currentMobHealth, mob.maxMobHealth, mob.itemDrop, mob.expDrop, mob.dropChance, mob.mobLevel); ;
+                    // Dragon dragon = new Dragon(mob.name, mob.currentMobHealth, mob.maxMobHealth, mob.normalAtkNames, mob.specialAtkNames, mob.maxMobHealth, mob.itemDrop, mob.expDrop, mob.dropChance, mob.mobLevel);
+                    // character.CombatSystem(character, mob, quickDisplay);
+                    // break;
+                // case Crawler _:
+                    // Crawler crawler = new Crawler(mob.name, mob.normalAtkNames, mob.specialAtkNames, mob.specialAtkRecharge, mob.currentMobHealth, mob.maxMobHealth, mob.itemDrop, mob.expDrop, mob.dropChance, mob.mobLevel);
                     // Spawn another type of mob (replace with your mob class and parameters)
-                    break;
-                // case AnotherMobType2 _:
-                    // Spawn another type of mob (replace with your mob class and parameters)
-                    break;
-                default:
+                    // break;
+                // Add other cases for different mob types if needed
+                // default:
                     // Handle unexpected mob type
-                    break;
-            }
+                    // break;
+           // }
 
             // Now you can use the spawned mob object
-        }
+        // }
 
         // Infinite dungeon method
         public void InfiniteDungeon()
@@ -1042,7 +1099,6 @@ namespace FantasyRPG
             UI = new UIManager();
             smoothPrinting = new SmoothConsole();
         }
-
 
         // Future reference: Create different types of dragons that have weaknesses (i.e. water dragons, shadow dragons etc)
 
@@ -2998,10 +3054,8 @@ namespace FantasyRPG
                 Console.ReadKey(); // Wait for user input
                 Console.Clear(); // Clear the console to prepare for combat
 
-                Dragon windsom = null;
 
                 // Spawn the dragon
-                windsom.MobSpawn(windsom, character);
             }
 
 
@@ -3018,7 +3072,7 @@ namespace FantasyRPG
                 // {"Dragon's Claw", (30, "Dragon-Magic")},
                 // {"Dragon's Breath", (40, "Dragon-Magic")},
                 // {"Raging Tempest", (50, "Dragon-Magic")}
-            // };
+            //};
 
             // Dictionary containing dragon attacks and their associated damage value
             // Dictionary<string, (int, string)> specialAtkNames = new Dictionary<string, (int, string)>()
