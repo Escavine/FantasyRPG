@@ -174,8 +174,8 @@ namespace FantasyRPG
                     {
                         DisplayMageCombatSystemHeader(); // Display the MCS (Mage Combat System Header)
 
-                        Console.WriteLine($"{character.name} - Mage Status");
-                        Console.WriteLine($"{mob.name} - Enemy");
+                        Console.WriteLine($"{character.name} - Mage Status : Current Level {character.level}");
+                        Console.WriteLine($"{mob.name} - Enemy : Level {mob.mobLevel}");
 
                         UI.DisplayProgressBar($"{character.name}'s Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
                         Console.WriteLine(); // Spacing
@@ -592,6 +592,7 @@ namespace FantasyRPG
                 smoothPrinting.PrintLine($"FantasyRPG: Mage Level Up!");
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 character.level++; // Increment the level
+                character.exp -= character.experienceRequiredForNextLevel; // Decrement to avoid overdistrubution
                 character.maxHealth += 5; // For every level, increase the users maximum health by 5 points
                 character.maxMana += 5; // For every level, increase the users maximum mana by 5 points
                 character.currentHealth += character.maxHealth; // Replenish the users health
@@ -609,8 +610,15 @@ namespace FantasyRPG
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine($"FantasyRPG: Pirate Level Up!");
                 smoothPrinting.PrintLine("--------------------------------------------------");
-                level++;
-                smoothPrinting.RapidPrint($"\n{name} has levelled up! You are now level {level}");
+                character.level++; // Increment the level
+                character.maxHealth += 5; // For every level, increase the users maximum health by 5 points
+                character.maxMana += 5; // For every level, increase the users maximum mana by 5 points
+                character.currentHealth += character.maxHealth; // Replenish the users health
+                character.currentMana += character.maxMana; // Replenish the users mana
+                smoothPrinting.RapidPrint($"\n{character.name} has levelled up, you are now level {character.level}!");
+                smoothPrinting.RapidPrint($"\nYour maximum HP has increased by +5");
+                smoothPrinting.RapidPrint($"\nYour maximum mana has increased by +5");
+                smoothPrinting.RapidPrint($"\nYour current health and mana have been replenished!");
                 CalculateExperienceForNextLevel((SomaliPirate)character);
             }
 
@@ -621,10 +629,10 @@ namespace FantasyRPG
         {
             character.exp += experiencePoints;
 
+
             // Check if the character should level up
             if (character.exp >= character.experienceRequiredForNextLevel)
             {
-                character.exp = 0; // Reset experience points
                 LevelUp((Mage)character);
             }
 
@@ -921,6 +929,17 @@ namespace FantasyRPG
             {
                 Console.WriteLine(); // Spacing
                 smoothPrinting.RapidPrint($"\n{mob.name} Drop: {character.name} has received...\n\nItem Name: {drop.Key}\nDamage: {drop.Value.damage}\nRarity: {drop.Value.rarity}\nItem Description: {drop.Value.weaponDescription}\nWeapon Type: {drop.Value.weaponType}\n\nWould you like to equip this weapon? (1 for 'Yes' and any other key to store the item in your inventory)");
+
+                foreach (var currentWeaponStats in character.weapon)
+                {
+                    // Displays the users current equipped weapon 
+                    smoothPrinting.RapidPrint($"\nCurrent Weapon Equipped:\nWeapon Name: {currentWeaponStats.weaponName}\nWeapon Damage: {currentWeaponStats.damage}\nWeapon Rarity: {currentWeaponStats.rarity}\nWeapon Description: {currentWeaponStats.weaponDescription}\nWeapon Type: {currentWeaponStats.weaponType}");
+
+                    // Displaying the stat difference between the weapons/items
+                    smoothPrinting.RapidPrint($"\nStat Comparision:\nDamage Difference: {drop.Value.damage - currentWeaponStats.damage}\nRarity Differnce: {currentWeaponStats.rarity}->{drop.Value.rarity}\nWeapon Type Difference: {currentWeaponStats.weaponType}->{drop.Value.weaponType}");
+
+                }
+
                 Console.WriteLine(); // Spacing
                 smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
                 userChoice = Console.ReadLine(); // Register user input
