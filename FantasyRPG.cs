@@ -591,8 +591,15 @@ namespace FantasyRPG
                 smoothPrinting.PrintLine("--------------------------------------------------");
                 smoothPrinting.PrintLine($"FantasyRPG: Mage Level Up!");
                 smoothPrinting.PrintLine("--------------------------------------------------");
-                level++; // Increment the level
+                character.level++; // Increment the level
+                character.maxHealth += 5; // For every level, increase the users maximum health by 5 points
+                character.maxMana += 5; // For every level, increase the users maximum mana by 5 points
+                character.currentHealth += character.maxHealth; // Replenish the users health
+                character.currentMana += character.maxMana; // Replenish the users mana
                 smoothPrinting.RapidPrint($"\n{character.name} has levelled up, you are now level {character.level}!");
+                smoothPrinting.RapidPrint($"\nYour maximum HP has increased by +5");
+                smoothPrinting.RapidPrint($"\nYour maximum mana has increased by +5");
+                smoothPrinting.RapidPrint($"\nYour current health and mana have been replenished!");
                 CalculateExperienceForNextLevel((Mage)character);
 
             }
