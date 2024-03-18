@@ -609,7 +609,7 @@ namespace FantasyRPG
 
                 if (((Mage)character).level == 10)
                 {
-                    ((Mage)character).chooseNewSpeciality(); 
+                    ((Mage)character).chooseNewSpeciality(character); 
                 }
 
 
@@ -922,6 +922,7 @@ namespace FantasyRPG
                 smoothPrinting.RapidPrint($"\nYou received {mob.expDrop} EXP!"); // Display the received EXP to the user
                 character.exp += mob.expDrop; // Update the accumulated EXP for the user
                 character.GainExperience(character, character.exp); // Check the user level and level up when needed
+                character.inCombat = false; // Break the condition, as the combat has now reached its conclusion
 
 
             }
@@ -1202,13 +1203,15 @@ namespace FantasyRPG
         public string specialAtkName; // Remove these static features
         public int specialAtkDmg;
         public int normalAtkDmg;
+        public bool inCombat = false; 
 
-        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _specialAtkName, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
+        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _specialAtkName, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered, _inCombat)
         {
             name = _name;
             weapon = _weapon;
             specialAtkName = _specialAtkName;
             currentInventory = _currentInventory;
+            inCombat = _inCombat;
             normalAtkName = "Sword Slash"; // Remove these static features
             specialAtkDmg = 10; // Remove these static features
             normalAtkDmg = 4; // Remove these static features
@@ -1254,11 +1257,13 @@ namespace FantasyRPG
         // Properties for common wizard attributes
         public List<(string magicSpell, int damage, int manaRequirement)> magicSpells = new List<(string magicSpell, int damage, int manaRequirement)>();
         string[] magicSpecialties; // User can have multiple magic specialties
+        public bool inCombat = false;
 
-        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> _currentInventory, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
+        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> _currentInventory, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered, _inCombat)
         {
             name = _name;
             weapon = _weapon;
+            inCombat = _inCombat;
             magicSpecialties = _magicSpecialties;
             currentInventory = _currentInventory;
             magicSpells = _magicSpells; // Predefined variables for every new wizard in the game
@@ -1626,11 +1631,12 @@ namespace FantasyRPG
         public List<(string attack, int damage, int manaRequirement, string elementType, string description)> pirateSpecialAtks; // Normal and special attack lists, containing all relevant information
         public List<(string auraName, int damage, string rarity, string description)> weaponAura; // Weapon aura
 
-        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string auraName, int damage, string rarity, string description)> _weaponAura, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateNormalAtks, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateSpecialAtks, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered)
+        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string auraName, int damage, string rarity, string description)> _weaponAura, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateNormalAtks, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateSpecialAtks, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered, _inCombat)
         {
             name = _name;
             weapon = _weapon;
             weaponAura = _weaponAura;
+            inCombat = _inCombat;
             pirateNormalAtks = _pirateNormalAtks; // Presets for all new Somali Pirates in the game
             pirateSpecialAtks = _pirateSpecialAtks;
             currentInventory = _currentInventory; // This will be readjusted to a list in the future
@@ -1738,8 +1744,10 @@ namespace FantasyRPG
 
             };
 
+            bool debuggingCombat = false;
+
             // Create the debugging mage object with the specified arguments
-            Mage debuggingMage = new Mage(mageName, mageWeapon, mageSpecialties, arcaniaGoldCoins, magicSpells, currentInventory, specialAtkRecharge, npcsEncountered); // Debugging Mage
+            Mage debuggingMage = new Mage(mageName, mageWeapon, mageSpecialties, arcaniaGoldCoins, magicSpells, currentInventory, specialAtkRecharge, npcsEncountered, debuggingCombat); // Debugging Mage
             ForestOfMysteries scenario = new ForestOfMysteries();
             int remainingAttempts = 3;
 
@@ -2412,8 +2420,9 @@ namespace FantasyRPG
                     Console.ForegroundColor = ConsoleColor.White; // Reset the console color
 
                     int mageSpecialAtkRecharge = 0; // Preset
+                    bool mageCombat = false;
 
-                    Mage mage = new Mage(mageName, mageStaff, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory, mageSpecialAtkRecharge, mageClassNpcsEncountered);
+                    Mage mage = new Mage(mageName, mageStaff, magicSpecialties.ToArray(), arcaniaGoldCoins, magicSpells, mageInventory, mageSpecialAtkRecharge, mageClassNpcsEncountered, mageCombat);
                     DisplayMageDetails(); // Proceed to the function via function call to display Mage's details
                     break;
 
@@ -2748,8 +2757,9 @@ namespace FantasyRPG
                     // Add the random aura to the list
                     pirateWeaponAura.Add((randomAura.Key, randomAura.Value.damage, randomAura.Value.rarity, randomAura.Value.auraDescription));
 
+                    bool pirateCombat = false;
 
-                    SomaliPirate myPirate = new SomaliPirate(pirateName, pirateWeapon, pirateWeaponAura, chosenPirateNormalAttacks, chosenSpecialAttacks, pirateInventory, arcaniaGoldCoins, specialAtkRecharge, pirateClassNpcsEncountered); // Generate the pirate details
+                    SomaliPirate myPirate = new SomaliPirate(pirateName, pirateWeapon, pirateWeaponAura, chosenPirateNormalAttacks, chosenSpecialAttacks, pirateInventory, arcaniaGoldCoins, specialAtkRecharge, pirateClassNpcsEncountered, pirateCombat); // Generate the pirate details
 
                     Console.Clear(); // Neater
 
@@ -3167,9 +3177,15 @@ namespace FantasyRPG
                 );
                 // Create a MobSpawner object passing character and dragonType
                 MobSpawner mobSpawner = new MobSpawner(character, dragonType);
+                character.inCombat = true; // Enable combat status
 
-                // Spawn the dragon using MobSpawn method
-                mobSpawner.MobSpawn(character, dragon);
+                do
+                {
+                    // Spawn the dragon using MobSpawn method
+                    mobSpawner.MobSpawn(character, dragon);
+
+                } while (character.inCombat == true);
+
 
             }
 
