@@ -174,9 +174,10 @@ namespace FantasyRPG
                     {
                         DisplayMageCombatSystemHeader(); // Display the MCS (Mage Combat System Header)
 
-                        Console.WriteLine($"{character.name} - Mage Status : Current Level {character.level}");
-                        Console.WriteLine($"{mob.name} - Enemy : Level {mob.mobLevel}");
+                        smoothPrinting.RapidPrint($"{character.name} - Mage Status\n");
+                        smoothPrinting.RapidPrint($"{mob.name} - Enemy");
 
+                        smoothPrinting.RapidPrint("\nMage Status\n");
                         UI.DisplayProgressBar($"{character.name}'s Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
                         Console.WriteLine(); // Spacing
 
@@ -265,7 +266,7 @@ namespace FantasyRPG
                         DisplayMageCombatSystemHeader(); // Display the MCS (Mage Combat System Header)
 
                         smoothPrinting.RapidPrint($"{character.name} - Mage Status\n");
-                        smoothPrinting.RapidPrint($"{mob.name} - Enemy\n");
+                        smoothPrinting.RapidPrint($"{mob.name} - Enemy");
 
                         UI.DisplayProgressBar($"{character.name}'s Health", character.currentHealth, character.maxHealth, 30); // Display Mage's health
                         Console.WriteLine(); // Spacing
@@ -435,7 +436,8 @@ namespace FantasyRPG
                         {
                             foreach (var damageBoost in weapon)
                             {
-                                smoothPrinting.RapidPrint($"\n{character.name} has casted {spell.magicSpell}, dealing {(int)spell.damage + (damageBoost.damage * 0.3)} damage to {mob.name}.");
+                                int totalSpellDamage = (int)(spell.damage + damageBoost.damage * 0.3); // Retrieve the total spell damage as an integer value
+                                smoothPrinting.RapidPrint($"\n{character.name} has casted {spell.magicSpell}, dealing {(int)totalSpellDamage} damage to {mob.name}.");
                                 mob.currentMobHealth = 0; // Set the enemies health to zero, to prevent game from crashing
                                 character.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
                                 Console.ReadKey();
@@ -449,7 +451,8 @@ namespace FantasyRPG
                             foreach (var damageBoost in weapon) // The weapon will enable further damage with the encompassing spell used
                             {
                                 smoothPrinting.RapidPrint($"\n{character.name} has casted {spell.magicSpell}, dealing {(int)spell.damage + (damageBoost.damage * 0.3)} damage to {mob.name}.");
-                                mob.currentMobHealth -= (int)((spell.damage + damageBoost.damage) * 0.3); // Ensure the mob health remains integer, as to avoid game crashing
+                                int totalSpellDamage = (int)(spell.damage + damageBoost.damage * 0.3); // Retrieve the total spell damage as an integer value
+                                mob.currentMobHealth -= (int)totalSpellDamage; // Ensure the mob health remains integer, as to avoid game crashing
                                 character.currentMana -= spell.manaRequirement; // Linearly reduce the mage's mana based on the mana requirement of the spell
                                 Console.ReadKey();
                                 Console.Clear();
@@ -653,7 +656,7 @@ namespace FantasyRPG
             smoothPrinting = new SmoothConsole();
         }
 
-        public void MobSpawn(MobDefault mob)
+        public void MobSpawn(CharacterDefault character, MobDefault mob)
         {
             if (mob == null)
             {
@@ -666,6 +669,7 @@ namespace FantasyRPG
             {
                 case MobType.Dragon:
                     Dragon dragon = new Dragon(mob.name, mob.currentMobHealth, mob.maxMobHealth, mob.normalAtkNames, mob.specialAtkNames, mob.specialAtkRecharge, mob.itemDrop, mob.expDrop, mob.dropChance, mob.mobLevel);
+                    dragon.exertPressure(character, mob);
                     playerCharacter.CombatSystem(playerCharacter, dragon, quickDisplay);
                     break;
 
@@ -2983,7 +2987,7 @@ namespace FantasyRPG
                 MobSpawner mobSpawner = new MobSpawner(character, wolfType); // Pass null or remove the unnecessary parameter
 
                 // Spawn the wolf using MobSpawn method
-                mobSpawner.MobSpawn(wolf);
+                mobSpawner.MobSpawn(character, wolf);
             }
             
         }
@@ -3145,7 +3149,7 @@ namespace FantasyRPG
                 MobSpawner mobSpawner = new MobSpawner(character, dragonType);
 
                 // Spawn the dragon using MobSpawn method
-                mobSpawner.MobSpawn(dragon);
+                mobSpawner.MobSpawn(character, dragon);
 
             }
 
