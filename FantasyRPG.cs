@@ -609,7 +609,7 @@ namespace FantasyRPG
 
                 if (((Mage)character).level == 10)
                 {
-                    ((Mage)character).chooseNewSpeciality(character); 
+                    ((Mage)character).chooseNewSpeciality(character);
                 }
 
 
@@ -1203,7 +1203,7 @@ namespace FantasyRPG
         public string specialAtkName; // Remove these static features
         public int specialAtkDmg;
         public int normalAtkDmg;
-        public bool inCombat = false; 
+        public bool inCombat = false;
 
         public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _specialAtkName, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered, _inCombat)
         {
@@ -1320,7 +1320,7 @@ namespace FantasyRPG
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine("FantasyRPG: Mage's Prestiege");
             smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.RapidPrint($"\n {character.name}'s current known magic specialities: ");
+            smoothPrinting.RapidPrint($"\n {character.name}'s current known magic specialities: \n");
 
             for (int j = 0; j < magicSpecialties.Length; j++) // Display the user's current magic specialties
             {
@@ -1584,6 +1584,10 @@ namespace FantasyRPG
 
             Console.Clear(); // Neater
 
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("FantasyRPG: Mage's Prestiege");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+
             smoothPrinting.FastPrint(name + "'s" + " current known magic specialities:" + "\n");
 
 
@@ -1604,6 +1608,7 @@ namespace FantasyRPG
 
 
             int userContinue = 0;
+            Console.WriteLine(); // Spacing
             Console.WriteLine("\nAre you ready to go back? (1 for Yes)"); // Give mage user time to read their updated information
             userContinue = Convert.ToInt32(Console.ReadLine());
 
