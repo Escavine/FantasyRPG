@@ -29,7 +29,7 @@ namespace FantasyRPG
         public float numOfPotionsInInventory;
         public float maxPotions;
         public int currentMana, maxMana;
-        public List<(string itemName, string itemDescription, string itemRarity, int itemPower)> currentInventory; // Will contain item name, description, rarity and power (i.e. healing or attack etc.) 
+        public List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> currentInventory; // Will contain item name, description, rarity and power (i.e. healing or attack etc.) 
         public int arcaniaGoldCoins; // Currency for the city of Arcanith
         public int specialAtkRecharge;// Percentage value, going upto 100%
         public List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered;
@@ -46,7 +46,7 @@ namespace FantasyRPG
         private readonly UIManager UI;
         private readonly SmoothConsole smoothPrinting;
 
-        public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> _currentInventory, int _arcaniaGoldCoins, int specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) // Default preset for all classes during the start of the game :3
+        public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> _currentInventory, int _arcaniaGoldCoins, int specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) // Default preset for all classes during the start of the game :3
         {
             name = _name;
             weapon = _weapon; // WIll store the details of the given weapon (i.e. weapon name, type, damage, etc.)
@@ -714,11 +714,11 @@ namespace FantasyRPG
         private readonly SmoothConsole smoothPrinting; // Cleaner and neater output
 
         // Mobs can have different attack names and varying item drops, each associated with a rarity and damage value
-        public Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> itemDrop { get; } // First string defines the weapon name, second integer defines the weapon damage, thirs stirng defines the weapon rarity and fourth string defines the weapon type
+        public Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType, string category, int quantity)> itemDrop { get; } // First string defines the weapon name, second integer defines the weapon damage, thirs stirng defines the weapon rarity and fourth string defines the weapon type
         public Dictionary<string, (int damage, string magicType)> normalAtkNames { get; }
         public Dictionary<string, (int damage, string magicType)> specialAtkNames { get; }
 
-        public MobDefault(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> _itemDrop, int _expDrop, int _dropChance, int _mobLevel) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
+        public MobDefault(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType, string category, int quantity)> _itemDrop, int _expDrop, int _dropChance, int _mobLevel) // Presets for all mobs within the game (i.e. dragons, shadow stalkers, arcane phantons, crawlers etc.)
         {
             name = _name;
             normalAtkNames = _normalAtkNames;
@@ -930,7 +930,7 @@ namespace FantasyRPG
         }
 
         // If the user gets lucky, then they can get a mob drop, which can vary as it is RNG
-        public void dropItem(int dropChance, CharacterDefault character, MobDefault mob, Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop)
+        public void dropItem(int dropChance, CharacterDefault character, MobDefault mob, Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)> itemDrop)
         {
             Random ran = new Random(); // Determine which item will be dropped
             int randomWeapon = ran.Next(0, itemDrop.Count()); // Generate a value between the zero index to the limit of the dictionary
@@ -973,7 +973,7 @@ namespace FantasyRPG
                     smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
                 }
 
-                character.currentInventory.Add((drop.Key, drop.Value.weaponDescription, drop.Value.rarity, drop.Value.damage)); // Add the item drop to the player's inventory
+                character.currentInventory.Add((drop.Key, drop.Value.weaponDescription, drop.Value.rarity, drop.Value.damage, drop.Value.category, drop.value.quantity)); // Add the item drop to the player's inventory
             }
             else
             {
@@ -1074,7 +1074,7 @@ namespace FantasyRPG
         };
 
 
-        public Wolf(string _name, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> _itemDrop, int _expDrop, int _dropChance, int _mobLevel) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop, _expDrop, _dropChance, _mobLevel)
+        public Wolf(string _name, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType, string category, int quantity)> _itemDrop, int _expDrop, int _dropChance, int _mobLevel) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop, _expDrop, _dropChance, _mobLevel)
         {
             UI = new UIManager();
             smoothPrinting = new SmoothConsole();
@@ -1205,7 +1205,7 @@ namespace FantasyRPG
         public int normalAtkDmg;
         public bool inCombat = false;
 
-        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _specialAtkName, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered, _inCombat)
+        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _specialAtkName, List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered, _inCombat)
         {
             name = _name;
             weapon = _weapon;
@@ -1259,7 +1259,7 @@ namespace FantasyRPG
         string[] magicSpecialties; // User can have multiple magic specialties
         public bool inCombat = false;
 
-        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> _currentInventory, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered, _inCombat)
+        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> _currentInventory, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered, _inCombat)
         {
             name = _name;
             weapon = _weapon;
@@ -1348,7 +1348,7 @@ namespace FantasyRPG
             }
 
 
-            smoothPrinting.FastPrint("\nChoose a magic specialty by entering the corresponding number:\n");
+            smoothPrinting.FastPrint("\nChoose a magic specialty by entering the corresponding number:");
             string userInput = Convert.ToString(Console.ReadLine());
 
 
@@ -1636,7 +1636,7 @@ namespace FantasyRPG
         public List<(string attack, int damage, int manaRequirement, string elementType, string description)> pirateSpecialAtks; // Normal and special attack lists, containing all relevant information
         public List<(string auraName, int damage, string rarity, string description)> weaponAura; // Weapon aura
 
-        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string auraName, int damage, string rarity, string description)> _weaponAura, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateNormalAtks, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateSpecialAtks, List<(string itemName, string itemDescription, string itemRarity, int itemPower)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered, _inCombat)
+        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string auraName, int damage, string rarity, string description)> _weaponAura, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateNormalAtks, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateSpecialAtks, List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered, _inCombat)
         {
             name = _name;
             weapon = _weapon;
@@ -1733,10 +1733,10 @@ namespace FantasyRPG
                 ("Cyclone Strike", 50, 5)
              };
 
-            List<(string itemName, string itemDescription, string itemRarity, int itemPower)> currentInventory = new List<(string, string, string, int)>
+            List<(string itemName, string itemDescription, string itemRarity, int itemPower, int quantity)> currentInventory = new List<(string, string, string, int, int)>
                 {
-                    ("Heartblades Vesper", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right, I took it, the developer himself :3", "Legendary", 250),
-                    ("Healing Potion", "Regenerates +20 health", "Uncommon", 20)
+                    ("Heartblades Vesper", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right, I took it, the developer himself :3", "Legendary", 250, 1),
+                    ("Healing Potion", "Regenerates +20 health", "Uncommon", 20, 50)
                 };
 
             int specialAtkRecharge = 100;
@@ -2732,13 +2732,13 @@ namespace FantasyRPG
 
                     arcaniaGoldCoins = 0; // Preset zero
 
-                    List<(string itemName, string itemDescription, string itemRarity, int itemPower)> pirateInventory = new List<(string, string, string, int)>();
+                    List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> pirateInventory = new List<(string, string, string, int, string, int)>();
 
                     // User will be randomly assigned a weapon
                     Random weaponPirateRandom = new Random();
                     int pirateRandomWeaponAssignment = weaponPirateRandom.Next(0, pirateWeaponChoices.Count); // Allow for the random generation between index 0 and length of the dictionary
 
-                    List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> pirateWeapon = new List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)>(); // This list will store the assigned weapon for the pirate class
+                    List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)> pirateWeapon = new List<(string, int, string, string, string, string, int)>(); // This list will store the assigned weapon for the pirate class
 
                     // Access the weapon details directly using the index
                     var randomPirateWeapon = pirateWeaponChoices.ElementAt(pirateRandomWeaponAssignment);
@@ -3177,7 +3177,7 @@ namespace FantasyRPG
                     0,        // Special attack recharge percentage
                     itemDrop,   // Item drop dictionary
                     300,        // Experience points drop
-                    12,         // Drop chance
+                    1,         // Drop chance
                     25          // Mob level
                 );
                 // Create a MobSpawner object passing character and dragonType
