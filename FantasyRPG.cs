@@ -25,7 +25,7 @@ namespace FantasyRPG
         public string name;
         public bool inCombat = false; // Combat status (for the combat system)
         public int currentHealth, maxHealth;
-        public List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> weapon;
+        public List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)> weapon;
         public float numOfPotionsInInventory;
         public float maxPotions;
         public int currentMana, maxMana;
@@ -46,7 +46,7 @@ namespace FantasyRPG
         private readonly UIManager UI;
         private readonly SmoothConsole smoothPrinting;
 
-        public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> _currentInventory, int _arcaniaGoldCoins, int specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) // Default preset for all classes during the start of the game :3
+        public CharacterDefault(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)> _weapon, List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> _currentInventory, int _arcaniaGoldCoins, int specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) // Default preset for all classes during the start of the game :3
         {
             name = _name;
             weapon = _weapon; // WIll store the details of the given weapon (i.e. weapon name, type, damage, etc.)
@@ -1259,7 +1259,7 @@ namespace FantasyRPG
         string[] magicSpecialties; // User can have multiple magic specialties
         public bool inCombat = false;
 
-        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> _currentInventory, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered, _inCombat)
+        public Mage(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)> _weapon, string[] _magicSpecialties, int _arcaniaGoldCoins, List<(string magicSpell, int damage, int manaRequirement)> _magicSpells, List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> _currentInventory, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered, _inCombat)
         {
             name = _name;
             weapon = _weapon;
@@ -2531,13 +2531,13 @@ namespace FantasyRPG
                     string pirateName = Convert.ToString(Console.ReadLine());
                     Console.Clear();
 
-                    Dictionary<string, (int damage, string weaponType, string rarity, string weaponDescription)> pirateWeaponChoices = new Dictionary<string, (int, string, string, string)>()
+                    Dictionary<string, (int damage, string weaponType, string rarity, string weaponDescription, string category, int quantity)> pirateWeaponChoices = new Dictionary<string, (int, string, string, string, string, int)>()
                     {
-                        { "Sharp Cutlass", (6, "Sword", "Common", "A short, nimble sword ideal for quick strikes.") },
-                        { "Raging Horn", (8, "Longsword", "Common", "A curved longsword evoking power, perfect for forceful attacks.") },
-                        { "Somali Pride", (11, "Sword", "Uncommon", "A rare sword of Somali origin, passed down through generations.") },
-                        { "Mohamad's Dagger", (20, "Dagger", "Rare", "A concealable dagger named after a famous pirate, perfect for surprise attacks.") },
-                        { "Dilapidated Thorn", (14, "Katana", "Rare", "A worn katana with a sharp edge, nicknamed for its piercing ability.") },
+                        { "Sharp Cutlass", (6, "Sword", "Common", "A short, nimble sword ideal for quick strikes.", "Melee", 1) },
+                        { "Raging Horn", (8, "Longsword", "Common", "A curved longsword evoking power, perfect for forceful attacks.", "Melee", 1) },
+                        { "Somali Pride", (11, "Sword", "Uncommon", "A rare sword of Somali origin, passed down through generations.", "Melee", 1) },
+                        { "Mohamad's Dagger", (20, "Dagger", "Rare", "A concealable dagger named after a famous pirate, perfect for surprise attacks.", "Melee", 1) },
+                        { "Dilapidated Thorn", (14, "Katana", "Rare", "A worn katana with a sharp edge, nicknamed for its piercing ability.", "Melee", 1) }
                     };
 
                     // Auras give damage bonuses on attacks
@@ -2743,10 +2743,10 @@ namespace FantasyRPG
                     var randomPirateWeapon = pirateWeaponChoices.ElementAt(pirateRandomWeaponAssignment);
 
                     // Add the weapon details to the pirateWeapon list
-                    pirateWeapon.Add((randomPirateWeapon.Key, randomPirateWeapon.Value.damage, randomPirateWeapon.Value.weaponType, randomPirateWeapon.Value.rarity, randomPirateWeapon.Value.weaponDescription));
+                    pirateWeapon.Add((randomPirateWeapon.Key, randomPirateWeapon.Value.damage, randomPirateWeapon.Value.weaponType, randomPirateWeapon.Value.rarity, randomPirateWeapon.Value.weaponDescription, randomPirateWeapon.Value.category, randomPirateWeapon.Value.quantity));
 
                     // Add the weapon name to the pirateInventory list
-                    pirateInventory.Add((randomPirateWeapon.Key, randomPirateWeapon.Value.weaponDescription, randomPirateWeapon.Value.rarity, randomPirateWeapon.Value.damage));
+                    pirateInventory.Add((randomPirateWeapon.Key, randomPirateWeapon.Value.weaponDescription, randomPirateWeapon.Value.rarity, randomPirateWeapon.Value.damage, randomPirateWeapon.Value.category, randomPirateWeapon.Value.quantity)); ;
 
 
 
