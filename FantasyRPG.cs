@@ -690,7 +690,14 @@ namespace FantasyRPG
                     Wolf wolf = new Wolf("Wolf", mob.currentMobHealth, mob.maxMobHealth, mob.normalAtkNames, mob.specialAtkNames, mob.specialAtkRecharge, mob.itemDrop, mob.expDrop, mob.dropChance, mob.mobLevel);
                     playerCharacter.CombatSystem(playerCharacter, wolf, quickDisplay);
                     break;
-
+                case MobType.Boar:
+                    Boar boar = new Boar("Wolf", mob.currentMobHealth, mob.maxMobHealth, mob.normalAtkNames, mob.specialAtkNames, mob.specialAtkRecharge, mob.itemDrop, mob.expDrop, mob.dropChance, mob.mobLevel);
+                    playerCharacter.CombatSystem(playerCharacter, boar, quickDisplay);
+                    break;
+                case MobType.OversizedBoar:
+                    Boar oversizedBoar = new Boar("Oversized Boar", 75, 75, mob.normalAtkNames, mob.specialAtkNames, mob.specialAtkRecharge, mob.itemDrop, mob.expDrop, mob.dropChance, mob.mobLevel);
+                    playerCharacter.CombatSystem(playerCharacter, oversizedBoar, quickDisplay);
+                    break;
                 default:
                     smoothPrinting.RapidPrint("\nUnknown mob type, please check the code.");
                     break;
@@ -703,6 +710,8 @@ namespace FantasyRPG
     {
         Dragon,
         Wolf,
+        Boar,
+        OversizedBoar,
         Crawler
     }
 
@@ -1075,6 +1084,35 @@ namespace FantasyRPG
 
 
         public Wolf(string _name, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType, string category, int quantity)> _itemDrop, int _expDrop, int _dropChance, int _mobLevel) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop, _expDrop, _dropChance, _mobLevel)
+        {
+            UI = new UIManager();
+            smoothPrinting = new SmoothConsole();
+            normalAtkNames = _normalAtkNames;
+            specialAtkNames = _specialAtkNames;
+        }
+
+    }
+
+    public class Boar : MobDefault // Boar mob
+    {
+        private readonly UIManager UI;
+        private readonly SmoothConsole smoothPrinting;
+
+        private readonly Dictionary<string, (int damage, string magicType)> normalAtkNames = new Dictionary<string, (int damage, string magicType)>()
+        {
+            {"Tusk Swipe", (15, "Physical")},
+            {"Feral Charge", (8, "Physical")},
+            {"Mud Slam", (10, "Earth-Magic")}
+        };
+
+        private readonly Dictionary<string, (int damage, string magicType)> specialAtkNames = new Dictionary<string, (int damage, string magicType)>()
+        {
+            { "Rampaging Roar", (20, "Sound-Magic")},
+            { "Earthquake Stomp", (25, "Earth-Magic")},
+            { "Inferno Charge", (30, "Fire-Magic") }
+        };
+
+        public Boar(string _name, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType, string category, int quantity)> _itemDrop, int _expDrop, int _dropChance, int _mobLevel) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop, _expDrop, _dropChance, _mobLevel)
         {
             UI = new UIManager();
             smoothPrinting = new SmoothConsole();
@@ -1723,16 +1761,16 @@ namespace FantasyRPG
 
             List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)> mageWeapon = new List<(string, int, string, string, string, string, int)> 
             {
-                ("Heartblades Vesper", 250, "Legendary", "Staff", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right. I took it, the developer himself :3", "Developer-Exclusive", 1)
+                ("Heartblades Vesper", 250, "Legendary", "Staff", "Developer weapon :3", "Developer-Exclusive", 1)
             };
 
             string[] mageSpecialties = new string[] { "Fire-Magic", "Lightning-Magic", "Eucladian-Magic", "Light-Magic", "Dark-Magic" };
             int arcaniaGoldCoins = 100000;
 
             List<(string, int, int)> magicSpells = new List<(string, int, int)> {
-                ("Lucerian's Wrath", 350, 5),
-                ("Umbral Surge", 120, 5),
-                ("Cyclone Strike", 50, 5)
+                ("Lucerian's Wrath", 350, 80),
+                ("Umbral Surge", 120, 50),
+                ("Cyclone Strike", 50, 20)
              };
 
             List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> currentInventory = new List<(string, string, string, int, string, int)>()
@@ -1751,12 +1789,70 @@ namespace FantasyRPG
 
             };
 
+            
+
             bool debuggingCombat = false;
 
             // Create the debugging mage object with the specified arguments
             Mage debuggingMage = new Mage(mageName, mageWeapon, mageSpecialties, arcaniaGoldCoins, magicSpells, currentInventory, specialAtkRecharge, npcsEncountered, debuggingCombat); // Debugging Mage
+
+            // OP Parameter changes
+            debuggingMage.currentHealth = 500;
+            debuggingMage.maxHealth = 500;
+            debuggingMage.currentMana = 500;
+            debuggingMage.maxMana = 500;
+            debuggingMage.level = 60;
+
             ForestOfMysteries scenario = new ForestOfMysteries();
             int remainingAttempts = 3;
+
+            // Debugging Mode - GAME IS IN TESTING PHASE
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("FantasyRPG: Debugging Mode");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+
+            smoothPrinting.RapidPrint($"{debuggingMage.name} - Debugger Mage\n");
+            smoothPrinting.RapidPrint($"Level: {debuggingMage.level}\n");
+
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("FantasyRPG: Debugging Mage - Stats");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+
+            UI.DisplayProgressBar($"{debuggingMage.name}'s Health", debuggingMage.currentHealth, debuggingMage.maxHealth, 30); // Display Mage's health
+
+            Console.WriteLine(); // Spacing
+
+            UI.DisplayProgressBar($"{debuggingMage.name}'s Mana", debuggingMage.currentMana, debuggingMage.maxMana, 30);
+
+            Console.WriteLine(); // Spacing
+            Console.WriteLine(); // Spacing
+
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("FantasyRPG: Debugging Mage - Weapon");
+            smoothPrinting.PrintLine("--------------------------------------------------"); 
+            
+            // Display details of the current weapon used
+            foreach (var weaponDetails in debuggingMage.weapon)
+            {
+                smoothPrinting.RapidPrint($"\nWeapon Name: {weaponDetails.weaponName}\nWeapon Damage: {weaponDetails.damage}\nWeapon Rarity: {weaponDetails.rarity}\nWeapon Description: {weaponDetails.weaponDescription}\n");
+            }
+
+            Console.WriteLine(); // Spacing
+
+            int spellCount = 1;
+
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("FantasyRPG: Debugging Mage - Spells");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            
+            // Display the moveset of the mage
+            foreach (var spell in ((Mage)debuggingMage).magicSpells) // Display all spells currently avaliable to the Mage
+            {
+                smoothPrinting.RapidPrint($"\n{spellCount}. Spell: {spell.magicSpell} - Damage: {spell.damage}\nMana Requirement: {spell.manaRequirement}\n");
+                spellCount++;
+            }
+
+            UI.PromptUserToContinue();
 
             scenario.forestOfMysteries(debuggingMage, remainingAttempts); // Call the forestOfMysteries method with the Mage object and remaining attempts
 
@@ -2934,44 +3030,56 @@ namespace FantasyRPG
             smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
             string firstSelection = Convert.ToString(Console.ReadLine());
 
-            switch (firstSelection)
+            try
             {
-                case "1":
-                    DragonConfrontation(character);
-                    break;
-                case "2":
-                    // Move northward
-                    NorthDirection(character);
-                    break;
-                case "3":
-                    character.CheckInventory();
-                    UI.PromptUserToContinue();
-                    forestOfMysteries(character, remainingAttempts - 1); // Recurse to avoid breaking program haha
-                    break;
-                case "4":
-                    smoothPrinting.PrintLine("--------------------------------------------------");
-                    smoothPrinting.PrintLine("FantasyRPG: Available Commands");
-                    smoothPrinting.PrintLine("--------------------------------------------------");
+                switch (firstSelection)
+                {
+                    case "1":
+                        DragonConfrontation(character);
+                        break;
+                    case "2":
+                        // Move northward
+                        NorthDirection(character);
+                        break;
+                    case "3":
+                        character.CheckInventory();
+                        UI.PromptUserToContinue();
+                        forestOfMysteries(character, remainingAttempts - 1); // Recurse to avoid breaking program haha
+                        break;
+                    case "4":
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+                        smoothPrinting.PrintLine("FantasyRPG: Available Commands");
+                        smoothPrinting.PrintLine("--------------------------------------------------");
 
-                    smoothPrinting.RapidPrint("\nEnter the value '1' if you want to get closer to the dragon\n");
-                    smoothPrinting.RapidPrint("\nEnter the value '2' if you want to go northwards\n");
-                    smoothPrinting.RapidPrint("\nEnter the value '3' to check your inventory");
-                    Console.WriteLine(); // Spacing
-                    UI.PromptUserToContinue();
-                    forestOfMysteries(character, remainingAttempts); // Return the user back to the scenario
-                    break;
-                default:
-                    Console.WriteLine("\nInvalid input, please try again");
-                    Console.ReadKey();
-                    Console.Clear();
-                    forestOfMysteries(character, remainingAttempts - 1);
-                    break;
+                        smoothPrinting.RapidPrint("\nEnter the value '1' if you want to get closer to the dragon\n");
+                        smoothPrinting.RapidPrint("\nEnter the value '2' if you want to go northwards\n");
+                        smoothPrinting.RapidPrint("\nEnter the value '3' to check your inventory");
+                        Console.WriteLine(); // Spacing
+                        UI.PromptUserToContinue();
+                        forestOfMysteries(character, remainingAttempts); // Return the user back to the scenario
+                        break;
+                    default:
+                        Console.WriteLine("\nInvalid input, please try again");
+                        Console.ReadKey();
+                        Console.Clear();
+                        forestOfMysteries(character, remainingAttempts - 1);
+                        break;
+                }
+
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nThere has been an error, error code: " + ex.Message);
+            }
+
         }
 
 
         public void NorthDirection(CharacterDefault character)
         {
+            string? userInput;
+            bool meetingGuildLeader = false; // Should an overgrown bore spawn, then this will be 'true' as this is part of a mission
+
             Random random = new Random();
             int generatedValue = random.Next(1, 4); // Increase range to account for additional mob types
 
@@ -3010,12 +3118,12 @@ namespace FantasyRPG
                     { "Howler's Claw", (25, "Rare", "Rapier", "A claw imbued with the power of the alpha wolf, capable of rending through armor.", "Weapon", 1) },
                 };
 
-                MobType wolfType = new MobType();
+                MobType Wolf = new MobType();
 
                 Wolf wolf = new Wolf("Wolf", 30, 30, normalAtkNames, specialAtkNames, 0, itemDrop, 25, 3, 3); // Assuming you have a Wolf class defined
 
                 // Create a MobSpawner object passing the player character and the wolf instance
-                MobSpawner mobSpawner = new MobSpawner(character, wolfType); // Pass null or remove the unnecessary parameter
+                MobSpawner mobSpawner = new MobSpawner(character, Wolf); // Pass null or remove the unnecessary parameter
 
 
                 // Spawn the wolf using MobSpawn method
@@ -3024,6 +3132,83 @@ namespace FantasyRPG
 
 
             }
+
+            Console.Clear();
+            smoothPrinting.PrintLine("--------------------------------------------------");
+            smoothPrinting.PrintLine("FantasyRPG: Forest of Mysteries - North");
+            smoothPrinting.PrintLine("--------------------------------------------------");
+
+            smoothPrinting.RapidPrint("\nYou venture northward into the dense forest, where towering trees cast shifting patterns of light and shadow. The rustle of leaves underfoot and the distant calls of wildlife fill the air. " +
+                "Among the trees, you catch glimpses of wolves, bears, and other creatures, each adding to the allure of the wilderness. The cool breeze carries whispers of ancient tales, fueling your resolve to unravel the mysteries that lie ahead.");
+
+            smoothPrinting.RapidPrint("\nWhat do you do?\n");
+
+            Console.WriteLine("\n[Available Commands:]");
+            smoothPrinting.PrintLine("\n1. Fight: Take on a random mob within the forest");
+            smoothPrinting.PrintLine("\n2. Explore: Search the area for hidden treasures or clues");
+            smoothPrinting.PrintLine("\n3. Inventory: View your current inventory of items");
+            smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
+            userInput = Console.ReadLine();
+
+            try
+            {
+                switch (firstSelection)
+                {
+                    case "1":
+                        // TESTING CASE: WILL BE CHANGED TO RANDOM CASE, TO SPAWN RANDOM MOBS, AND ALLOW USER TO FARM EXP IN THE AREA
+
+                        // Create an instance of the Bore class 
+                        Dictionary<string, (int damage, string magicType)> normalAtkNames = new Dictionary<string, (int damage, string magicType)>()
+                        {
+                            {"Tusk Swipe", (25, "Physical")},
+                            {"Feral Charge", (30, "Physical")},
+                            {"Mud Slam", (20, "Earth-Magic")}
+                        };
+
+                        Dictionary<string, (int damage, string magicType)> specialAtkNames = new Dictionary<string, (int damage, string magicType)>()
+                        {
+                            {"Rampaging Roar", (50, "Sound-Magic")},
+                            {"Earthquake Stomp", (60, "Earth-Magic")},
+                            {"Inferno Charge", (70, "Fire-Magic")}
+                        };
+
+                        Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)> itemDrop = new Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)>()
+                        {
+                            { "Razor Tusk", (20, "Common", "Sword", "A sharp tusk capable of tearing through armor.", "Weapon", 1) },
+                            { "Behemoth's Hoof", (30, "Rare", "Hammer", "A massive hoof that belonged to a legendary bore, imbued with immense strength.", "Weapon", 1) },
+                        };
+
+                        MobType Boar = new MobType();
+
+                        MobSpawner mobspawn = new MobSpawner(character, Boar);
+
+                        Boar boarSpawn = new Boar("Boar", 50, 50, normalAtkNames, specialAtkNames, 0, itemDrop, 35, 5, 6);
+
+                        mobspawn.MobSpawn(character, boarSpawn);
+
+                        break;
+                    case "2":
+
+                        break;
+                    case "3":
+                        character.CheckInventory();
+                        UI.PromptUserToContinue();
+                        NorthDirection(character); // Recurse
+                        break;
+                    default:
+                        Console.WriteLine("\nInvalid input, please try again");
+                        Console.ReadKey();
+                        Console.Clear();
+                        NorthDirection(character);
+                        break;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nThere has been an error, error code: " + ex.Message);
+            }
+
 
         }
 
