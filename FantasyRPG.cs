@@ -1733,11 +1733,11 @@ namespace FantasyRPG
                 ("Cyclone Strike", 50, 5)
              };
 
-            List<(string itemName, string itemDescription, string itemRarity, int itemPower, int quantity)> currentInventory = new List<(string, string, string, int, int)>
-                {
-                    ("Heartblades Vesper", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right, I took it, the developer himself :3", "Legendary", 250, 1),
-                    ("Healing Potion", "Regenerates +20 health", "Uncommon", 20, 50)
-                };
+            List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> currentInventory = new List<(string, string, string, int, string, int)>()
+            {
+                ("Heartblades Vesper", "Developer weapon :3", "Legendary", 250, "Weapon", 1),
+                ("Du-Lucérian's Elixir", "A legendary potion crafted by Khalid Du-Lucérian, renowned for its mystical properties. It instantly restores +100 health to the imbiber.", "Legendary", 100, "Potion", 50)
+            };
 
             int specialAtkRecharge = 100;
 
