@@ -966,14 +966,14 @@ namespace FantasyRPG
                 if (userChoice == "1")
                 {
                     character.weapon.Clear(); // Remove the current weapon equipped by the user
-                    character.weapon.Add((drop.Key, drop.Value.damage, drop.Value.rarity, drop.Value.weaponType, drop.Value.weaponDescription));
+                    character.weapon.Add((drop.Key, drop.Value.damage, drop.Value.rarity, drop.Value.weaponType, drop.Value.weaponDescription, drop.Value.category, drop.Value.quantity));
                 }
                 else
                 {
                     smoothPrinting.RapidPrint("\nWeapon will be stored to inventory.");
                 }
 
-                character.currentInventory.Add((drop.Key, drop.Value.weaponDescription, drop.Value.rarity, drop.Value.damage, drop.Value.category, drop.value.quantity)); // Add the item drop to the player's inventory
+                character.currentInventory.Add((drop.Key, drop.Value.weaponDescription, drop.Value.rarity, drop.Value.damage, drop.Value.category, drop.Value.quantity)); // Add the item drop to the player's inventory
             }
             else
             {
@@ -1205,7 +1205,7 @@ namespace FantasyRPG
         public int normalAtkDmg;
         public bool inCombat = false;
 
-        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, string _specialAtkName, List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered, _inCombat)
+        public Knight(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)> _weapon, string _specialAtkName, List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered, _inCombat)
         {
             name = _name;
             weapon = _weapon;
@@ -1636,7 +1636,7 @@ namespace FantasyRPG
         public List<(string attack, int damage, int manaRequirement, string elementType, string description)> pirateSpecialAtks; // Normal and special attack lists, containing all relevant information
         public List<(string auraName, int damage, string rarity, string description)> weaponAura; // Weapon aura
 
-        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> _weapon, List<(string auraName, int damage, string rarity, string description)> _weaponAura, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateNormalAtks, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateSpecialAtks, List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered, _inCombat)
+        public SomaliPirate(string _name, List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)> _weapon, List<(string auraName, int damage, string rarity, string description)> _weaponAura, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateNormalAtks, List<(string attack, int damage, int manaRequirement, string elementType, string description)> _pirateSpecialAtks, List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> _currentInventory, int _arcaniaGoldCoins, int _specialAtkRecharge, List<(string npcName, string npcDescription, string npcAffiliation)> _npcsEncountered, bool _inCombat) : base(_name, _weapon, _currentInventory, _arcaniaGoldCoins, _specialAtkRecharge, _npcsEncountered, _inCombat)
         {
             name = _name;
             weapon = _weapon;
@@ -1720,8 +1720,10 @@ namespace FantasyRPG
 
             // Define values for debugging mage
             string mageName = "Khalid Du-Lucérian";
-            List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> mageWeapon = new List<(string, int, string, string, string)> {
-               ("Heartblades Vesper", 250, "Legendary", "Staff", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right. I took it, the developer himself :3")
+
+            List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)> mageWeapon = new List<(string, int, string, string, string, string, int)> 
+            {
+                ("Heartblades Vesper", 250, "Legendary", "Staff", "A staff that has been a part of the Heartblade's for many generations, till I took it, that's right. I took it, the developer himself :3", "Developer-Exclusive", 1)
             };
 
             string[] mageSpecialties = new string[] { "Fire-Magic", "Lightning-Magic", "Eucladian-Magic", "Light-Magic", "Dark-Magic" };
@@ -2586,7 +2588,7 @@ namespace FantasyRPG
                     // Counter variables for output tracking
                     int normalAttackChoiceCount = 0;
                     int specialAttackChoiceCount = 0;
-                    int chosenNormalAttackCount = 0;
+                    // int chosenNormalAttackCount = 0;
 
 
                     smoothPrinting.PrintLine("---------Normal Attack Selection----------\n");
@@ -2747,7 +2749,6 @@ namespace FantasyRPG
 
                     // Add the weapon name to the pirateInventory list
                     pirateInventory.Add((randomPirateWeapon.Key, randomPirateWeapon.Value.weaponDescription, randomPirateWeapon.Value.rarity, randomPirateWeapon.Value.damage, randomPirateWeapon.Value.category, randomPirateWeapon.Value.quantity)); ;
-
 
 
                     // User will be randomly assigned an aura
