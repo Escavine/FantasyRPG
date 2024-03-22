@@ -1005,7 +1005,7 @@ namespace FantasyRPG
             };
 
 
-        public Crawler(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> _itemDrop, int _expDrop, int _dropChance, int _mobLevel) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop, _expDrop, _dropChance, _mobLevel)
+        public Crawler(string _name, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int, string)> _specialAtkNames, int _specialAtkRecharge, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType, string category, int quantity)> _itemDrop, int _expDrop, int _dropChance, int _mobLevel) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop, _expDrop, _dropChance, _mobLevel)
         {
             // Default presets for a crawler, inherited from the mob default class
             name = "Crawler";
@@ -1101,17 +1101,17 @@ namespace FantasyRPG
             { "Rampant Flame Charge", (200, "Fire-Magic") }
         };
 
-        private readonly Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> itemDrop = new Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)>()
+        private readonly Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType, string category, int quantity)> itemDrop = new Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType, string category, int quantity)>()
         {
-            { "Frostfire Fang", (65, "Unique", "Staff", "Forged in the icy flames of the dragon's breath, this fang drips with frostfire, capable of freezing enemies in their tracks.") },
-            { "Serpent's Gaze", (50, "Unique", "Rapier/Sword", "Crafted from the scales of the ancient serpent, this gaze holds the power to petrify foes with a single glance.") },
-            { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword", "Tempered in the chaosfire of the dragon's lair, this greatsword burns with an insatiable hunger for destruction.") },
-            { "Nightshade Arc", (55, "Unique", "Bow", "Fashioned from the sinew of the nocturnal shadows, this bow strikes with deadly accuracy under the cover of darkness.") },
-            { "Aerith's Heirloom", (80, "Legendary", "Staff", "Once wielded by the legendary Aerith, this staff channels the primordial magic of creation itself, capable of reshaping reality.") },
-            { "Eucladian's Aura", (55, "Legendary", "Aura", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.") }
+            { "Frostfire Fang", (65, "Unique", "Forged in the icy flames of the dragon's breath, this fang drips with frostfire, capable of freezing enemies in their tracks.", "Staff", "Staff", 1) },
+            { "Serpent's Gaze", (50, "Unique", "Crafted from the scales of the ancient serpent, this gaze holds the power to petrify foes with a single glance.", "Rapier/Sword", "Rapier", 1) },
+            { "Chaosfire Greatsword", (60, "Unique", "Tempered in the chaosfire of the dragon's lair, this greatsword burns with an insatiable hunger for destruction.", "Greatsword/Sword", "Greatsword", 1) },
+            { "Nightshade Arc", (55, "Unique", "Fashioned from the sinew of the nocturnal shadows, this bow strikes with deadly accuracy under the cover of darkness.", "Bow", "Bow", 1) },
+            { "Aerith's Heirloom", (80, "Legendary", "Once wielded by the legendary Aerith, this staff channels the primordial magic of creation itself, capable of reshaping reality.", "Staff", "Staff", 1) },
+            { "Eucladian's Aura", (55, "Legendary", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.", "Aura", "Aura", 1) }
         };
 
-        public Dragon(string _name, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType)> _itemDrop, int _expDrop, int _dropChance, int _mobLevel) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop, _expDrop, _dropChance, _mobLevel)
+        public Dragon(string _name, int _currentMobHealth, int _maxMobHealth, Dictionary<string, (int damage, string magicType)> _normalAtkNames, Dictionary<string, (int damage, string magicType)> _specialAtkNames, int _specialAtkRecharge, Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType, string category, int quantity)> _itemDrop, int _expDrop, int _dropChance, int _mobLevel) : base(_name, _normalAtkNames, _specialAtkNames, _specialAtkRecharge, _currentMobHealth, _maxMobHealth, _itemDrop, _expDrop, _dropChance, _mobLevel)
         {
             // name = _name;
             // currentMobHealth = 350;
@@ -2166,14 +2166,13 @@ namespace FantasyRPG
                         { "Etherial Nexus", (9,30) }
                     };
 
-                    // Tuple dictionary for the starter weapons, which is associated with a damage value and a rarity type
-                    Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> starterMageWeapons = new Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)>()
+                    Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)> starterMageWeapons = new Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)>()
                     {
-                        { "Weathered Oakwind", (5, "Common", "Staff", "A primitive staff made with oak, that has been weathered down with time. Has the potential to regain it's once lost status, should it be with the 'Chosen One'.") },
-                        { "Ancient Runestaff", (7, "Uncommon", "Staff", "Found in the lost ruins, filled with ancient mysteries yet to be untold.") },
-                        { "Runic Wooden Scepter", (3, "Common", "Staff", ".") },
-                        { "Dusty Relic Rod", (2, "Common", "Staff", "Dusty and archaic staff, tough luck if you receive this staff.") },
-                        { "Emerald Crystal Staff", (10, "Unique", "Staff", "A staff adorned with a seraphic crystal, bolstering its power. This staff is a sign of blessed luck!") }
+                        { "Weathered Oakwind", (5, "Common", "Staff", "A primitive staff made with oak, that has been weathered down with time. Has the potential to regain it's once lost status, should it be with the 'Chosen One'.", "Starter Weapon", 1) },
+                        { "Ancient Runestaff", (7, "Uncommon", "Staff", "Found in the lost ruins, filled with ancient mysteries yet to be untold.", "Starter Weapon", 1) },
+                        { "Runic Wooden Scepter", (3, "Common", "Staff", ".", "Starter Weapon", 1) },
+                        { "Dusty Relic Rod", (2, "Common", "Staff", "Dusty and archaic staff, tough luck if you receive this staff.", "Starter Weapon", 1) },
+                        { "Emerald Crystal Staff", (10, "Unique", "Staff", "A staff adorned with a seraphic crystal, bolstering its power. This staff is a sign of blessed luck!", "Starter Weapon", 1) }
                     };
 
                     Console.Clear(); // Cleaning purposes
@@ -2208,16 +2207,16 @@ namespace FantasyRPG
                     smoothPrinting.RapidPrint("\nYou will be randomly assigned a starter weapon...");
 
 
-                    List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> starterMageWeaponChoices = starterMageWeapons.Select(entry => (entry.Key, entry.Value.damage, entry.Value.rarity, entry.Value.weaponType, entry.Value.weaponDescription)).ToList();
+                    List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)> starterMageWeaponChoices = starterMageWeapons.Select(entry => (entry.Key, entry.Value.damage, entry.Value.rarity, entry.Value.weaponType, entry.Value.weaponDescription, entry.Value.category, entry.Value.quantity)).ToList();
 
-                    List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription)> mageStaff = new List<(string, int, string, string, string)>(starterMageWeaponChoices);
+                    List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)> mageStaff = new List<(string, int, string, string, string, string, int)>(starterMageWeaponChoices);
 
                     Random ranNum = new Random();
                     int random_index = ranNum.Next(0, starterMageWeaponChoices.Count); // Generates random value that'll decide on which weapon the user gets 
                     mageStaff.Add(starterMageWeaponChoices[random_index]); // Append the weapon into the mage staff list
 
-                    List<(string itemName, string itemDescription, string itemRarity, int itemPower)> mageInventory = new List<(string, string, string, int)>();
-                    mageInventory.Add((starterMageWeaponChoices[random_index].weaponName, starterMageWeaponChoices[random_index].weaponDescription, starterMageWeaponChoices[random_index].rarity, starterMageWeaponChoices[random_index].damage)); // Store the weapon in the users inventory
+                    List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> mageInventory = new List<(string, string, string, int, string, int)>();
+                    mageInventory.Add((starterMageWeaponChoices[random_index].weaponName, starterMageWeaponChoices[random_index].weaponDescription, starterMageWeaponChoices[random_index].rarity, starterMageWeaponChoices[random_index].damage, starterMageWeaponChoices[random_index].category, starterMageWeaponChoices[random_index].quantity)); // Store the weapon in the users inventory
 
                     smoothPrinting.RapidPrint("\nOnce you are done reading the details, press any key to move on.");
                     Console.ReadKey();
@@ -3004,10 +3003,10 @@ namespace FantasyRPG
                     { "Bloody Rage", (15, "Fire-Magic") }
                 };
 
-                Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop = new Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)>()
+                Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)> itemDrop = new Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)>()
                 {
-                    { "Sharp Fang", (20, "Common", "Sword", "A sharp fang torn from the jaws of a wolf, suitable for close combat.") },
-                    { "Howler's Claw", (25, "Rare", "Rapier", "A claw imbued with the power of the alpha wolf, capable of rending through armor.") },
+                    { "Sharp Fang", (20, "Common", "Sword", "A sharp fang torn from the jaws of a wolf, suitable for close combat.", "Weapon", 1) },
+                    { "Howler's Claw", (25, "Rare", "Rapier", "A claw imbued with the power of the alpha wolf, capable of rending through armor.", "Weapon", 1) },
                 };
 
                 MobType wolfType = new MobType();
@@ -3158,14 +3157,14 @@ namespace FantasyRPG
                 };
 
                 // Dictionary containing item names and their associated damage, rarity, weapon type, and description
-                Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)> itemDrop = new Dictionary<string, (int damage, string rarity, string weaponType, string weaponDescription)>()
+                Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType, string category, int quantity)> itemDrop = new Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType, string category, int quantity)>()
                 {
-                    { "Frostfire Fang", (65, "Unique", "Staff", "Forged in the icy flames of the dragon's breath, this fang drips with frostfire, capable of freezing enemies in their tracks.") },
-                    { "Serpent's Gaze", (50, "Unique", "Rapier/Sword", "Crafted from the scales of the ancient serpent, this gaze holds the power to petrify foes with a single glance.") },
-                    { "Chaosfire Greatsword", (60, "Unique", "Greatsword/Sword", "Tempered in the chaosfire of the dragon's lair, this greatsword burns with an insatiable hunger for destruction.") },
-                    { "Nightshade Arc", (55, "Unique", "Bow", "Fashioned from the sinew of the nocturnal shadows, this bow strikes with deadly accuracy under the cover of darkness.") },
-                    { "Aerith's Heirloom", (80, "Legendary", "Staff", "Once wielded by the legendary Aerith, this staff channels the primordial magic of creation itself, capable of reshaping reality.") },
-                    { "Eucladian's Aura", (55, "Legendary", "Aura", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.") }
+                    { "Frostfire Fang", (65, "Unique", "Forged in the icy flames of the dragon's breath, this fang drips with frostfire, capable of freezing enemies in their tracks.", "Staff", "Staff", 1) },
+                    { "Serpent's Gaze", (50, "Unique", "Crafted from the scales of the ancient serpent, this gaze holds the power to petrify foes with a single glance.", "Rapier/Sword", "Rapier", 1) },
+                    { "Chaosfire Greatsword", (60, "Unique", "Tempered in the chaosfire of the dragon's lair, this greatsword burns with an insatiable hunger for destruction.", "Greatsword/Sword", "Greatsword", 1) },
+                    { "Nightshade Arc", (55, "Unique", "Fashioned from the sinew of the nocturnal shadows, this bow strikes with deadly accuracy under the cover of darkness.", "Bow", "Bow", 1) },
+                    { "Aerith's Heirloom", (80, "Legendary", "Once wielded by the legendary Aerith, this staff channels the primordial magic of creation itself, capable of reshaping reality.", "Staff", "Staff", 1) },
+                    { "Eucladian's Aura", (55, "Legendary", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.", "Aura", "Aura", 1) }
                 };
 
                 Dragon dragon = new Dragon(
