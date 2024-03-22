@@ -239,10 +239,10 @@ namespace FantasyRPG
                                 if (generatedValue == 1)
                                 {
                                     smoothPrinting.RapidPrint($"\nYou have successfully escaped the grasp of {mob.name}.");
-                                    ForestOfMysteries returnToForest = new ForestOfMysteries();
+                                    // ForestOfMysteries returnToForest = new ForestOfMysteries();
 
                                     // Future reference: change this to return to wherever the user was intially, (i.e. if they were in the infinite dungeon, then return them to the dashboard)
-                                    returnToForest.forestOfMysteries(character); // Return to the forest, should the user be lucky
+                                    // returnToForest.forestOfMysteries(character); // Return to the forest, should the user be lucky
                                 }
                                 // Otherwise...
                                 else
@@ -1790,7 +1790,6 @@ namespace FantasyRPG
             };
 
             
-
             bool debuggingCombat = false;
 
             // Create the debugging mage object with the specified arguments
@@ -3148,11 +3147,11 @@ namespace FantasyRPG
             smoothPrinting.PrintLine("\n2. Explore: Search the area for hidden treasures or clues");
             smoothPrinting.PrintLine("\n3. Inventory: View your current inventory of items");
             smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
-            userInput = Console.ReadLine();
+            userInput = (Console.ReadLine();
 
             try
             {
-                switch (firstSelection)
+                switch (userInput)
                 {
                     case "1":
                         // TESTING CASE: WILL BE CHANGED TO RANDOM CASE, TO SPAWN RANDOM MOBS, AND ALLOW USER TO FARM EXP IN THE AREA
