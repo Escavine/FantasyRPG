@@ -158,7 +158,7 @@ namespace FantasyRPG
                 int? numCount = 1; // Will display the numeric choices for the Mage's options
                 string? userChoice;
 
-                string[] mageChoices = new string[] { "Attack", "Check Inventory", "Attempt Escape (WARNING: Low Chance)" }; // Array displaying the different Mage's options
+                string[] mageChoices = new string[] { "Attack", "Use Item", "Check Inventory", "Attempt Escape (WARNING: Low Chance)" }; // Array displaying the different Mage's options
 
 
                 if (mob.currentMobHealth == 0) // Check everytime if the mob has died
@@ -192,7 +192,10 @@ namespace FantasyRPG
                         UI.DisplayProgressBar($"{mob.name} ULT (%):", mob.specialAtkRecharge, 100, 30); // Display enemies special attack recharge
                         Console.WriteLine(); // Spacing
 
-                        Console.WriteLine($"\nRemaining Healing Potions: {numOfPotionsInInventory}"); // Display Mage's remaining potions
+                        foreach (var numOfPotions in character.currentInventory)
+                        {
+                            Console.WriteLine($"\nRemaining Healing Potions: {numOfPotions.quantity}"); // Display Mage's remaining potions
+                        }
 
                         if (character.currentHealth <= 30) // Check if users health is low
                         {
@@ -222,13 +225,19 @@ namespace FantasyRPG
                                 MageSpellAttack(character, mob, userTurn = true, enemyTurn = false, quickDisplay);
                                 break;
                             case "2":
+
+
+
+
+                                break;
+                            case "3":
                                 CheckInventory();
                                 smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
                                 Console.ReadKey(); // Register user's input
                                 Console.Clear(); // Clear the console to prevent confusion
                                 DisplayMageStatus(character, mob, quickDisplay = true); // Recurse back to the original function
                                 break;
-                            case "3":
+                            case "4":
                                 // Generate a random value
                                 Random ran = new Random();
                                 int generatedValue = ran.Next(0, 5); // Testing, will be readjusted
@@ -282,7 +291,10 @@ namespace FantasyRPG
                         UI.DisplayProgressBar($"{mob.name}'s ULT (%):", mob.specialAtkRecharge, 100, 30); // Display enemies special attack recharge
                         Console.WriteLine(); // Spacing
 
-                        smoothPrinting.RapidPrint($"\nRemaining Healing Potions: {numOfPotionsInInventory}\n"); // Display Mage's remaining potions
+                        foreach (var numOfPotions in character.currentInventory)
+                        {
+                            Console.WriteLine($"\nRemaining Healing Potions: {numOfPotions.quantity}"); // Display Mage's remaining potions
+                        }
 
                         if (character.currentHealth <= 30) // Check if users health is low
                         {
@@ -312,13 +324,20 @@ namespace FantasyRPG
                                 MageSpellAttack(character, mob, userTurn = true, enemyTurn = false, quickDisplay);
                                 break;
                             case "2":
+
+
+
+
+
+                                break;
+                            case "3":
                                 CheckInventory();
                                 smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
                                 Console.ReadKey(); // Register user's input
                                 Console.Clear(); // Clear the console to prevent confusion
                                 DisplayMageStatus(character, mob, quickDisplay = true); // Recurse back to the original function
                                 break;
-                            case "3":
+                            case "4":
                                 // Generate a random value
                                 Random ran = new Random();
                                 int generatedValue = ran.Next(0, 1); // Testing, will be readjusted
@@ -549,7 +568,6 @@ namespace FantasyRPG
         {
             UIManager UI = new UIManager(); // Engage the UIManager for progress bars
             Console.WriteLine(); // Spacing to stop overlapping
-            Console.WriteLine(); // Double spacing to stop overlapping
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine($"FantasyRPG: {character.name}'s Status Check - Required EXP for next Level");
             smoothPrinting.PrintLine("--------------------------------------------------");
@@ -3147,7 +3165,7 @@ namespace FantasyRPG
             smoothPrinting.PrintLine("\n2. Explore: Search the area for hidden treasures or clues");
             smoothPrinting.PrintLine("\n3. Inventory: View your current inventory of items");
             smoothPrinting.RapidPrint("\nEnter a corresponding value: ");
-            userInput = (Console.ReadLine();
+            userInput = Console.ReadLine();
 
             try
             {
