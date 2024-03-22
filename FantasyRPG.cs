@@ -194,7 +194,14 @@ namespace FantasyRPG
 
                         foreach (var numOfPotions in character.currentInventory)
                         {
-                            Console.WriteLine($"\nRemaining Healing Potions: {numOfPotions.quantity}"); // Display Mage's remaining potions
+                            if (numOfPotions.category == "Potion") // Filter the current inventory via a category basis
+                            {
+                                if (numOfPotions.quantity > 0)
+                                {
+                                    Console.WriteLine($"\nRemaining Healing Potions: {numOfPotions.quantity}\n"); // Display Mage's remaining potions
+                                }
+                            }
+
                         }
 
                         if (character.currentHealth <= 30) // Check if users health is low
@@ -225,10 +232,61 @@ namespace FantasyRPG
                                 MageSpellAttack(character, mob, userTurn = true, enemyTurn = false, quickDisplay);
                                 break;
                             case "2":
+                                Console.Clear(); // Clear console, to mitigate overlapping
 
+                                smoothPrinting.PrintLine("--------------------------------------------------");
+                                smoothPrinting.PrintLine("FantasyRPG: Combat System - Healing");
+                                smoothPrinting.PrintLine("--------------------------------------------------");
 
+                                string? usePotion;
 
+                                // Future reference: if a user has a variety of potions, allow them to filter between then and use the selected one, this is static for now
 
+                                foreach (var potion in character.currentInventory)
+                                {
+                                    if (potion.category == "Potion") // Filter the current inventory via a category basis
+                                    {
+                                        if (potion.quantity > 0)
+                                        {
+                                            smoothPrinting.RapidPrint($"\nHealing Potion: {potion.itemName}\nPotion Description: {potion.itemDescription}\nPotion Potency: {potion.itemPower}\n"); // Display Mage's remaining potions
+                                        }
+                                    }
+
+                                }
+
+                                smoothPrinting.RapidPrint("\nWould you like to use the following potion? ('1' for yes and any other key for no): ");
+                                usePotion = Console.ReadLine();
+
+                                // Future reference: Potions can have various effects, this is catered for healing as of present. This will need to be changed in the future. Infact, the whole functionality should be placed in a function rather than here, which can be used by all classes
+                                switch (usePotion)
+                                {
+                                    case "1":
+                                        for (int i = 0; i < character.currentInventory.Count; i++)
+                                        {
+                                            var currentItem = character.currentInventory[i];
+                                            // Check if the item is a potion
+                                            if (currentItem.category == "Potion")
+                                            {
+                                                smoothPrinting.RapidPrint($"\n{character.name} has used {currentItem.itemName}, regaining +{currentItem.itemPower} health!\n");
+                                                character.currentHealth += currentItem.itemPower; // Adjust the character's health
+                                                                                                  // Create a new tuple with the updated quantity
+                                                var updatedItem = (currentItem.itemName, currentItem.itemDescription, currentItem.itemRarity, currentItem.itemPower, currentItem.category, currentItem.quantity - 1);
+                                                // Update the item in the list
+                                                character.currentInventory[i] = updatedItem;
+                                                UI.PromptUserToContinue();
+                                                break; // Exit the loop after using the potion
+                                            }
+                                        }
+
+                                        CombatSystem(character, mob, quickDisplay); // Return to combat system
+                                        break;
+
+                                    default:
+                                        smoothPrinting.RapidPrint("\nPotion has not been used, returning back to combat system!");
+                                        UI.PromptUserToContinue();
+                                        CombatSystem(character, mob, quickDisplay); // Return to combat system
+                                        break;
+                                }
                                 break;
                             case "3":
                                 CheckInventory();
@@ -293,7 +351,14 @@ namespace FantasyRPG
 
                         foreach (var numOfPotions in character.currentInventory)
                         {
-                            Console.WriteLine($"\nRemaining Healing Potions: {numOfPotions.quantity}"); // Display Mage's remaining potions
+                            if (numOfPotions.category == "Potion") // Filter the current inventory via a category basis
+                            {
+                                if (numOfPotions.quantity > 0)
+                                {
+                                    smoothPrinting.RapidPrint($"\nRemaining Healing Potions: {numOfPotions.quantity}\n"); // Display Mage's remaining potions
+                                }
+                            }
+
                         }
 
                         if (character.currentHealth <= 30) // Check if users health is low
@@ -324,12 +389,64 @@ namespace FantasyRPG
                                 MageSpellAttack(character, mob, userTurn = true, enemyTurn = false, quickDisplay);
                                 break;
                             case "2":
+                                Console.Clear(); // Clear the console, to avoid overlapping
 
+                                smoothPrinting.PrintLine("--------------------------------------------------");
+                                smoothPrinting.PrintLine("FantasyRPG: Combat System - Healing");
+                                smoothPrinting.PrintLine("--------------------------------------------------");
 
+                                string? usePotion;
 
+                                // Future reference: if a user has a variety of potions, allow them to filter between then and use the selected one, this is static for now
 
+                                foreach (var potion in character.currentInventory)
+                                {
+                                    if (potion.category == "Potion") // Filter the current inventory via a category basis
+                                    {
+                                        if (potion.quantity > 0)
+                                        {
+                                            smoothPrinting.RapidPrint($"\nHealing Potion: {potion.itemName}\nPotion Description: {potion.itemDescription}\nPotion Potency: {potion.itemPower}\n"); // Display Mage's remaining potions
+                                        }
+                                    }
+
+                                }
+
+                                smoothPrinting.RapidPrint("\nWould you like to use the following potion? ('1' for yes and any other key for no): ");
+                                usePotion = Console.ReadLine();
+
+                                // Future reference: Potions can have various effects, this is catered for healing as of present. This will need to be changed in the future. Infact, the whole functionality should be placed in a function rather than here, which can be used by all classes
+                                switch (usePotion)
+                                {
+                                    case "1":
+                                        for (int i = 0; i < character.currentInventory.Count; i++)
+                                        {
+                                            var currentItem = character.currentInventory[i];
+                                            // Check if the item is a potion
+                                            if (currentItem.category == "Potion")
+                                            {
+                                                smoothPrinting.RapidPrint($"\n{character.name} has used {currentItem.itemName}, regaining +{currentItem.itemPower} health!\n");
+                                                character.currentHealth += currentItem.itemPower; // Adjust the character's health
+                                                                                                  // Create a new tuple with the updated quantity
+                                                var updatedItem = (currentItem.itemName, currentItem.itemDescription, currentItem.itemRarity, currentItem.itemPower, currentItem.category, currentItem.quantity - 1);
+                                                // Update the item in the list
+                                                character.currentInventory[i] = updatedItem;
+                                                UI.PromptUserToContinue();
+                                                break; // Exit the loop after using the potion
+                                            }
+                                        }
+
+                                        CombatSystem(character, mob, quickDisplay); // Return to combat system
+                                        break;
+
+                                    default:
+                                        smoothPrinting.RapidPrint("\nPotion has not been used, returning back to combat system!");
+                                        UI.PromptUserToContinue();
+                                        CombatSystem(character, mob, quickDisplay); // Return to combat system
+                                        break;
+                                }
 
                                 break;
+
                             case "3":
                                 CheckInventory();
                                 smoothPrinting.RapidPrint("\nAffirmative? If so, click any key to be redirected back to the M.C.S (Mage Combat System)");
@@ -3095,7 +3212,7 @@ namespace FantasyRPG
         public void NorthDirection(CharacterDefault character)
         {
             string? userInput;
-            bool meetingGuildLeader = false; // Should an overgrown bore spawn, then this will be 'true' as this is part of a mission
+            bool meetingGuildLeader = false; // Should an overgrown boar spawn, then this will be 'true' as this is part of a mission
 
             Random random = new Random();
             int generatedValue = random.Next(1, 4); // Increase range to account for additional mob types
@@ -3173,6 +3290,15 @@ namespace FantasyRPG
                 {
                     case "1":
                         // TESTING CASE: WILL BE CHANGED TO RANDOM CASE, TO SPAWN RANDOM MOBS, AND ALLOW USER TO FARM EXP IN THE AREA
+
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+                        smoothPrinting.PrintLine("FantasyRPG: Boar Encounter!");
+                        smoothPrinting.PrintLine("--------------------------------------------------");
+
+                        smoothPrinting.RapidPrint("\nYou have encountered a wild boar, one that is showing hostility, you have no choice but to fight to the battle of death!");
+
+                        Console.WriteLine(); // Spacing
+                        UI.PromptUserToContinue();
 
                         // Create an instance of the Bore class 
                         Dictionary<string, (int damage, string magicType)> normalAtkNames = new Dictionary<string, (int damage, string magicType)>()
@@ -3359,6 +3485,7 @@ namespace FantasyRPG
                     { "Rampant Flame Charge", (200, "Fire-Magic") }
                 };
 
+
                 // Dictionary containing item names and their associated damage, rarity, weapon type, and description
                 Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType, string category, int quantity)> itemDrop = new Dictionary<string, (int damage, string rarity, string weaponDescription, string weaponType, string category, int quantity)>()
                 {
@@ -3369,6 +3496,7 @@ namespace FantasyRPG
                     { "Aerith's Heirloom", (80, "Legendary", "Once wielded by the legendary Aerith, this staff channels the primordial magic of creation itself, capable of reshaping reality.", "Staff", "Staff", 1) },
                     { "Eucladian's Aura", (55, "Legendary", "Embrace the ethereal aura of the Eucladian, granting unmatched protection against all forms of magic and malevolence.", "Aura", "Aura", 1) }
                 };
+
 
                 Dragon dragon = new Dragon(
                     "Windsom",  // Name
@@ -3382,6 +3510,7 @@ namespace FantasyRPG
                     1,         // Drop chance
                     25          // Mob level
                 );
+
                 // Create a MobSpawner object passing character and dragonType
                 MobSpawner mobSpawner = new MobSpawner(character, dragonType);
                 character.inCombat = true; // Enable combat status
@@ -3447,6 +3576,7 @@ namespace FantasyRPG
     }
 
 
+
     public class InfiniteDungeon
     {
         public void dungeon()
@@ -3475,6 +3605,7 @@ namespace FantasyRPG
 
             // Should I decide to make this section more interactive, then these data types will come to use
             // string choice2, choice3;
+
 
             smoothPrinting.PrintLine("--------------------------------------------------");
             smoothPrinting.PrintLine("First Encounter - Arcania's Magic Council");
@@ -3539,6 +3670,7 @@ namespace FantasyRPG
 
 
             firstEncounterDialogue1(); // Function call to enable dialogue
+
 
             void firstEncounterDialogue1()
             {
