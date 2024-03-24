@@ -1884,7 +1884,6 @@ namespace FantasyRPG
             SmoothConsole smoothPrinting = new SmoothConsole();
             UIManager UI = new UIManager();
             Console.Title = "FantasyRPG";
-            // GameMenu menu = new GameMenu();
             // MagicCouncil encounter = new MagicCouncil(); // Debugging
             // string name = "Silver"; // Debugging
             // encounter.firstEncounter(name); // Debugging
@@ -1892,107 +1891,106 @@ namespace FantasyRPG
             // firstScenario.usersFirstJourney("Tristian");
 
             // Define values for debugging mage
-            string mageName = "Khalid Du-Lucérian";
+            // string mageName = "Khalid Du-Lucérian";
 
-            List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)> mageWeapon = new List<(string, int, string, string, string, string, int)> 
-            {
-                ("Heartblades Vesper", 250, "Legendary", "Staff", "Developer weapon :3", "Developer-Exclusive", 1)
-            };
+            // List<(string weaponName, int damage, string rarity, string weaponType, string weaponDescription, string category, int quantity)> mageWeapon = new List<(string, int, string, string, string, string, int)> 
+            // {
+            // ("Heartblades Vesper", 250, "Legendary", "Staff", "Developer weapon :3", "Developer-Exclusive", 1)
+            // };
 
-            string[] mageSpecialties = new string[] { "Fire-Magic", "Lightning-Magic", "Eucladian-Magic", "Light-Magic", "Dark-Magic" };
-            int arcaniaGoldCoins = 100000;
+            // string[] mageSpecialties = new string[] { "Fire-Magic", "Lightning-Magic", "Eucladian-Magic", "Light-Magic", "Dark-Magic" };
+            // int arcaniaGoldCoins = 100000;
 
-            List<(string, int, int)> magicSpells = new List<(string, int, int)> {
-                ("Lucerian's Wrath", 350, 80),
-                ("Umbral Surge", 120, 50),
-                ("Cyclone Strike", 50, 20)
-             };
+            // List<(string, int, int)> magicSpells = new List<(string, int, int)> {
+            // ("Lucerian's Wrath", 350, 80),
+            // ("Umbral Surge", 120, 50),
+            // ("Cyclone Strike", 50, 20)
+            // };
 
-            List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> currentInventory = new List<(string, string, string, int, string, int)>()
-            {
-                ("Heartblades Vesper", "Developer weapon :3", "Legendary", 250, "Weapon", 1),
-                ("Du-Lucérian's Elixir", "A legendary potion crafted by Khalid Du-Lucérian, renowned for its mystical properties. It instantly restores +100 health to the imbiber.", "Legendary", 100, "Potion", 50)
-            };
+            // List<(string itemName, string itemDescription, string itemRarity, int itemPower, string category, int quantity)> currentInventory = new List<(string, string, string, int, string, int)>()
+            // {
+            // ("Heartblades Vesper", "Developer weapon :3", "Legendary", 250, "Weapon", 1),
+            //  ("Du-Lucérian's Elixir", "A legendary potion crafted by Khalid Du-Lucérian, renowned for its mystical properties. It instantly restores +100 health to the imbiber.", "Legendary", 100, "Potion", 50)
+            // };
 
-            int specialAtkRecharge = 100;
+            // int specialAtkRecharge = 100;
 
-            List<(string npcName, string npcInformation, string npcAffiliation)> npcsEncountered = new List<(string, string, string)> {
-                 ("Veridian Pendragon", "False ranker and solo assassin, very capable and someone not to underestimate.", "Heartblade Association/Pendragon Lineage"),
-                ("Evelyn Everbright", "Rank 10 of the Arcania's Magic Council and Guildmaster of Arcania's Magic Council.", "Arcania's Magic Council/Arcane Sentinels"),
-                ("Khalid Du-Lucérian", "The true leader of Arcania's Magic Council, identity remains unknown.", "Arcania's Magic Council/Heartblade Association/Lucerian Lineage"),
-                ("Cloud (Real Identity - Silver Eucladian-Nine)", "Rank 1 of the Arcania's Magic Council.", "Arcania's Magic Council/Eucladian-Nine Lineage")
+            // List<(string npcName, string npcInformation, string npcAffiliation)> npcsEncountered = new List<(string, string, string)> {
+            // ("Veridian Pendragon", "False ranker and solo assassin, very capable and someone not to underestimate.", "Heartblade Association/Pendragon Lineage"),
+            // ("Evelyn Everbright", "Rank 10 of the Arcania's Magic Council and Guildmaster of Arcania's Magic Council.", "Arcania's Magic Council/Arcane Sentinels"),
+            // ("Khalid Du-Lucérian", "The true leader of Arcania's Magic Council, identity remains unknown.", "Arcania's Magic Council/Heartblade Association/Lucerian Lineage"),
+            // ("Cloud (Real Identity - Silver Eucladian-Nine)", "Rank 1 of the Arcania's Magic Council.", "Arcania's Magic Council/Eucladian-Nine Lineage")
+            // };
 
-            };
 
-            
-            bool debuggingCombat = false;
+            // bool debuggingCombat = false;
 
             // Create the debugging mage object with the specified arguments
-            Mage debuggingMage = new Mage(mageName, mageWeapon, mageSpecialties, arcaniaGoldCoins, magicSpells, currentInventory, specialAtkRecharge, npcsEncountered, debuggingCombat); // Debugging Mage
+            // Mage debuggingMage = new Mage(mageName, mageWeapon, mageSpecialties, arcaniaGoldCoins, magicSpells, currentInventory, specialAtkRecharge, npcsEncountered, debuggingCombat); // Debugging Mage
 
             // OP Parameter changes
-            debuggingMage.currentHealth = 500;
-            debuggingMage.maxHealth = 500;
-            debuggingMage.currentMana = 500;
-            debuggingMage.maxMana = 500;
-            debuggingMage.level = 60;
+            // debuggingMage.currentHealth = 500;
+            // debuggingMage.maxHealth = 500;
+            // debuggingMage.currentMana = 500;
+            // debuggingMage.maxMana = 500;
+            // debuggingMage.level = 60;
 
-            ForestOfMysteries scenario = new ForestOfMysteries();
-            int remainingAttempts = 3;
+            // ForestOfMysteries scenario = new ForestOfMysteries();
+            // int remainingAttempts = 3;
 
             // Debugging Mode - GAME IS IN TESTING PHASE
-            smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine("FantasyRPG: Debugging Mode");
-            smoothPrinting.PrintLine("--------------------------------------------------");
+            // smoothPrinting.PrintLine("--------------------------------------------------");
+            // smoothPrinting.PrintLine("FantasyRPG: Debugging Mode");
+            // smoothPrinting.PrintLine("--------------------------------------------------");
 
-            smoothPrinting.RapidPrint($"{debuggingMage.name} - Debugger Mage\n");
-            smoothPrinting.RapidPrint($"Level: {debuggingMage.level}\n");
+            // smoothPrinting.RapidPrint($"{debuggingMage.name} - Debugger Mage\n");
+            // smoothPrinting.RapidPrint($"Level: {debuggingMage.level}\n");
 
-            smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine("FantasyRPG: Debugging Mage - Stats");
-            smoothPrinting.PrintLine("--------------------------------------------------");
+            // smoothPrinting.PrintLine("--------------------------------------------------");
+            // smoothPrinting.PrintLine("FantasyRPG: Debugging Mage - Stats");
+            // smoothPrinting.PrintLine("--------------------------------------------------");
 
-            UI.DisplayProgressBar($"{debuggingMage.name}'s Health", debuggingMage.currentHealth, debuggingMage.maxHealth, 30); // Display Mage's health
+            // UI.DisplayProgressBar($"{debuggingMage.name}'s Health", debuggingMage.currentHealth, debuggingMage.maxHealth, 30); // Display Mage's health
 
-            Console.WriteLine(); // Spacing
+            // Console.WriteLine(); // Spacing
 
-            UI.DisplayProgressBar($"{debuggingMage.name}'s Mana", debuggingMage.currentMana, debuggingMage.maxMana, 30);
+            // UI.DisplayProgressBar($"{debuggingMage.name}'s Mana", debuggingMage.currentMana, debuggingMage.maxMana, 30);
 
-            Console.WriteLine(); // Spacing
-            Console.WriteLine(); // Spacing
+            // Console.WriteLine(); // Spacing
+            // Console.WriteLine(); // Spacing
 
-            smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine("FantasyRPG: Debugging Mage - Weapon");
-            smoothPrinting.PrintLine("--------------------------------------------------"); 
-            
+            // smoothPrinting.PrintLine("--------------------------------------------------");
+            // smoothPrinting.PrintLine("FantasyRPG: Debugging Mage - Weapon");
+            // smoothPrinting.PrintLine("--------------------------------------------------"); 
+
             // Display details of the current weapon used
-            foreach (var weaponDetails in debuggingMage.weapon)
-            {
-                smoothPrinting.RapidPrint($"\nWeapon Name: {weaponDetails.weaponName}\nWeapon Damage: {weaponDetails.damage}\nWeapon Rarity: {weaponDetails.rarity}\nWeapon Description: {weaponDetails.weaponDescription}\n");
-            }
+            // foreach (var weaponDetails in debuggingMage.weapon)
+            // {
+            // smoothPrinting.RapidPrint($"\nWeapon Name: {weaponDetails.weaponName}\nWeapon Damage: {weaponDetails.damage}\nWeapon Rarity: {weaponDetails.rarity}\nWeapon Description: {weaponDetails.weaponDescription}\n");
+            // }
 
-            Console.WriteLine(); // Spacing
+            // Console.WriteLine(); // Spacing
 
-            int spellCount = 1;
+            // int spellCount = 1;
 
-            smoothPrinting.PrintLine("--------------------------------------------------");
-            smoothPrinting.PrintLine("FantasyRPG: Debugging Mage - Spells");
-            smoothPrinting.PrintLine("--------------------------------------------------");
-            
+            // smoothPrinting.PrintLine("--------------------------------------------------");
+            // smoothPrinting.PrintLine("FantasyRPG: Debugging Mage - Spells");
+            // smoothPrinting.PrintLine("--------------------------------------------------");
+
             // Display the moveset of the mage
-            foreach (var spell in ((Mage)debuggingMage).magicSpells) // Display all spells currently avaliable to the Mage
-            {
-                smoothPrinting.RapidPrint($"\n{spellCount}. Spell: {spell.magicSpell} - Damage: {spell.damage}\nMana Requirement: {spell.manaRequirement}\n");
-                spellCount++;
-            }
+            // foreach (var spell in ((Mage)debuggingMage).magicSpells) // Display all spells currently avaliable to the Mage
+            // {
+            // smoothPrinting.RapidPrint($"\n{spellCount}. Spell: {spell.magicSpell} - Damage: {spell.damage}\nMana Requirement: {spell.manaRequirement}\n");
+            // spellCount++;
+            // }
 
-            UI.PromptUserToContinue();
+            // UI.PromptUserToContinue();
 
-            scenario.forestOfMysteries(debuggingMage, remainingAttempts); // Call the forestOfMysteries method with the Mage object and remaining attempts
+            // scenario.forestOfMysteries(debuggingMage, remainingAttempts); // Call the forestOfMysteries method with the Mage object and remaining attempts
 
 
-
-            // menu.gameMenu(); // User is first directed to the game menu method
+            GameMenu menu = new GameMenu();
+            menu.gameMenu(); // User is first directed to the game menu method
 
             // List<(string npcName, string npcDescription, string npcAffiliation)> npcsEncountered = new List<(string npcName, string npcDescription, string npcAffiliation)>() // Debugging: populating data
             // {
