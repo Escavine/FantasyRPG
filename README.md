@@ -22,11 +22,11 @@ FantasyRPG is not currently available for public release. The game is in an unfi
 
 ## Acknowledgments
 
-FantasyRPG was a passion project created by [Your Name]. While the game remains incomplete, special thanks go to [Acknowledgments, if any].
+FantasyRPG was a passion project created by [Escavine].
 
 ## Contributing
 
-Contributions to FantasyRPG are not open to the public at this time. However, feedback and suggestions are always welcome.
+Contributions to FantasyRPG are possible, just contact me if you are interested, feedback and suggestions are also welcome as well.
 
 ## Disclaimer
 
